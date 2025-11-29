@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+<<<<<<< HEAD
+  /* ============================================
+     🎨 COLOR PALETTE - EDIT THESE TO CHANGE COLORS!
+     ============================================ */
+
+  /* DARK MODE COLORS (default) */
+  :root {
+    --background: #1a2734; /* Main background -  */
+    --foreground: #f3f2f9; /* Main text color - */
+    --card: #4281A4; /* Card backgrounds -  */
+    --card-foreground: #1e2d3d; /* Card text */
+    --muted: #3a4a5a; /* Muted/secondary backgrounds */
+    --muted-foreground: #a1a1aa; /* Muted text */
+    --accent: #4281a4; /* Accent color - gold/orange */
+    --accent-hover: #4d96bf; /* Accent hover state */
+    --border: #F3F2F9; /* Border color */
+=======
+  :root {
+    /* Light theme variables (default) */
+    --bg: #DCD7C9; /* Sand/Cream */
+    --fg: #2C3639; /* Charcoal */
+    --muted: #3F4E4F; /* Slate */
+    --accent: #A27B5C; /* Brass */
+  }
+
+  .dark {
+    /* Dark theme variables */
+    --bg: #2C3639; /* Charcoal */
+    --fg: #DCD7C9; /* Sand/Cream */
+    --muted: #3F4E4F; /* Slate */
+    --accent: #A27B5C; /* Brass */
+  }
+
+  body {
+    @apply font-primary leading-loose;
+    background-color: var(--bg);
+    color: var(--fg);
+>>>>>>> 18c9f22ff1e852dbd7adbf32571a45b666dd48a0
+  }
+
+  /* LIGHT MODE COLORS */
+  .light {
+    --background: #f3f2f9; /* Main background - light gray */
+    --foreground: #1a2735; /* Main text color - dark */
+    --card: #3DA5D9; /* Card backgrounds - white */
+    --card-foreground: #1a2735; /* Card text */
+    --muted: #e2e8f0; /* Muted/secondary backgrounds */
+    --muted-foreground: #64748b; /* Muted text */
+    --accent: #3DA5D9; /* Accent color - darker gold for contrast */
+    --accent-hover: #d4942e; /* Accent hover state */
+    --border: #1a2734; /* Border color */
+  }
+
+  /* ============================================ */
+
+  body {
+    @apply font-primary leading-loose transition-colors duration-300;
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  .h1 {
+    @apply text-[48px] xl:text-[80px] leading-[1.1] font-semibold;
+  }
+  .h2 {
+    @apply text-[36px] xl:text-[48px] leading-[1.1] font-semibold;
+  }
+  .h3 {
+    @apply text-[20px] xl:text-[24px] leading-[1.1] font-semibold;
+  }
+  .text-outline {
+    -webkit-text-stroke: 1px var(--foreground);
+  }
+  .text-outline-hover {
+    -webkit-text-stroke: 1px var(--accent);
+  }
+}
+
+/* Utility classes using CSS variables */
+@layer utilities {
+  .bg-theme {
+    background-color: var(--background);
+  }
+  .text-theme {
+    color: var(--foreground);
+  }
+  .bg-card-theme {
+    background-color: var(--card);
+  }
+  .text-muted-theme {
+    color: var(--muted-foreground);
+  }
+  .border-theme {
+    border-color: var(--border);
+  }
+}
+
+/* Glass morphism effect - theme aware */
+@layer components {
+  .glass {
+    background: color-mix(in srgb, var(--card) 60%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .glass-strong {
+    background: color-mix(in srgb, var(--card) 85%, transparent);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+}

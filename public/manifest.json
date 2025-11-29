@@ -1,0 +1,21 @@
+{
+  "name": "Carl Patrick Adrian Aguas - Portfolio",
+  "short_name": "Carl.",
+  "description": "Full-Stack Developer Portfolio",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1c1c22",
+  "theme_color": "#00ff99",
+  "icons": [
+    {
+      "src": "/assets/icon/c-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/icon/c-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
