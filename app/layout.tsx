@@ -4,6 +4,7 @@ import "./globals.css";
 // components
 import Header from "@/components/Header";
 import PageTransition from "@/components/PageTransition";
+import PageLoader from "@/components/PageLoader";
 import Footer from "@/components/Footer";
 import { Analytics } from "@/lib/analytics";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -69,6 +70,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <body className={jetbrainsMono.variable}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+          <PageLoader />
           <AnimatedBackground />
           <Header />
           <div className="pt-24 min-h-screen">

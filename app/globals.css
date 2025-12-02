@@ -3,44 +3,21 @@
 @tailwind utilities;
 
 @layer base {
-<<<<<<< HEAD
   /* ============================================
      🎨 COLOR PALETTE - EDIT THESE TO CHANGE COLORS!
      ============================================ */
 
   /* DARK MODE COLORS (default) */
   :root {
-    --background: #1a2734; /* Main background -  */
-    --foreground: #f3f2f9; /* Main text color - */
-    --card: #4281A4; /* Card backgrounds -  */
+    --background: #1a2734; /* Main background */
+    --foreground: #f3f2f9; /* Main text color */
+    --card: #4281A4; /* Card backgrounds */
     --card-foreground: #1e2d3d; /* Card text */
     --muted: #3a4a5a; /* Muted/secondary backgrounds */
     --muted-foreground: #a1a1aa; /* Muted text */
-    --accent: #4281a4; /* Accent color - gold/orange */
+    --accent: #4281a4; /* Accent color */
     --accent-hover: #4d96bf; /* Accent hover state */
     --border: #F3F2F9; /* Border color */
-=======
-  :root {
-    /* Light theme variables (default) */
-    --bg: #DCD7C9; /* Sand/Cream */
-    --fg: #2C3639; /* Charcoal */
-    --muted: #3F4E4F; /* Slate */
-    --accent: #A27B5C; /* Brass */
-  }
-
-  .dark {
-    /* Dark theme variables */
-    --bg: #2C3639; /* Charcoal */
-    --fg: #DCD7C9; /* Sand/Cream */
-    --muted: #3F4E4F; /* Slate */
-    --accent: #A27B5C; /* Brass */
-  }
-
-  body {
-    @apply font-primary leading-loose;
-    background-color: var(--bg);
-    color: var(--fg);
->>>>>>> 18c9f22ff1e852dbd7adbf32571a45b666dd48a0
   }
 
   /* LIGHT MODE COLORS */
