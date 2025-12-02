@@ -11,25 +11,25 @@
   :root {
     --background: #1a2734; /* Main background */
     --foreground: #f3f2f9; /* Main text color */
-    --card: #4281A4; /* Card backgrounds */
+    --card: #4281a4; /* Card backgrounds */
     --card-foreground: #1e2d3d; /* Card text */
     --muted: #3a4a5a; /* Muted/secondary backgrounds */
     --muted-foreground: #a1a1aa; /* Muted text */
     --accent: #4281a4; /* Accent color */
     --accent-hover: #4d96bf; /* Accent hover state */
-    --border: #F3F2F9; /* Border color */
+    --border: #f3f2f9; /* Border color */
   }
 
   /* LIGHT MODE COLORS */
   .light {
     --background: #f3f2f9; /* Main background - light gray */
     --foreground: #1a2735; /* Main text color - dark */
-    --card: #3DA5D9; /* Card backgrounds - white */
+    --card: #3da5d9; /* Card backgrounds - white */
     --card-foreground: #1a2735; /* Card text */
     --muted: #e2e8f0; /* Muted/secondary backgrounds */
     --muted-foreground: #64748b; /* Muted text */
-    --accent: #3DA5D9; /* Accent color - darker gold for contrast */
-    --accent-hover: #d4942e; /* Accent hover state */
+    --accent: #3da5d9; /* Accent color - darker gold for contrast */
+    --accent-hover: #FF70A6; /* Accent hover state */
     --border: #1a2734; /* Border color */
   }
 
@@ -89,5 +89,13 @@
     background: color-mix(in srgb, var(--card) 85%, transparent);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
+  }
+
+  /* Gradient text effect */
+  .gradient-text {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }

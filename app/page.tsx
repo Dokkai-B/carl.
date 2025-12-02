@@ -23,27 +23,15 @@ const HomePage = () => {
       {/* Hero Section - Full Screen Split Design */}
       <section className="min-h-screen relative flex items-center overflow-hidden">
         <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left Side - Content */}
+          <div className="grid lg:grid-cols-5 gap-8 items-center">
+            {/* Left Side - Content (takes 3 of 5 columns = 60%) */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               style={{ y, opacity }}
-              className="space-y-8 z-10"
+              className="space-y-8 z-10 lg:col-span-3"
             >
-              {/* Animated Badge */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.6 }}
-              >
-                <div className="inline-flex items-center gap-2 glass px-4 py-2 rounded-full border border-primary/20">
-                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                  <span className="text-sm font-medium">Available for work</span>
-                </div>
-              </motion.div>
-
               {/* Main Heading */}
               <div className="space-y-4">
                 <motion.div
@@ -51,22 +39,16 @@ const HomePage = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3, duration: 0.6 }}
                 >
-                  <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
-                    Building Digital
+                  <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
+                    <span className="text-muted-foreground font-normal">Hey, I'm</span>
                     <br />
-                    <span className="gradient-text">Experiences</span>
+                    <span className="gradient-text">Carl Patrick Aguas</span>
+                    <br />
+                    <span className="text-muted-foreground font-normal">but you can call me</span>
+                    <br />
+                    <span className="gradient-text">Carlo</span>
                   </h1>
                 </motion.div>
-
-                <motion.p
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4, duration: 0.6 }}
-                  className="text-xl text-muted-foreground max-w-lg"
-                >
-                  Hi, I'm <span className="text-primary font-semibold">Carl Patrick Adrian Aguas</span>,
-                  an aspiring full-stack developer passionate about creating beautiful, functional web applications.
-                </motion.p>
               </div>
 
               {/* CTA Buttons */}
@@ -77,14 +59,32 @@ const HomePage = () => {
                 className="flex flex-wrap gap-4"
               >
                 <Link href="/work">
-                  <Button size="lg" className="group">
-                    View My Work
-                    <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <Button
+                    size="lg"
+                    className="group gap-2"
+                    onMouseEnter={() =>
+                      window.dispatchEvent(new CustomEvent("orbHover", { detail: "projects" }))
+                    }
+                    onMouseLeave={() =>
+                      window.dispatchEvent(new CustomEvent("orbHover", { detail: null }))
+                    }
+                  >
+                    see my projects
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
-                <Link href="/contact">
-                  <Button size="lg" variant="outline">
-                    Get In Touch
+                <Link href="/resume">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    onMouseEnter={() =>
+                      window.dispatchEvent(new CustomEvent("orbHover", { detail: "about" }))
+                    }
+                    onMouseLeave={() =>
+                      window.dispatchEvent(new CustomEvent("orbHover", { detail: null }))
+                    }
+                  >
+                    more about me
                   </Button>
                 </Link>
               </motion.div>
@@ -124,12 +124,12 @@ const HomePage = () => {
               </motion.div>
             </motion.div>
 
-            {/* Right Side - Visual Element */}
+            {/* Right Side - Visual Element (takes 2 of 5 columns = 40%) */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3, duration: 1, ease: [0.22, 1, 0.36, 1] }}
-              className="relative h-[600px] hidden lg:block"
+              className="relative h-[600px] hidden lg:block lg:col-span-2"
             >
               {/* Floating Cards */}
               <motion.div
@@ -191,34 +191,14 @@ const HomePage = () => {
               {/* Decorative Elements */}
               <div className="absolute inset-0 -z-10">
                 <div className="absolute top-1/4 right-1/4 w-72 h-72 bg-primary/20 rounded-full blur-3xl animate-pulse" />
-                <div className="absolute bottom-1/4 left-1/4 w-72 h-72 bg-accent/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
+                <div
+                  className="absolute bottom-1/4 left-1/4 w-72 h-72 bg-accent/20 rounded-full blur-3xl animate-pulse"
+                  style={{ animationDelay: "1s" }}
+                />
               </div>
             </motion.div>
           </div>
         </div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-        >
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="flex flex-col items-center gap-2 text-muted-foreground cursor-pointer"
-          >
-            <span className="text-sm">Scroll to explore</span>
-            <div className="w-6 h-10 rounded-full border-2 border-primary/30 flex items-start justify-center p-2">
-              <motion.div
-                animate={{ y: [0, 12, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="w-1.5 h-1.5 rounded-full bg-primary"
-              />
-            </div>
-          </motion.div>
-        </motion.div>
       </section>
 
       {/* Stats Section */}
@@ -279,8 +259,8 @@ const HomePage = () => {
               Let's Work <span className="gradient-text">Together</span>
             </h2>
             <p className="text-muted-foreground text-lg mb-8 max-w-2xl mx-auto">
-              I'm always interested in hearing about new projects and opportunities.
-              Whether you have a question or just want to say hi, feel free to reach out!
+              I'm always interested in hearing about new projects and opportunities. Whether you
+              have a question or just want to say hi, feel free to reach out!
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Link href="/contact">
