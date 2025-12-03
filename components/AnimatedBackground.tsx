@@ -67,7 +67,8 @@ export function AnimatedBackground() {
     lightFramesRef.current = generateNoiseFrames(noiseSize, noiseSize, 6, false);
   }, []);
 
-  const isDark = resolvedTheme === "dark";
+  // Default to dark mode on initial render to match defaultTheme="dark" in ThemeProvider
+  const isDark = !mounted || resolvedTheme === "dark";
 
   // Noise animation effect
   useEffect(() => {

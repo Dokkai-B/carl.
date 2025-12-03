@@ -15,7 +15,8 @@ export default function CustomCursor() {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  const isDark = resolvedTheme === "dark";
+  // Default to dark mode on initial render to match defaultTheme="dark" in ThemeProvider
+  const isDark = !mounted || resolvedTheme === "dark";
 
   // Different spring configs for dark (more lag) vs light (subtle lag)
   const haloSpringConfig = { damping: 15, stiffness: 120, mass: 0.8 };

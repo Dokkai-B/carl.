@@ -2,7 +2,7 @@
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { LucideIcon } from "lucide-react";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 
 interface SkillCardProps {
@@ -25,8 +25,15 @@ export default function SkillCard({
   className = "",
 }: SkillCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
   const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Default to dark mode on initial render to match defaultTheme="dark" in ThemeProvider
+  const isDark = !mounted || resolvedTheme === "dark";
 
   // Theme-aware hover colors
   const hoverBgColor = isDark
