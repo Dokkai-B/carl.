@@ -20,10 +20,13 @@ export function AnimatedBackground() {
 
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("orbHover" as keyof WindowEventMap, handleOrbHover as EventListener);
-    
+
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("orbHover" as keyof WindowEventMap, handleOrbHover as EventListener);
+      window.removeEventListener(
+        "orbHover" as keyof WindowEventMap,
+        handleOrbHover as EventListener
+      );
     };
   }, []);
 
@@ -53,7 +56,7 @@ export function AnimatedBackground() {
       {/* Base gradient layer */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-muted" />
-        
+
         {/* Animated gradient orbs - respond to button hover */}
         <motion.div
           className="absolute top-0 -left-4 w-72 h-72 bg-primary/30 rounded-full mix-blend-multiply filter blur-3xl"
@@ -70,7 +73,7 @@ export function AnimatedBackground() {
             ease: "easeOut",
           }}
         />
-        
+
         <motion.div
           className="absolute top-1/4 right-0 w-96 h-96 bg-accent/20 rounded-full mix-blend-multiply filter blur-3xl"
           animate={{
@@ -86,7 +89,7 @@ export function AnimatedBackground() {
             ease: "easeOut",
           }}
         />
-        
+
         <motion.div
           className="absolute bottom-0 left-1/3 w-80 h-80 bg-secondary/20 rounded-full mix-blend-multiply filter blur-3xl"
           animate={{
@@ -119,7 +122,7 @@ export function AnimatedBackground() {
 
         {/* Grid pattern overlay */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000,transparent)]" />
-        
+
         {/* Noise texture */}
         <div className="absolute inset-0 opacity-[0.015] noise" />
       </div>

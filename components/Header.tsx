@@ -30,27 +30,37 @@ const MenuButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () => void 
           const col = i % 3;
           const topPos = row === 0 ? "0%" : row === 1 ? "50%" : "100%";
           const leftPos = col === 0 ? "0%" : col === 1 ? "50%" : "100%";
-          
+
           return (
             <span
               key={i}
               className={`absolute w-1 h-1 rounded-full bg-current transition-all duration-300
-                ${isOpen 
-                  ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 scale-0" 
-                  : "-translate-x-1/2 -translate-y-1/2"}`}
+                ${
+                  isOpen
+                    ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 scale-0"
+                    : "-translate-x-1/2 -translate-y-1/2"
+                }`}
               style={!isOpen ? { top: topPos, left: leftPos } : undefined}
             />
           );
         })}
-        
+
         {/* Cross lines that appear when open */}
-        <span 
+        <span
           className={`absolute top-1/2 left-1/2 w-5 h-0.5 rounded-full bg-current transition-all duration-300
-            ${isOpen ? "-translate-x-1/2 -translate-y-1/2 rotate-45 scale-100" : "-translate-x-1/2 -translate-y-1/2 rotate-0 scale-0"}`}
+            ${
+              isOpen
+                ? "-translate-x-1/2 -translate-y-1/2 rotate-45 scale-100"
+                : "-translate-x-1/2 -translate-y-1/2 rotate-0 scale-0"
+            }`}
         />
-        <span 
+        <span
           className={`absolute top-1/2 left-1/2 w-5 h-0.5 rounded-full bg-current transition-all duration-300
-            ${isOpen ? "-translate-x-1/2 -translate-y-1/2 -rotate-45 scale-100" : "-translate-x-1/2 -translate-y-1/2 rotate-0 scale-0"}`}
+            ${
+              isOpen
+                ? "-translate-x-1/2 -translate-y-1/2 -rotate-45 scale-100"
+                : "-translate-x-1/2 -translate-y-1/2 rotate-0 scale-0"
+            }`}
         />
       </div>
     </button>
@@ -58,22 +68,22 @@ const MenuButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () => void 
 };
 
 // Animated text component - each word drops in
-const DropInText = ({ 
-  text, 
-  isActive, 
+const DropInText = ({
+  text,
+  isActive,
   delay = 0,
   href,
-  onClick
-}: { 
-  text: string; 
-  isActive: boolean; 
+  onClick,
+}: {
+  text: string;
+  isActive: boolean;
   delay?: number;
   href: string;
   onClick: () => void;
 }) => {
   return (
     <Link href={href} onClick={onClick} className="block">
-      <motion.div 
+      <motion.div
         className={`text-3xl md:text-5xl font-bold tracking-tight transition-colors duration-300 py-1
           ${isActive ? "text-accent" : "text-foreground hover:text-accent"}`}
         initial={{ y: -80, opacity: 0 }}
@@ -151,7 +161,9 @@ const Header = () => {
           <Link href="/" className="z-50">
             <motion.h1 className="font-bold" style={{ fontSize: logoSize }}>
               <motion.span
-                className={`transition-colors duration-300 ${isMenuOpen ? "text-foreground" : "gradient-text"}`}
+                className={`transition-colors duration-300 ${
+                  isMenuOpen ? "text-foreground" : "gradient-text"
+                }`}
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 400 }}
               >
@@ -219,17 +231,20 @@ const Header = () => {
                 transition={{ delay: 0.5, duration: 0.4 }}
               >
                 <div className="flex flex-col items-center gap-4 pt-8 border-t border-border/30">
-                  <p className="text-muted-foreground text-sm">
-                    Available for freelance work
-                  </p>
-                  <Link 
-                    href="/contact" 
+                  <p className="text-muted-foreground text-sm">Available for freelance work</p>
+                  <Link
+                    href="/contact"
                     onClick={() => setIsMenuOpen(false)}
                     className="inline-flex items-center gap-2 text-accent hover:text-accent-hover transition-colors"
                   >
                     <span className="text-sm font-medium">Let's work together</span>
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 8l4 4m0 0l-4 4m4-4H3"
+                      />
                     </svg>
                   </Link>
                 </div>

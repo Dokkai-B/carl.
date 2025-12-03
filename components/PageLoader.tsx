@@ -135,7 +135,7 @@ export default function PageLoader() {
                 ease: "easeInOut",
               }}
             >
-              <p 
+              <p
                 className="text-xl text-muted-foreground font-primary"
                 style={{ letterSpacing: TEXT_TRACKING }}
               >

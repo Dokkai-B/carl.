@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Stats from "@/components/Stats";
+import SkillCard from "@/components/SkillCard";
 import { useRef } from "react";
 
 const HomePage = () => {
@@ -131,62 +132,36 @@ const HomePage = () => {
               transition={{ delay: 0.3, duration: 1, ease: [0.22, 1, 0.36, 1] }}
               className="relative h-[600px] hidden lg:block lg:col-span-2"
             >
-              {/* Floating Cards */}
-              <motion.div
-                animate={{
-                  y: [0, -20, 0],
-                }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="absolute top-0 right-0 w-64 glass-strong p-6 rounded-2xl border border-border/50"
-              >
-                <Code2 className="w-12 h-12 text-primary mb-4" />
-                <h3 className="font-semibold mb-2">Full-Stack Development</h3>
-                <p className="text-sm text-muted-foreground">
-                  Building scalable web applications with modern technologies
-                </p>
-              </motion.div>
+              {/* Skill Cards with 3D tilt and glass hover */}
+              <SkillCard
+                icon={Code2}
+                title="Full-Stack Development"
+                description="Building scalable web applications with modern technologies"
+                floatDirection="up"
+                floatDuration={6}
+                delay={0}
+                className="absolute top-10 right-60 z-30"
+              />
 
-              <motion.div
-                animate={{
-                  y: [0, 20, 0],
-                }}
-                transition={{
-                  duration: 7,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 1,
-                }}
-                className="absolute bottom-32 right-16 w-64 glass-strong p-6 rounded-2xl border border-border/50"
-              >
-                <Palette className="w-12 h-12 text-accent mb-4" />
-                <h3 className="font-semibold mb-2">UI/UX Design</h3>
-                <p className="text-sm text-muted-foreground">
-                  Crafting intuitive and beautiful user interfaces
-                </p>
-              </motion.div>
+              <SkillCard
+                icon={Palette}
+                title="UI/UX Design"
+                description="Crafting intuitive and beautiful user interfaces"
+                floatDirection="down"
+                floatDuration={7}
+                delay={1}
+                className="absolute top-[30%] right-2 z-20"
+              />
 
-              <motion.div
-                animate={{
-                  y: [0, -15, 0],
-                }}
-                transition={{
-                  duration: 8,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 2,
-                }}
-                className="absolute bottom-0 left-0 w-64 glass-strong p-6 rounded-2xl border border-border/50"
-              >
-                <Rocket className="w-12 h-12 text-secondary mb-4" />
-                <h3 className="font-semibold mb-2">Problem Solving</h3>
-                <p className="text-sm text-muted-foreground">
-                  Turning complex challenges into elegant solutions
-                </p>
-              </motion.div>
+              <SkillCard
+                icon={Rocket}
+                title="Problem Solving"
+                description="Turning complex challenges into elegant solutions"
+                floatDirection="up"
+                floatDuration={8}
+                delay={2}
+                className="absolute bottom-10 left-0 z-10"
+              />
 
               {/* Decorative Elements */}
               <div className="absolute inset-0 -z-10">
