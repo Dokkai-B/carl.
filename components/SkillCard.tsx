@@ -3,6 +3,7 @@
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { LucideIcon } from "lucide-react";
 import { useRef } from "react";
+import { useTheme } from "next-themes";
 
 interface SkillCardProps {
   icon: LucideIcon;
@@ -24,6 +25,17 @@ export default function SkillCard({
   className = "",
 }: SkillCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+
+  // Theme-aware hover colors
+  const hoverBgColor = isDark
+    ? "rgba(66, 129, 164, 0.15)" // Blue tint for dark mode
+    : "rgba(255, 112, 166, 0.12)"; // Pink tint for light mode
+
+  // Theme-aware border and icon stroke
+  const cardBorderWidth = "1.2px";
+  const iconStrokeWidth = isDark ? 2.25 : 2;
 
   // Mouse position for 3D tilt effect
   const mouseX = useMotionValue(0);
@@ -75,48 +87,69 @@ export default function SkillCard({
         style={{
           rotateX,
           rotateY,
-          transformStyle: "preserve-3d",
         }}
         className="group relative w-64 cursor-pointer"
       >
-        {/* Card Content */}
+        {/* Blur layer - separate from 3D transform */}
+        <div
+          className="absolute inset-0 rounded-xl"
+          style={{
+            backgroundColor: isDark ? "rgba(20, 30, 40, 0.5)" : "rgba(255, 255, 255, 0.4)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+          }}
+        />
+
+        {/* Card Content - Frosted Glass */}
         <div
           className="
             relative p-6 rounded-xl
-            bg-card/40 backdrop-blur-sm
-            border border-border/30
             transition-all duration-500 ease-out
-            group-hover:bg-card/20 group-hover:backdrop-blur-md
-            group-hover:border-border/50 group-hover:shadow-lg
+            group-hover:shadow-lg
             group-hover:shadow-primary/5
           "
+          style={{
+            borderWidth: "2px",
+            borderStyle: "solid",
+            borderColor: isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.08)",
+            boxShadow: isDark
+              ? "inset 0 2px 4px rgba(255,255,255,0.05), inset 0 -2px 4px rgba(0,0,0,0.15)"
+              : "inset 0 2px 4px rgba(255,255,255,0.6), inset 0 -2px 4px rgba(0,0,0,0.04)",
+          }}
         >
-          {/* Subtle gradient overlay on hover */}
+          {/* Colored glass overlay on hover */}
           <div
             className="
               absolute inset-0 rounded-xl opacity-0 
-              bg-gradient-to-br from-primary/5 via-transparent to-accent/5
               group-hover:opacity-100 transition-opacity duration-500
               pointer-events-none
             "
+            style={{
+              backgroundColor: hoverBgColor,
+            }}
           />
 
-          {/* Icon Container */}
+          {/* Icon Module Container */}
           <div
             className="
-              relative w-12 h-12 mb-4 rounded-lg
-              bg-gradient-to-br from-primary/10 to-accent/10
-              border border-border/20
+              relative w-14 h-14 mb-4 rounded-xl
               flex items-center justify-center
               transition-all duration-500
-              group-hover:scale-110 group-hover:border-primary/30
-              group-hover:shadow-md group-hover:shadow-primary/10
+              group-hover:scale-105
             "
-            style={{ transform: "translateZ(20px)" }}
+            style={{
+              backgroundColor: isDark ? "rgba(66, 129, 164, 0.15)" : "rgba(255, 112, 166, 0.12)",
+              borderWidth: "2px",
+              borderStyle: "solid",
+              borderColor: isDark ? "rgba(66, 129, 164, 0.4)" : "rgba(255, 112, 166, 0.35)",
+              boxShadow: isDark
+                ? "inset 0 2px 4px rgba(66, 129, 164, 0.2), inset 0 -2px 3px rgba(0,0,0,0.15)"
+                : "inset 0 2px 4px rgba(255, 112, 166, 0.18), inset 0 -2px 3px rgba(0,0,0,0.05)",
+            }}
           >
             <Icon
               className="w-6 h-6 text-[var(--accent)] transition-colors duration-300 group-hover:text-[var(--accent-hover)]"
-              strokeWidth={1.5}
+              strokeWidth={iconStrokeWidth}
             />
           </div>
 
@@ -128,7 +161,6 @@ export default function SkillCard({
               transition-colors duration-300
               group-hover:text-foreground
             "
-            style={{ transform: "translateZ(15px)" }}
           >
             {title}
           </h3>
@@ -140,7 +172,6 @@ export default function SkillCard({
               transition-colors duration-300
               group-hover:text-muted-foreground
             "
-            style={{ transform: "translateZ(10px)" }}
           >
             {description}
           </p>

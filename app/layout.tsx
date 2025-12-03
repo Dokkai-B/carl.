@@ -5,11 +5,11 @@ import "./globals.css";
 import Header from "@/components/Header";
 import PageTransition from "@/components/PageTransition";
 import PageLoader from "@/components/PageLoader";
-import Footer from "@/components/Footer";
 import { Analytics } from "@/lib/analytics";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AnimatedBackground } from "@/components/AnimatedBackground";
 import CustomCursor from "@/components/CustomCursor";
+import ConditionalFooter from "@/components/ConditionalFooter";
 
 // config
 import { siteConfig } from "@/config/site";
@@ -78,7 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="pt-24 min-h-screen">
             <PageTransition>{children}</PageTransition>
           </div>
-          <Footer />
+          <ConditionalFooter />
           <Analytics />
         </ThemeProvider>
       </body>

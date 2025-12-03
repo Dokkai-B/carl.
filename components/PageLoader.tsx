@@ -32,6 +32,8 @@ export default function PageLoader() {
 
     const timer = setTimeout(() => {
       setIsLoading(false);
+      // Dispatch event to signal loader is complete
+      window.dispatchEvent(new CustomEvent("loaderComplete"));
     }, MIN_DISPLAY_TIME);
 
     return () => {

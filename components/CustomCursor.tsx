@@ -20,7 +20,7 @@ export default function CustomCursor() {
   // Different spring configs for dark (more lag) vs light (subtle lag)
   const haloSpringConfig = { damping: 15, stiffness: 120, mass: 0.8 };
   const ringSpringConfig = { damping: 20, stiffness: 180, mass: 0.5 };
-  
+
   const outerX = useSpring(mouseX, isDark ? haloSpringConfig : ringSpringConfig);
   const outerY = useSpring(mouseY, isDark ? haloSpringConfig : ringSpringConfig);
 
@@ -31,8 +31,10 @@ export default function CustomCursor() {
 
   // Dark mode colors (soft halo glow)
   const darkColors = {
-    haloNormal: "radial-gradient(circle, rgba(66, 129, 164, 0.15) 0%, rgba(66, 129, 164, 0.05) 50%, transparent 70%)",
-    haloHover: "radial-gradient(circle, rgba(66, 129, 164, 0.25) 0%, rgba(66, 129, 164, 0.08) 50%, transparent 70%)",
+    haloNormal:
+      "radial-gradient(circle, rgba(66, 129, 164, 0.15) 0%, rgba(66, 129, 164, 0.05) 50%, transparent 70%)",
+    haloHover:
+      "radial-gradient(circle, rgba(66, 129, 164, 0.25) 0%, rgba(66, 129, 164, 0.08) 50%, transparent 70%)",
     shadowNormal: "0 0 20px rgba(66, 129, 164, 0.15)",
     shadowHover: "0 0 30px rgba(66, 129, 164, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.05)",
     dotNormal: "linear-gradient(135deg, #f0f8ff 0%, #c8e4f5 100%)",

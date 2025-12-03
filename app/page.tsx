@@ -1,64 +1,125 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, Code2, Palette, Rocket, Download, Github, Linkedin, Mail } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowRight, Code2, Palette, Rocket, Github, Linkedin, Mail } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import Stats from "@/components/Stats";
 import SkillCard from "@/components/SkillCard";
-import { useRef } from "react";
+import { useEffect, useState } from "react";
+
+// Animation variants for staggered entrance
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+// Subtle slide up animation
+const slideUp = {
+  hidden: { opacity: 0, y: 12 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: [0.25, 0.1, 0.25, 1],
+    },
+  },
+};
+
+// Subtle slide from left for buttons
+const slideFromLeft = {
+  hidden: { opacity: 0, x: -8 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.5,
+      ease: [0.25, 0.1, 0.25, 1],
+    },
+  },
+};
+
+// Slide up with blur for skill cards
+const slideUpBlur = {
+  hidden: { opacity: 0, y: 16, filter: "blur(4px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.6,
+      ease: [0.25, 0.1, 0.25, 1],
+    },
+  },
+};
 
 const HomePage = () => {
-  const containerRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"],
-  });
+  const [loaderComplete, setLoaderComplete] = useState(false);
 
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  useEffect(() => {
+    // Check if this is a fresh page load or navigation
+    const isInitialLoad = !sessionStorage.getItem("hasVisited");
+
+    if (isInitialLoad) {
+      // First visit - wait for loader to complete
+      const handleLoaderComplete = () => {
+        setLoaderComplete(true);
+        sessionStorage.setItem("hasVisited", "true");
+      };
+
+      window.addEventListener("loaderComplete", handleLoaderComplete);
+      return () => window.removeEventListener("loaderComplete", handleLoaderComplete);
+    } else {
+      // Navigation from another page - animate immediately
+      setLoaderComplete(true);
+    }
+  }, []);
 
   return (
-    <div ref={containerRef}>
+    <div>
       {/* Hero Section - Full Screen Split Design */}
-      <section className="min-h-screen relative flex items-center overflow-hidden">
+      <section className="min-h-[calc(100vh-6rem)] relative flex items-center overflow-hidden">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-5 gap-8 items-center">
             {/* Left Side - Content (takes 3 of 5 columns = 60%) */}
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              style={{ y, opacity }}
+              variants={containerVariants}
+              initial="hidden"
+              animate={loaderComplete ? "visible" : "hidden"}
               className="space-y-8 z-10 lg:col-span-3"
             >
               {/* Main Heading */}
-              <div className="space-y-4">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3, duration: 0.6 }}
-                >
-                  <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
-                    <span className="text-muted-foreground font-normal">Hey, I'm</span>
-                    <br />
-                    <span className="gradient-text">Carl Patrick Aguas</span>
-                    <br />
-                    <span className="text-muted-foreground font-normal">but you can call me</span>
-                    <br />
-                    <span className="gradient-text">Carlo</span>
-                  </h1>
+              <div className="space-y-1">
+                <motion.div variants={slideUp}>
+                  <span className="text-3xl md:text-4xl lg:text-5xl text-muted-foreground font-normal leading-tight block">
+                    Hey, I'm
+                  </span>
+                </motion.div>
+                <motion.div variants={slideUp}>
+                  <span className="text-3xl md:text-4xl lg:text-5xl font-bold gradient-text leading-tight block">
+                    Carl Patrick Aguas
+                  </span>
+                </motion.div>
+                <motion.div variants={slideUp}>
+                  <span className="text-3xl md:text-4xl lg:text-5xl text-muted-foreground font-normal leading-tight block">
+                    but you can call me
+                  </span>
+                </motion.div>
+                <motion.div variants={slideUp}>
+                  <span className="text-3xl md:text-4xl lg:text-5xl font-bold gradient-text leading-tight block">
+                    Carlo
+                  </span>
                 </motion.div>
               </div>
 
               {/* CTA Buttons */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.6 }}
-                className="flex flex-wrap gap-4"
-              >
+              <motion.div variants={slideFromLeft} className="flex flex-wrap gap-4">
                 <Link href="/work">
                   <Button
                     size="lg"
@@ -91,77 +152,87 @@ const HomePage = () => {
               </motion.div>
 
               {/* Social Links */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.6, duration: 0.6 }}
-                className="flex items-center gap-4 pt-4"
-              >
+              <motion.div variants={slideUp} className="flex items-center gap-4 pt-4">
                 <span className="text-sm text-muted-foreground">Follow me:</span>
                 <div className="flex gap-3">
-                  <a
+                  <motion.a
                     href="https://github.com/Dokkai-B"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-10 h-10 glass rounded-full flex items-center justify-center hover:border-primary/50 transition-all hover:scale-110"
+                    whileHover={{ scale: 1.1 }}
                   >
                     <Github className="w-5 h-5" />
-                  </a>
-                  <a
+                  </motion.a>
+                  <motion.a
                     href="https://www.linkedin.com/in/carl-patrick-adrian-aguas-0a5959292/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-10 h-10 glass rounded-full flex items-center justify-center hover:border-primary/50 transition-all hover:scale-110"
+                    whileHover={{ scale: 1.1 }}
                   >
                     <Linkedin className="w-5 h-5" />
-                  </a>
-                  <a
+                  </motion.a>
+                  <motion.a
                     href="mailto:cpacaguas@mymail.mapua.edu.ph"
                     className="w-10 h-10 glass rounded-full flex items-center justify-center hover:border-primary/50 transition-all hover:scale-110"
+                    whileHover={{ scale: 1.1 }}
                   >
                     <Mail className="w-5 h-5" />
-                  </a>
+                  </motion.a>
                 </div>
               </motion.div>
             </motion.div>
 
             {/* Right Side - Visual Element (takes 2 of 5 columns = 40%) */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3, duration: 1, ease: [0.22, 1, 0.36, 1] }}
+              initial="hidden"
+              animate={loaderComplete ? "visible" : "hidden"}
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: {
+                    staggerChildren: 0.12,
+                    delayChildren: 0.4,
+                  },
+                },
+              }}
               className="relative h-[600px] hidden lg:block lg:col-span-2"
             >
               {/* Skill Cards with 3D tilt and glass hover */}
-              <SkillCard
-                icon={Code2}
-                title="Full-Stack Development"
-                description="Building scalable web applications with modern technologies"
-                floatDirection="up"
-                floatDuration={6}
-                delay={0}
-                className="absolute top-10 right-60 z-30"
-              />
+              <motion.div variants={slideUpBlur} className="absolute top-10 right-60 z-30">
+                <SkillCard
+                  icon={Code2}
+                  title="Full-Stack Development"
+                  description="Building scalable web applications with modern technologies"
+                  floatDirection="up"
+                  floatDuration={6}
+                  delay={0}
+                />
+              </motion.div>
 
-              <SkillCard
-                icon={Palette}
-                title="UI/UX Design"
-                description="Crafting intuitive and beautiful user interfaces"
-                floatDirection="down"
-                floatDuration={7}
-                delay={1}
-                className="absolute top-[30%] right-2 z-20"
-              />
+              <motion.div variants={slideUpBlur} className="absolute top-[30%] right-2 z-20">
+                <SkillCard
+                  icon={Palette}
+                  title="UI/UX Design"
+                  description="Crafting intuitive and beautiful user interfaces"
+                  floatDirection="down"
+                  floatDuration={7}
+                  delay={1}
+                />
+              </motion.div>
 
-              <SkillCard
-                icon={Rocket}
-                title="Problem Solving"
-                description="Turning complex challenges into elegant solutions"
-                floatDirection="up"
-                floatDuration={8}
-                delay={2}
-                className="absolute bottom-10 left-0 z-10"
-              />
+              <motion.div variants={slideUpBlur} className="absolute bottom-10 left-0 z-10">
+                <SkillCard
+                  icon={Rocket}
+                  title="Problem Solving"
+                  description="Turning complex challenges into elegant solutions"
+                  floatDirection="up"
+                  floatDuration={8}
+                  delay={2}
+                />
+              </motion.div>
 
               {/* Decorative Elements */}
               <div className="absolute inset-0 -z-10">
@@ -173,85 +244,6 @@ const HomePage = () => {
               </div>
             </motion.div>
           </div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <Stats />
-
-      {/* Featured Work Preview */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Featured <span className="gradient-text">Projects</span>
-            </h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Check out some of my recent work
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-center"
-          >
-            <Link href="/work">
-              <Button size="lg" variant="outline" className="group">
-                View All Projects
-                <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="glass-strong rounded-3xl p-12 md:p-16 text-center border border-border/50 relative overflow-hidden"
-          >
-            {/* Background Decoration */}
-            <div className="absolute inset-0 -z-10">
-              <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-              <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
-            </div>
-
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Let's Work <span className="gradient-text">Together</span>
-            </h2>
-            <p className="text-muted-foreground text-lg mb-8 max-w-2xl mx-auto">
-              I'm always interested in hearing about new projects and opportunities. Whether you
-              have a question or just want to say hi, feel free to reach out!
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <Link href="/contact">
-                <Button size="lg" className="group">
-                  Start a Conversation
-                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
-              <a href="/assets/cv/resume.pdf" download>
-                <Button size="lg" variant="outline">
-                  <Download className="mr-2 w-4 h-4" />
-                  Download CV
-                </Button>
-              </a>
-            </div>
-          </motion.div>
         </div>
       </section>
     </div>

@@ -13,7 +13,7 @@ export function ThemeTransition() {
     // Detect theme change
     if (previousTheme.current !== resolvedTheme && previousTheme.current !== undefined) {
       setIsTransitioning(true);
-      
+
       // Remove overlay after animation
       const timer = setTimeout(() => {
         setIsTransitioning(false);

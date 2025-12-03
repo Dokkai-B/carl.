@@ -117,11 +117,32 @@ const DropInText = ({
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [animationReady, setAnimationReady] = useState(false);
   const pathname = usePathname();
   const { scrollY } = useScroll();
 
   const headerPadding = useTransform(scrollY, [0, 100], ["1.5rem", "0.75rem"]);
   const logoSize = useTransform(scrollY, [0, 100], ["2rem", "1.5rem"]);
+
+  useEffect(() => {
+    setMounted(true);
+
+    // Check if this is initial load or navigation
+    const isInitialLoad = !sessionStorage.getItem("hasVisited");
+
+    if (isInitialLoad) {
+      // Wait for loader to complete before animating
+      const handleLoaderComplete = () => {
+        setAnimationReady(true);
+      };
+      window.addEventListener("loaderComplete", handleLoaderComplete);
+      return () => window.removeEventListener("loaderComplete", handleLoaderComplete);
+    } else {
+      // Navigation - animate immediately
+      setAnimationReady(true);
+    }
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -159,7 +180,13 @@ const Header = () => {
         <div className="container mx-auto flex justify-between items-center px-4">
           {/* Logo */}
           <Link href="/" className="z-50">
-            <motion.h1 className="font-bold" style={{ fontSize: logoSize }}>
+            <motion.h1
+              className="font-bold"
+              style={{ fontSize: logoSize }}
+              initial={mounted ? { opacity: 0, y: -8 } : false}
+              animate={animationReady ? { opacity: 1, y: 0 } : { opacity: 0, y: -8 }}
+              transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+            >
               <motion.span
                 className={`transition-colors duration-300 ${
                   isMenuOpen ? "text-foreground" : "gradient-text"
@@ -174,10 +201,15 @@ const Header = () => {
           </Link>
 
           {/* Right side controls */}
-          <div className="flex items-center gap-3 z-50">
+          <motion.div
+            className="flex items-center gap-3 z-50"
+            initial={mounted ? { opacity: 0, y: -8 } : false}
+            animate={animationReady ? { opacity: 1, y: 0 } : { opacity: 0, y: -8 }}
+            transition={{ duration: 0.5, delay: 0.05, ease: [0.25, 0.1, 0.25, 1] }}
+          >
             <ThemeToggle />
             <MenuButton isOpen={isMenuOpen} onClick={() => setIsMenuOpen(!isMenuOpen)} />
-          </div>
+          </motion.div>
         </div>
       </motion.header>
 
