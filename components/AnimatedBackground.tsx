@@ -1,38 +1,71 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { useTheme } from "next-themes";
 
-type OrbState = "default" | "projects" | "about" | null;
+type OrbState = "default" | "projects" | "about" | "returning" | null;
 
 export function AnimatedBackground() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [orbState, setOrbState] = useState<OrbState>("default");
+  const [mounted, setMounted] = useState(false);
+  const returnTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const { resolvedTheme } = useTheme();
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
+    setMounted(true);
+  }, []);
 
+  const isDark = resolvedTheme === "dark";
+
+  // Theme-aware orb colors (light mode is more subtle)
+  const orbColors = {
+    orb1: isDark ? "rgba(66, 129, 164, 0.4)" : "rgba(255, 112, 166, 0.15)",
+    orb2: isDark ? "rgba(77, 150, 191, 0.35)" : "rgba(255, 140, 180, 0.12)",
+    orb3: isDark ? "rgba(61, 165, 217, 0.3)" : "rgba(255, 112, 166, 0.1)",
+  };
+
+  useEffect(() => {
     const handleOrbHover = (e: CustomEvent<OrbState>) => {
-      setOrbState(e.detail || "default");
+      // Clear any pending return timeout
+      if (returnTimeoutRef.current) {
+        clearTimeout(returnTimeoutRef.current);
+        returnTimeoutRef.current = null;
+      }
+
+      if (e.detail === null) {
+        // First go to "returning" state (animates back to 0,0 smoothly)
+        setOrbState("returning");
+        // After the return animation completes, switch to default floating
+        returnTimeoutRef.current = setTimeout(() => {
+          setOrbState("default");
+        }, 1000); // Wait for return animation to complete
+      } else {
+        setOrbState(e.detail);
+      }
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("orbHover" as keyof WindowEventMap, handleOrbHover as EventListener);
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener(
         "orbHover" as keyof WindowEventMap,
         handleOrbHover as EventListener
       );
+      if (returnTimeoutRef.current) {
+        clearTimeout(returnTimeoutRef.current);
+      }
     };
   }, []);
 
   // Define orb positions/shapes for each state
   const orbConfigs = {
     default: {
+      orb1: { x: 0, y: 0, scale: 1, opacity: 0.7 },
+      orb2: { x: 0, y: 0, scale: 1, opacity: 0.7 },
+      orb3: { x: 0, y: 0, scale: 1, opacity: 0.7 },
+    },
+    returning: {
       orb1: { x: 0, y: 0, scale: 1, opacity: 0.7 },
       orb2: { x: 0, y: 0, scale: 1, opacity: 0.7 },
       orb3: { x: 0, y: 0, scale: 1, opacity: 0.7 },
@@ -59,7 +92,8 @@ export function AnimatedBackground() {
 
         {/* Animated gradient orbs - respond to button hover */}
         <motion.div
-          className="absolute top-0 -left-4 w-72 h-72 bg-primary/30 rounded-full mix-blend-multiply filter blur-3xl"
+          className="absolute top-0 -left-4 w-72 h-72 rounded-full filter blur-3xl transition-colors duration-500"
+          style={{ backgroundColor: orbColors.orb1 }}
           animate={{
             scale: orbState === "default" ? [1, 1.2, 1] : currentConfig.orb1.scale,
             x: orbState === "default" ? [0, 100, 0] : currentConfig.orb1.x,
@@ -67,15 +101,16 @@ export function AnimatedBackground() {
             opacity: currentConfig.orb1.opacity,
           }}
           transition={{
-            duration: orbState === "default" ? 8 : 0.6,
+            duration: orbState === "default" ? 8 : 0.8,
             repeat: orbState === "default" ? Infinity : 0,
             repeatType: "reverse",
-            ease: "easeOut",
+            ease: [0.4, 0, 0.2, 1],
           }}
         />
 
         <motion.div
-          className="absolute top-1/4 right-0 w-96 h-96 bg-accent/20 rounded-full mix-blend-multiply filter blur-3xl"
+          className="absolute top-1/4 right-0 w-96 h-96 rounded-full filter blur-3xl transition-colors duration-500"
+          style={{ backgroundColor: orbColors.orb2 }}
           animate={{
             scale: orbState === "default" ? [1, 1.3, 1] : currentConfig.orb2.scale,
             x: orbState === "default" ? [0, -100, 0] : currentConfig.orb2.x,
@@ -83,15 +118,16 @@ export function AnimatedBackground() {
             opacity: currentConfig.orb2.opacity,
           }}
           transition={{
-            duration: orbState === "default" ? 10 : 0.6,
+            duration: orbState === "default" ? 10 : 0.8,
             repeat: orbState === "default" ? Infinity : 0,
             repeatType: "reverse",
-            ease: "easeOut",
+            ease: [0.4, 0, 0.2, 1],
           }}
         />
 
         <motion.div
-          className="absolute bottom-0 left-1/3 w-80 h-80 bg-secondary/20 rounded-full mix-blend-multiply filter blur-3xl"
+          className="absolute bottom-0 left-1/3 w-80 h-80 rounded-full filter blur-3xl transition-colors duration-500"
+          style={{ backgroundColor: orbColors.orb3 }}
           animate={{
             scale: orbState === "default" ? [1, 1.1, 1] : currentConfig.orb3.scale,
             x: orbState === "default" ? [0, 50, 0] : currentConfig.orb3.x,
@@ -99,24 +135,10 @@ export function AnimatedBackground() {
             opacity: currentConfig.orb3.opacity,
           }}
           transition={{
-            duration: orbState === "default" ? 12 : 0.6,
+            duration: orbState === "default" ? 12 : 0.8,
             repeat: orbState === "default" ? Infinity : 0,
             repeatType: "reverse",
-            ease: "easeOut",
-          }}
-        />
-
-        {/* Mouse follower gradient */}
-        <motion.div
-          className="absolute w-96 h-96 bg-primary/10 rounded-full filter blur-3xl opacity-50 pointer-events-none"
-          animate={{
-            x: mousePosition.x - 192,
-            y: mousePosition.y - 192,
-          }}
-          transition={{
-            type: "spring",
-            stiffness: 50,
-            damping: 30,
+            ease: [0.4, 0, 0.2, 1],
           }}
         />
 

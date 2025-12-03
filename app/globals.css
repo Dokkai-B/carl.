@@ -2,6 +2,56 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================
+   🎨 ANIMATABLE CSS CUSTOM PROPERTIES
+   Using @property to make CSS variables transition smoothly
+   ============================================ */
+@property --background {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #1a2734;
+}
+@property --foreground {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #f3f2f9;
+}
+@property --card {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #4281a4;
+}
+@property --card-foreground {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #1e2d3d;
+}
+@property --muted {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #3a4a5a;
+}
+@property --muted-foreground {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #a1a1aa;
+}
+@property --accent {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #4281a4;
+}
+@property --accent-hover {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #4d96bf;
+}
+@property --border {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #f3f2f9;
+}
+
 @layer base {
   /* ============================================
      🎨 COLOR PALETTE - EDIT THESE TO CHANGE COLORS!
@@ -18,6 +68,17 @@
     --accent: #4281a4; /* Accent color */
     --accent-hover: #4d96bf; /* Accent hover state */
     --border: #f3f2f9; /* Border color */
+    
+    /* Transition for CSS custom properties */
+    transition: --background 0.4s ease-in-out,
+                --foreground 0.4s ease-in-out,
+                --card 0.4s ease-in-out,
+                --card-foreground 0.4s ease-in-out,
+                --muted 0.4s ease-in-out,
+                --muted-foreground 0.4s ease-in-out,
+                --accent 0.4s ease-in-out,
+                --accent-hover 0.4s ease-in-out,
+                --border 0.4s ease-in-out;
   }
 
   /* LIGHT MODE COLORS */
@@ -36,7 +97,7 @@
   /* ============================================ */
 
   body {
-    @apply font-primary leading-loose transition-colors duration-300;
+    @apply font-primary leading-loose;
     background-color: var(--background);
     color: var(--foreground);
   }

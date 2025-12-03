@@ -15,46 +15,38 @@ export default function CustomCursor() {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  // Spring config for the halo (trails behind) - MORE LAG/DELAY
-  const springConfig = { damping: 15, stiffness: 120, mass: 0.8 };
-  const haloX = useSpring(mouseX, springConfig);
-  const haloY = useSpring(mouseY, springConfig);
+  const isDark = resolvedTheme === "dark";
 
-  // Faster spring for the dot (more responsive) - KEEPS CURRENT SPEED
+  // Different spring configs for dark (more lag) vs light (subtle lag)
+  const haloSpringConfig = { damping: 15, stiffness: 120, mass: 0.8 };
+  const ringSpringConfig = { damping: 20, stiffness: 180, mass: 0.5 };
+  
+  const outerX = useSpring(mouseX, isDark ? haloSpringConfig : ringSpringConfig);
+  const outerY = useSpring(mouseY, isDark ? haloSpringConfig : ringSpringConfig);
+
+  // Faster spring for the dot (more responsive)
   const dotSpringConfig = { damping: 25, stiffness: 500, mass: 0.1 };
   const dotX = useSpring(mouseX, dotSpringConfig);
   const dotY = useSpring(mouseY, dotSpringConfig);
 
-  // Theme-based colors
-  const isDark = resolvedTheme === "dark";
-  
-  // Dark theme: blue accent (#4281a4)
-  // Light theme: pink accent (#ff70a6)
-  const colors = {
-    haloNormal: isDark
-      ? "radial-gradient(circle, rgba(66, 129, 164, 0.15) 0%, rgba(66, 129, 164, 0.05) 50%, transparent 70%)"
-      : "radial-gradient(circle, rgba(255, 112, 166, 0.15) 0%, rgba(255, 112, 166, 0.05) 50%, transparent 70%)",
-    haloHover: isDark
-      ? "radial-gradient(circle, rgba(66, 129, 164, 0.25) 0%, rgba(66, 129, 164, 0.08) 50%, transparent 70%)"
-      : "radial-gradient(circle, rgba(255, 112, 166, 0.25) 0%, rgba(255, 112, 166, 0.08) 50%, transparent 70%)",
-    shadowNormal: isDark
-      ? "0 0 20px rgba(66, 129, 164, 0.15)"
-      : "0 0 20px rgba(255, 112, 166, 0.15)",
-    shadowHover: isDark
-      ? "0 0 30px rgba(66, 129, 164, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.05)"
-      : "0 0 30px rgba(255, 112, 166, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.05)",
-    dotNormal: isDark
-      ? "linear-gradient(135deg, #f0f8ff 0%, #c8e4f5 100%)"
-      : "#3da5d9",
-    dotHover: isDark
-      ? "linear-gradient(135deg, #e0f0ff 0%, #4281a4 100%)"
-      : "linear-gradient(135deg, #3da5d9 0%, #ff70a6 100%)",
-    dotShadowNormal: isDark
-      ? "0 0 4px rgba(200, 228, 245, 0.6)"
-      : "0 0 4px rgba(61, 165, 217, 0.5)",
-    dotShadowHover: isDark
-      ? "0 0 8px rgba(66, 129, 164, 0.8), 0 0 12px rgba(255, 112, 166, 0.4)"
-      : "0 0 8px rgba(255, 112, 166, 0.8), 0 0 12px rgba(61, 165, 217, 0.4)",
+  // Dark mode colors (soft halo glow)
+  const darkColors = {
+    haloNormal: "radial-gradient(circle, rgba(66, 129, 164, 0.15) 0%, rgba(66, 129, 164, 0.05) 50%, transparent 70%)",
+    haloHover: "radial-gradient(circle, rgba(66, 129, 164, 0.25) 0%, rgba(66, 129, 164, 0.08) 50%, transparent 70%)",
+    shadowNormal: "0 0 20px rgba(66, 129, 164, 0.15)",
+    shadowHover: "0 0 30px rgba(66, 129, 164, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.05)",
+    dotNormal: "linear-gradient(135deg, #f0f8ff 0%, #c8e4f5 100%)",
+    dotHover: "linear-gradient(135deg, #e0f0ff 0%, #4281a4 100%)",
+    dotShadowNormal: "0 0 4px rgba(200, 228, 245, 0.6)",
+    dotShadowHover: "0 0 8px rgba(66, 129, 164, 0.8), 0 0 12px rgba(255, 112, 166, 0.4)",
+  };
+
+  // Light mode colors (outline ring with translucent fill on hover)
+  const lightColors = {
+    ringColor: "rgba(61, 165, 217, 0.6)",
+    ringColorHover: "rgba(61, 165, 217, 0.4)", // Lighter/thinner on hover
+    fillHover: "rgba(61, 165, 217, 0.12)", // Soft translucent fill
+    dotColor: "rgba(61, 165, 217, 1)",
   };
 
   useEffect(() => {
@@ -121,51 +113,70 @@ export default function CustomCursor() {
         }
       `}</style>
 
-      {/* Soft Halo - trails behind */}
+      {/* Outer element - Halo (dark) or Ring (light) */}
       <motion.div
         ref={cursorRef}
         className="fixed top-0 left-0 pointer-events-none z-[9998]"
         style={{
-          x: haloX,
-          y: haloY,
+          x: outerX,
+          y: outerY,
           translateX: "-50%",
           translateY: "-50%",
         }}
         animate={{
           opacity: isVisible ? 1 : 0,
-          scale: isHovering ? 1.3 : 1,
+          scale: isDark && isHovering ? 1.3 : 1,
         }}
         transition={{
           opacity: { duration: 0.15 },
           scale: { duration: 0.2, ease: "easeOut" },
         }}
       >
-        {/* Outer glow */}
-        <div
-          className={`
-            rounded-full transition-all duration-200 ease-out
-            ${isHovering ? "w-14 h-14" : "w-12 h-12"}
-          `}
-          style={{
-            background: isHovering ? colors.haloHover : colors.haloNormal,
-            boxShadow: isHovering ? colors.shadowHover : colors.shadowNormal,
-          }}
-        >
-          {/* Inner ring - appears on hover */}
+        {isDark ? (
+          /* Dark mode: Soft Halo Glow */
           <div
             className={`
-              absolute inset-2 rounded-full border transition-all duration-200
-              ${
-                isHovering
-                  ? "opacity-100 border-[var(--accent)]/40"
-                  : "opacity-0 border-transparent"
-              }
+              rounded-full transition-all duration-300 ease-out
+              ${isHovering ? "w-14 h-14" : "w-12 h-12"}
             `}
+            style={{
+              background: isHovering ? darkColors.haloHover : darkColors.haloNormal,
+              boxShadow: isHovering ? darkColors.shadowHover : darkColors.shadowNormal,
+            }}
+          >
+            {/* Inner ring - appears on hover (white) */}
+            <div
+              className={`
+                absolute inset-2 rounded-full border transition-all duration-200
+                ${isHovering ? "opacity-100 border-white/50" : "opacity-0 border-transparent"}
+              `}
+            />
+          </div>
+        ) : (
+          /* Light mode: Outline Ring with translucent fill on hover */
+          <motion.div
+            className="rounded-full"
+            animate={{
+              width: isHovering ? 64 : 48,
+              height: isHovering ? 64 : 48,
+              borderWidth: isHovering ? 0 : 2,
+              borderColor: lightColors.ringColor,
+              backgroundColor: isHovering ? lightColors.fillHover : "transparent",
+            }}
+            transition={{
+              width: { duration: 0.35, ease: [0.4, 0, 0.2, 1] },
+              height: { duration: 0.35, ease: [0.4, 0, 0.2, 1] },
+              borderWidth: { duration: 0.2, ease: "easeOut" },
+              backgroundColor: { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
+            }}
+            style={{
+              borderStyle: "solid",
+            }}
           />
-        </div>
+        )}
       </motion.div>
 
-      {/* Central dot - more responsive */}
+      {/* Central dot */}
       <motion.div
         className="fixed top-0 left-0 pointer-events-none z-[9999]"
         style={{
@@ -176,23 +187,40 @@ export default function CustomCursor() {
         }}
         animate={{
           opacity: isVisible ? 1 : 0,
-          scale: isHovering ? 0.8 : 1,
+          scale: isDark && isHovering ? 0.8 : 1,
         }}
         transition={{
           opacity: { duration: 0.1 },
           scale: { duration: 0.15, ease: "easeOut" },
         }}
       >
-        <div
-          className={`
-            rounded-full transition-all duration-150
-            ${isHovering ? "w-2 h-2" : "w-1.5 h-1.5"}
-          `}
-          style={{
-            background: isHovering ? colors.dotHover : colors.dotNormal,
-            boxShadow: isHovering ? colors.dotShadowHover : colors.dotShadowNormal,
-          }}
-        />
+        {isDark ? (
+          /* Dark mode dot */
+          <div
+            className={`
+              rounded-full transition-all duration-150
+              ${isHovering ? "w-2 h-2" : "w-1.5 h-1.5"}
+            `}
+            style={{
+              background: isHovering ? darkColors.dotHover : darkColors.dotNormal,
+              boxShadow: isHovering ? darkColors.dotShadowHover : darkColors.dotShadowNormal,
+            }}
+          />
+        ) : (
+          /* Light mode dot */
+          <motion.div
+            className="rounded-full"
+            animate={{
+              width: isHovering ? 6 : 5,
+              height: isHovering ? 6 : 5,
+              backgroundColor: lightColors.dotColor,
+            }}
+            transition={{
+              duration: 0.2,
+              ease: "easeOut",
+            }}
+          />
+        )}
       </motion.div>
     </>
   );
