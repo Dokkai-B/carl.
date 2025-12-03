@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import { Analytics } from "@/lib/analytics";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AnimatedBackground } from "@/components/AnimatedBackground";
+import CustomCursor from "@/components/CustomCursor";
 
 // config
 import { siteConfig } from "@/config/site";
@@ -70,6 +71,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <body className={jetbrainsMono.variable}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+          <CustomCursor />
           <PageLoader />
           <AnimatedBackground />
           <Header />
