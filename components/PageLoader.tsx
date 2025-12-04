@@ -1,12 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useAnimation } from "framer-motion";
 import Image from "next/image";
+import { ANIMATION_CONFIG } from "@/lib/animations";
 
 export default function PageLoader() {
   const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState(0);
+  const [loadingComplete, setLoadingComplete] = useState(false);
+  const [textVisible, setTextVisible] = useState(false);
+  const textControls = useAnimation();
+  const iconControls = useAnimation();
 
   useEffect(() => {
     // =============================================
@@ -17,6 +22,36 @@ export default function PageLoader() {
     const SLOW_INCREMENT = 2; // Speed when progress >= 80%
     const MIN_DISPLAY_TIME = 2500; // Minimum time loader shows (milliseconds)
     // =============================================
+
+    // Start icon fade in animation
+    iconControls.start({
+      opacity: 1,
+      y: [0, -8, 0],
+      scale: 1,
+      transition: {
+        opacity: { duration: 0.6 },
+        scale: { duration: 0.6 },
+        y: {
+          duration: 2.5,
+          repeat: Infinity,
+          ease: "easeInOut",
+        },
+      },
+    });
+
+    // Start text enter animation after a short delay
+    const textEnterTimer = setTimeout(() => {
+      setTextVisible(true);
+      textControls.start({
+        y: 0,
+        opacity: 1,
+        transition: {
+          type: "spring",
+          stiffness: ANIMATION_CONFIG.spring.stiffness,
+          damping: ANIMATION_CONFIG.spring.damping,
+        },
+      });
+    }, 300);
 
     const interval = setInterval(() => {
       setProgress((prev) => {
@@ -31,16 +66,53 @@ export default function PageLoader() {
     }, INTERVAL_MS);
 
     const timer = setTimeout(() => {
-      setIsLoading(false);
-      // Dispatch event to signal loader is complete
-      window.dispatchEvent(new CustomEvent("loaderComplete"));
+      setLoadingComplete(true);
     }, MIN_DISPLAY_TIME);
 
     return () => {
       clearInterval(interval);
       clearTimeout(timer);
+      clearTimeout(textEnterTimer);
     };
-  }, []);
+  }, [textControls, iconControls]);
+
+  // Handle exit animations when loading is complete
+  useEffect(() => {
+    if (loadingComplete && textVisible) {
+      // Animate text sliding back up (into pocket)
+      textControls.start({
+        y: ANIMATION_CONFIG.slideDistance.exit,
+        opacity: 0,
+        transition: {
+          type: "spring",
+          stiffness: ANIMATION_CONFIG.spring.stiffness,
+          damping: ANIMATION_CONFIG.spring.damping,
+        },
+      });
+
+      // Animate icon sliding up and fading out (slightly delayed from text)
+      setTimeout(() => {
+        iconControls
+          .start({
+            y: ANIMATION_CONFIG.slideDistance.exit * 1.5,
+            opacity: 0,
+            scale: 0.9,
+            transition: {
+              type: "spring",
+              stiffness: ANIMATION_CONFIG.spring.stiffness,
+              damping: ANIMATION_CONFIG.spring.damping,
+            },
+          })
+          .then(() => {
+            // After both exit, hide the loader
+            setTimeout(() => {
+              setIsLoading(false);
+              window.dispatchEvent(new CustomEvent("loaderComplete"));
+            }, 100);
+          });
+      }, 100);
+    }
+  }, [loadingComplete, textVisible, textControls, iconControls]);
 
   // =============================================
   // 📐 SIZE & SPACING - Adjust these values (in pixels)
@@ -58,7 +130,7 @@ export default function PageLoader() {
         <motion.div
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, ease: "easeInOut" }}
+          transition={{ duration: 0.4, ease: ANIMATION_CONFIG.ease }}
           style={{
             position: "fixed",
             inset: 0,
@@ -73,20 +145,7 @@ export default function PageLoader() {
           {/* Floating Alibata Icon - Progress fills from bottom to top */}
           <motion.div
             initial={{ opacity: 0, y: 30, scale: 0.9 }}
-            animate={{
-              opacity: 1,
-              y: [0, -8, 0],
-              scale: 1,
-            }}
-            transition={{
-              opacity: { duration: 0.6 },
-              scale: { duration: 0.6 },
-              y: {
-                duration: 2.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              },
-            }}
+            animate={iconControls}
             style={{
               position: "relative",
               width: ICON_WIDTH,
@@ -122,28 +181,21 @@ export default function PageLoader() {
             </div>
           </motion.div>
 
-          {/* Kamusta! Text - matches hero text style */}
+          {/* Kamusta! Text - Slide pocket animation */}
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
+            initial={{
+              y: ANIMATION_CONFIG.slideDistance.enter,
+              opacity: 0,
+            }}
+            animate={textControls}
             style={{ marginTop: GAP_ICON_TO_TEXT }}
           >
-            <motion.div
-              animate={{ opacity: [0.4, 1, 0.4] }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
+            <p
+              className="text-xl text-muted-foreground font-primary"
+              style={{ letterSpacing: TEXT_TRACKING }}
             >
-              <p
-                className="text-xl text-muted-foreground font-primary"
-                style={{ letterSpacing: TEXT_TRACKING }}
-              >
-                Kamusta!
-              </p>
-            </motion.div>
+              Kamusta!
+            </p>
           </motion.div>
         </motion.div>
       )}

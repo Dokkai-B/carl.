@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { submitContactForm } from "@/app/actions/contact";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,8 +15,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useAnimation } from "framer-motion";
 import { CheckCircle2, Send } from "lucide-react";
+import {
+  slidePocketContainer,
+  slidePocketChild,
+  ANIMATION_CONFIG,
+  coordinatedContainer,
+} from "@/lib/animations";
+
+// Header container for coordinated staggered animation
+const headerContainer = coordinatedContainer(ANIMATION_CONFIG.stagger.normal, 0);
+
+// Form container
+const formContainer = coordinatedContainer(ANIMATION_CONFIG.stagger.normal, 0.05);
 
 const info = [
   {
@@ -40,9 +52,59 @@ const Contact = () => {
     message: string;
   }>({ type: null, message: "" });
   const [selectedService, setSelectedService] = useState("");
-  
+  const [menuOpen, setMenuOpen] = useState(false);
+  const isExitingRef = useRef(false);
+
   const formRef = useRef(null);
   const isInView = useInView(formRef, { once: true, amount: 0.2 });
+
+  const headerControls = useAnimation();
+  const formControls = useAnimation();
+  const infoControls = useAnimation();
+
+  // Listen for menu state changes
+  useEffect(() => {
+    const handleMenuState = (e: CustomEvent<{ isOpen: boolean }>) => {
+      setMenuOpen(e.detail.isOpen);
+
+      if (e.detail.isOpen) {
+        // Menu opened - slide content up (hide into pocket)
+        isExitingRef.current = true;
+        headerControls.start("exit");
+        formControls.start("exit");
+        infoControls.start("exit");
+      } else {
+        // Menu closed - wait for distraction, then slide content back
+        isExitingRef.current = false;
+        const enterDelay = ANIMATION_CONFIG.transition.enterDelay * 1000;
+        setTimeout(() => {
+          if (!isExitingRef.current) {
+            headerControls.start("visible");
+            formControls.start("visible");
+            infoControls.start("visible");
+          }
+        }, enterDelay);
+      }
+    };
+
+    window.addEventListener("menuStateChange", handleMenuState as EventListener);
+    return () => window.removeEventListener("menuStateChange", handleMenuState as EventListener);
+  }, [headerControls, formControls, infoControls]);
+
+  // Initial animation
+  useEffect(() => {
+    if (!menuOpen && !isExitingRef.current) {
+      headerControls.start("visible");
+    }
+  }, [menuOpen, headerControls]);
+
+  // Form and info animations when in view
+  useEffect(() => {
+    if (isInView && !menuOpen && !isExitingRef.current) {
+      formControls.start("visible");
+      infoControls.start("visible");
+    }
+  }, [isInView, menuOpen, formControls, infoControls]);
 
   // Handler for form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -56,7 +118,7 @@ const Contact = () => {
 
     try {
       const result = await submitContactForm(formData);
-      
+
       if (result.success) {
         setSubmitStatus({ type: "success", message: result.message });
         form.reset();
@@ -77,31 +139,36 @@ const Contact = () => {
   return (
     <section className="py-12 xl:py-20">
       <div className="container mx-auto px-4">
-        {/* Header */}
+        {/* Header - Slide pocket animation with stagger */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          variants={headerContainer}
+          initial="hidden"
+          animate={headerControls}
+          exit="exit"
           className="text-center mb-16"
         >
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <motion.h1 variants={slidePocketChild} className="text-4xl md:text-5xl font-bold mb-4">
             Get In <span className="gradient-text">Touch</span>
-          </h1>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Have a project in mind? Let's discuss how we can work together to bring your ideas to life.
-          </p>
+          </motion.h1>
+          <motion.p
+            variants={slidePocketChild}
+            className="text-muted-foreground text-lg max-w-2xl mx-auto"
+          >
+            Have a project in mind? Let's discuss how we can work together to bring your ideas to
+            life.
+          </motion.p>
         </motion.div>
 
         <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
           {/* Form */}
           <motion.div
             ref={formRef}
-            initial={{ opacity: 0, x: -50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6 }}
+            variants={slidePocketChild}
+            initial="hidden"
+            animate={formControls}
           >
-            <form 
-              className="glass-strong p-8 md:p-10 rounded-3xl border border-border/50 space-y-6" 
+            <form
+              className="glass-strong p-8 md:p-10 rounded-3xl border border-border/50 space-y-6"
               onSubmit={handleSubmit}
             >
               <div className="space-y-2 mb-2">
@@ -220,9 +287,9 @@ const Contact = () => {
 
           {/* Contact Info & Additional Options */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            variants={formContainer}
+            initial="hidden"
+            animate={infoControls}
             className="space-y-8"
           >
             {/* Contact Cards */}

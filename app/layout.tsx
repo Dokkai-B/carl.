@@ -5,6 +5,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import PageTransition from "@/components/PageTransition";
 import PageLoader from "@/components/PageLoader";
+import TransitionOverlay from "@/components/TransitionOverlay";
 import { Analytics } from "@/lib/analytics";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AnimatedBackground } from "@/components/AnimatedBackground";
@@ -73,6 +74,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <CustomCursor />
           <PageLoader />
+          <TransitionOverlay />
           <AnimatedBackground />
           <Header />
           <div className="pt-24 min-h-screen">

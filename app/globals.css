@@ -158,7 +158,8 @@
 
 /* Film grain animation - micro shimmer, non-directional, GPU accelerated */
 @keyframes grain-shimmer {
-  0%, 100% {
+  0%,
+  100% {
     background-position: 0px 0px;
   }
   10% {

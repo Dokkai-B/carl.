@@ -2,9 +2,16 @@
 
 import Link from "next/link";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { useEffect, useState, useRef } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
+import {
+  menuPreset,
+  slidePocketChild,
+  ANIMATION_CONFIG,
+  coordinatedMenuPreset,
+  triggerTransition,
+} from "@/lib/animations";
 
 const links = [
   { name: "Home", path: "/" },
@@ -67,7 +74,7 @@ const MenuButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () => void 
   );
 };
 
-// Animated text component - each word drops in
+// Animated text component - each word drops in using shared animation
 const DropInText = ({
   text,
   isActive,
@@ -86,16 +93,8 @@ const DropInText = ({
       <motion.div
         className={`text-3xl md:text-5xl font-bold tracking-tight transition-colors duration-300 py-1
           ${isActive ? "text-accent" : "text-foreground hover:text-accent"}`}
-        initial={{ y: -80, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        exit={{ y: -40, opacity: 0 }}
+        variants={coordinatedMenuPreset.item}
         whileHover={{ x: 15 }}
-        transition={{
-          delay: delay,
-          type: "spring",
-          stiffness: 300,
-          damping: 20,
-        }}
       >
         <span className="inline-flex items-center gap-2">
           {text}
@@ -104,7 +103,7 @@ const DropInText = ({
             <motion.span
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: delay + 0.2 }}
+              transition={{ delay: 0.2 }}
               className="w-2 h-2 rounded-full bg-accent"
             />
           )}
@@ -119,8 +118,11 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [animationReady, setAnimationReady] = useState(false);
+  const [menuAnimationReady, setMenuAnimationReady] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
   const { scrollY } = useScroll();
+  const isNavigatingRef = useRef(false);
 
   const headerPadding = useTransform(scrollY, [0, 100], ["1.5rem", "0.75rem"]);
   const logoSize = useTransform(scrollY, [0, 100], ["2rem", "1.5rem"]);
@@ -128,20 +130,21 @@ const Header = () => {
   useEffect(() => {
     setMounted(true);
 
-    // Check if this is initial load or navigation
-    const isInitialLoad = !sessionStorage.getItem("hasVisited");
-
-    if (isInitialLoad) {
-      // Wait for loader to complete before animating
-      const handleLoaderComplete = () => {
-        setAnimationReady(true);
-      };
-      window.addEventListener("loaderComplete", handleLoaderComplete);
-      return () => window.removeEventListener("loaderComplete", handleLoaderComplete);
-    } else {
-      // Navigation - animate immediately
+    // Always wait for loader to complete before animating header
+    const handleLoaderComplete = () => {
       setAnimationReady(true);
-    }
+    };
+    window.addEventListener("loaderComplete", handleLoaderComplete);
+
+    // Fallback in case loader already completed
+    const fallbackTimer = setTimeout(() => {
+      setAnimationReady(true);
+    }, 5000);
+
+    return () => {
+      window.removeEventListener("loaderComplete", handleLoaderComplete);
+      clearTimeout(fallbackTimer);
+    };
   }, []);
 
   useEffect(() => {
@@ -154,20 +157,59 @@ const Header = () => {
 
   // Close menu when route changes
   useEffect(() => {
+    if (isNavigatingRef.current) {
+      isNavigatingRef.current = false;
+    }
     setIsMenuOpen(false);
+    setMenuAnimationReady(false);
   }, [pathname]);
 
-  // Prevent body scroll when menu is open
+  // Prevent body scroll when menu is open and handle coordinated transitions
   useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = "hidden";
+      // Dispatch event to hide page content (triggers exit animation)
+      window.dispatchEvent(new CustomEvent("menuStateChange", { detail: { isOpen: true } }));
+
+      // After page content exits, trigger distraction and then allow menu animation
+      const distractionDelay = ANIMATION_CONFIG.transition.exitDuration * 1000;
+      setTimeout(() => {
+        triggerTransition("menu");
+      }, distractionDelay);
+
+      // After distraction completes, allow menu items to animate in
+      const menuReadyDelay =
+        (ANIMATION_CONFIG.transition.exitDuration +
+          ANIMATION_CONFIG.transition.distractionDuration) *
+        1000;
+      setTimeout(() => {
+        setMenuAnimationReady(true);
+      }, menuReadyDelay);
     } else {
       document.body.style.overflow = "unset";
+      setMenuAnimationReady(false);
+      // Dispatch event to show page content
+      window.dispatchEvent(new CustomEvent("menuStateChange", { detail: { isOpen: false } }));
     }
     return () => {
       document.body.style.overflow = "unset";
     };
   }, [isMenuOpen]);
+
+  // Handle navigation from menu with coordinated transition
+  const handleNavigation = (href: string) => {
+    if (href === pathname) {
+      // Same page - just close menu
+      setIsMenuOpen(false);
+      return;
+    }
+
+    isNavigatingRef.current = true;
+    setIsMenuOpen(false);
+
+    // Navigation will happen via the Link component
+    // The page change will trigger the coordinated transition
+  };
 
   return (
     <>
@@ -241,32 +283,38 @@ const Header = () => {
 
             {/* Navigation Content - centered container, left-aligned text */}
             <nav className="relative h-full flex flex-col items-center justify-center">
-              <div className="space-y-2 md:space-y-3 text-left">
+              <motion.div
+                className="space-y-2 md:space-y-3 text-left"
+                variants={coordinatedMenuPreset.container}
+                initial="hidden"
+                animate={menuAnimationReady ? "visible" : "hidden"}
+                exit="exit"
+              >
                 {links.map((link, index) => (
                   <DropInText
                     key={link.path}
                     text={link.name}
                     href={link.path}
                     isActive={link.path === pathname}
-                    delay={0.1 + index * 0.08}
-                    onClick={() => setIsMenuOpen(false)}
+                    delay={0}
+                    onClick={() => handleNavigation(link.path)}
                   />
                 ))}
-              </div>
+              </motion.div>
 
               {/* Bottom section */}
               <motion.div
                 className="absolute bottom-8 left-8 right-8"
-                initial={{ y: 30, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: 30, opacity: 0 }}
-                transition={{ delay: 0.5, duration: 0.4 }}
+                variants={slidePocketChild}
+                initial="hidden"
+                animate={menuAnimationReady ? "visible" : "hidden"}
+                exit="exit"
               >
                 <div className="flex flex-col items-center gap-4 pt-8 border-t border-border/30">
                   <p className="text-muted-foreground text-sm">Available for freelance work</p>
                   <Link
                     href="/contact"
-                    onClick={() => setIsMenuOpen(false)}
+                    onClick={() => handleNavigation("/contact")}
                     className="inline-flex items-center gap-2 text-accent hover:text-accent-hover transition-colors"
                   >
                     <span className="text-sm font-medium">Let's work together</span>

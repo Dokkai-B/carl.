@@ -98,7 +98,7 @@ export function AnimatedBackground() {
     <>
       {/* Base gradient layer with slow drift animation */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div 
+        <div
           className="absolute inset-0 animate-gradient-drift"
           style={{
             background: isDark
