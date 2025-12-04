@@ -15,7 +15,6 @@ import {
 
 const links = [
   { name: "Home", path: "/" },
-  { name: "Services", path: "/services" },
   { name: "Resume", path: "/resume" },
   { name: "Projects", path: "/work" },
   { name: "Contacts", path: "/contact" },

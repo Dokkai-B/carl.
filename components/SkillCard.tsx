@@ -9,6 +9,7 @@ interface SkillCardProps {
   icon: LucideIcon;
   title: string;
   description: string;
+  keyPoints?: string[];
   delay?: number;
   floatDirection?: "up" | "down";
   floatDuration?: number;
@@ -19,6 +20,7 @@ export default function SkillCard({
   icon: Icon,
   title,
   description,
+  keyPoints,
   delay = 0,
   floatDirection = "up",
   floatDuration = 6,
@@ -72,7 +74,7 @@ export default function SkillCard({
   };
 
   const floatAnimation = {
-    y: floatDirection === "up" ? [0, -15, 0] : [0, 15, 0],
+    y: floatDirection === "up" ? [0, -8, 0] : [0, 8, 0],
   };
 
   return (
@@ -182,6 +184,26 @@ export default function SkillCard({
           >
             {description}
           </p>
+
+          {/* Key Points */}
+          {keyPoints && keyPoints.length > 0 && (
+            <ul className="mt-3 space-y-1">
+              {keyPoints.map((point, index) => (
+                <li
+                  key={index}
+                  className="
+                    text-xs text-muted-foreground/70 leading-relaxed
+                    transition-colors duration-300
+                    group-hover:text-muted-foreground/90
+                    flex items-start gap-2
+                  "
+                >
+                  <span className="text-primary/60 mt-0.5">•</span>
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
+          )}
 
           {/* Bottom accent line */}
           <div

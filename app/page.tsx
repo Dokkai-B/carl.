@@ -1,17 +1,12 @@
 "use client";
 
 import { motion, useAnimation } from "framer-motion";
-import { ArrowRight, Code2, Palette, Rocket, Github, Linkedin, Mail } from "lucide-react";
+import { ArrowRight, Github, Linkedin, Mail } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import SkillCard from "@/components/SkillCard";
+import SkillNodes, { SkillNodesMobile } from "@/components/SkillNodes";
 import { useEffect, useState, useRef } from "react";
-import {
-  slidePocketContainer,
-  slidePocketChild,
-  ANIMATION_CONFIG,
-  coordinatedContainer,
-} from "@/lib/animations";
+import { slidePocketChild, ANIMATION_CONFIG, coordinatedContainer } from "@/lib/animations";
 
 // Container for staggered hero content - coordinated slide pocket animation
 const heroContainer = coordinatedContainer(ANIMATION_CONFIG.stagger.normal, 0);
@@ -187,58 +182,36 @@ const HomePage = () => {
               </motion.div>
             </motion.div>
 
-            {/* Right Side - Visual Element (takes 2 of 5 columns = 40%) */}
+            {/* Right Side - Floating Skill Nodes (takes 2 of 5 columns = 40%) */}
             <motion.div
               initial="hidden"
               animate={skillsControls}
               exit="exit"
               variants={skillCardsContainer}
-              className="relative h-[600px] hidden lg:block lg:col-span-2"
+              className="relative hidden lg:block lg:col-span-2"
             >
-              {/* Skill Cards with slide pocket animation */}
-              <motion.div variants={slidePocketChild} className="absolute top-10 right-60 z-30">
-                <SkillCard
-                  icon={Code2}
-                  title="Full-Stack Development"
-                  description="Building scalable web applications with modern technologies"
-                  floatDirection="up"
-                  floatDuration={6}
-                  delay={0}
-                />
+              <motion.div variants={slidePocketChild}>
+                <SkillNodes />
               </motion.div>
-
-              <motion.div variants={slidePocketChild} className="absolute top-[30%] right-2 z-20">
-                <SkillCard
-                  icon={Palette}
-                  title="UI/UX Design"
-                  description="Crafting intuitive and beautiful user interfaces"
-                  floatDirection="down"
-                  floatDuration={7}
-                  delay={1}
-                />
-              </motion.div>
-
-              <motion.div variants={slidePocketChild} className="absolute bottom-10 left-0 z-10">
-                <SkillCard
-                  icon={Rocket}
-                  title="Problem Solving"
-                  description="Turning complex challenges into elegant solutions"
-                  floatDirection="up"
-                  floatDuration={8}
-                  delay={2}
-                />
-              </motion.div>
-
-              {/* Decorative Elements */}
-              <div className="absolute inset-0 -z-10">
-                <div className="absolute top-1/4 right-1/4 w-72 h-72 bg-primary/20 rounded-full blur-3xl animate-pulse" />
-                <div
-                  className="absolute bottom-1/4 left-1/4 w-72 h-72 bg-accent/20 rounded-full blur-3xl animate-pulse"
-                  style={{ animationDelay: "1s" }}
-                />
-              </div>
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      {/* Mobile Skills Section - Shows only on smaller screens */}
+      <section className="lg:hidden py-16">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial="hidden"
+            animate={skillsControls}
+            exit="exit"
+            variants={skillCardsContainer}
+          >
+            <motion.h2 variants={slidePocketChild} className="text-2xl font-bold text-center mb-8">
+              What I <span className="gradient-text">Do</span>
+            </motion.h2>
+            <SkillNodesMobile />
+          </motion.div>
         </div>
       </section>
     </div>
