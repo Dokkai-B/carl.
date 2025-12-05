@@ -9,7 +9,7 @@ import {
   useInView,
   AnimatePresence,
 } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import { useTheme } from "next-themes";
 import { ANIMATION_CONFIG } from "@/lib/animations";
 
@@ -67,6 +67,110 @@ interface SkillItem {
   name: string;
   category: "frontend" | "backend" | "design" | "tools" | "languages";
 }
+
+type SectionId = "about" | "experience" | "education" | "skills";
+
+interface Particle {
+  id: number;
+  baseX: number;
+  baseY: number;
+  size: number;
+  delay: number;
+  duration: number;
+}
+
+interface BlobConfig {
+  clipPath: string;
+  color: string;
+  secondaryColor: string;
+  scale: number;
+}
+
+interface ParticlePattern {
+  positions: { x: number; y: number }[];
+}
+
+// =============================================
+// BACKGROUND CONFIGURATION
+// =============================================
+interface EnhancedBlobConfig extends BlobConfig {
+  translateX: string;
+  translateY: string;
+  hueRotate: number;
+}
+
+const BLOB_CONFIGS: Record<SectionId, EnhancedBlobConfig> = {
+  about: {
+    clipPath: "polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)",
+    color: "rgba(56, 189, 248, 0.32)", // Brighter cyan blue
+    secondaryColor: "rgba(99, 179, 237, 0.22)",
+    scale: 1,
+    translateX: "0%",
+    translateY: "0%",
+    hueRotate: 0,
+  },
+  experience: {
+    clipPath: "polygon(40% 0%, 60% 0%, 75% 15%, 80% 50%, 75% 85%, 60% 100%, 40% 100%, 25% 85%, 20% 50%, 25% 15%)",
+    color: "rgba(20, 184, 166, 0.35)", // Saturated teal / deep blue
+    secondaryColor: "rgba(45, 156, 180, 0.24)",
+    scale: 1.12,
+    translateX: "-15%",
+    translateY: "10%",
+    hueRotate: 10,
+  },
+  education: {
+    clipPath: "polygon(50% 0%, 80% 15%, 100% 50%, 80% 85%, 50% 100%, 20% 85%, 0% 50%, 20% 15%)",
+    color: "rgba(99, 102, 241, 0.33)", // Blue with violet tint
+    secondaryColor: "rgba(139, 92, 246, 0.22)",
+    scale: 1.08,
+    translateX: "0%",
+    translateY: "-20%",
+    hueRotate: -8,
+  },
+  skills: {
+    clipPath: "polygon(50% 0%, 65% 10%, 100% 20%, 85% 50%, 100% 80%, 65% 90%, 50% 100%, 35% 90%, 0% 80%, 15% 50%, 0% 20%, 35% 10%)",
+    color: "rgba(45, 212, 191, 0.30)", // Blue-green / teal
+    secondaryColor: "rgba(56, 189, 248, 0.20)",
+    scale: 1.15,
+    translateX: "12%",
+    translateY: "5%",
+    hueRotate: 12,
+  },
+};
+
+const PARTICLE_PATTERNS: Record<SectionId, ParticlePattern> = {
+  about: {
+    positions: [
+      { x: 50, y: 50 }, { x: 35, y: 35 }, { x: 65, y: 35 }, { x: 35, y: 65 }, { x: 65, y: 65 },
+      { x: 50, y: 30 }, { x: 50, y: 70 }, { x: 30, y: 50 }, { x: 70, y: 50 },
+      { x: 42, y: 42 }, { x: 58, y: 42 }, { x: 42, y: 58 }, { x: 58, y: 58 },
+    ],
+  },
+  experience: {
+    positions: [
+      { x: 20, y: 20 }, { x: 30, y: 30 }, { x: 40, y: 40 }, { x: 50, y: 50 },
+      { x: 60, y: 60 }, { x: 70, y: 70 }, { x: 80, y: 80 },
+      { x: 25, y: 28 }, { x: 35, y: 38 }, { x: 45, y: 48 }, { x: 55, y: 58 },
+      { x: 65, y: 68 }, { x: 75, y: 78 },
+    ],
+  },
+  education: {
+    positions: [
+      { x: 50, y: 25 }, { x: 65, y: 35 }, { x: 70, y: 50 }, { x: 65, y: 65 }, { x: 50, y: 75 },
+      { x: 35, y: 65 }, { x: 30, y: 50 }, { x: 35, y: 35 },
+      { x: 50, y: 40 }, { x: 58, y: 50 }, { x: 50, y: 60 }, { x: 42, y: 50 },
+      { x: 50, y: 50 },
+    ],
+  },
+  skills: {
+    positions: [
+      { x: 50, y: 50 }, { x: 50, y: 25 }, { x: 72, y: 37 }, { x: 72, y: 63 },
+      { x: 50, y: 75 }, { x: 28, y: 63 }, { x: 28, y: 37 },
+      { x: 50, y: 15 }, { x: 80, y: 30 }, { x: 80, y: 70 }, { x: 50, y: 85 },
+      { x: 20, y: 70 }, { x: 20, y: 30 },
+    ],
+  },
+};
 
 // =============================================
 // DATA
@@ -160,6 +264,248 @@ const sections = [
   { id: "education", label: "Education", icon: FaGraduationCap },
   { id: "skills", label: "Skills", icon: FaCode },
 ];
+
+// =============================================
+// MORPHING GRADIENT BLOB COMPONENT
+// =============================================
+const MorphingBlob = ({ activeSection, isDark }: { activeSection: SectionId; isDark: boolean }) => {
+  const config = BLOB_CONFIGS[activeSection];
+  
+  // Light mode uses pink theme with good visibility
+  const lightConfig: Record<SectionId, { color: string; secondaryColor: string }> = {
+    about: { color: "rgba(251, 113, 133, 0.28)", secondaryColor: "rgba(244, 114, 182, 0.18)" },
+    experience: { color: "rgba(236, 72, 153, 0.30)", secondaryColor: "rgba(219, 39, 119, 0.20)" },
+    education: { color: "rgba(192, 132, 252, 0.28)", secondaryColor: "rgba(251, 113, 133, 0.18)" },
+    skills: { color: "rgba(251, 146, 160, 0.26)", secondaryColor: "rgba(196, 181, 253, 0.18)" },
+  };
+
+  const colors = isDark 
+    ? { color: config.color, secondaryColor: config.secondaryColor }
+    : lightConfig[activeSection];
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Primary morphing blob - more visible with reduced blur */}
+      <motion.div
+        className="absolute top-1/2 left-1/2 w-[650px] h-[650px] xl:w-[850px] xl:h-[850px]"
+        initial={false}
+        animate={{
+          clipPath: config.clipPath,
+          scale: config.scale,
+          x: `calc(-50% + ${config.translateX})`,
+          y: `calc(-50% + ${config.translateY})`,
+          filter: `blur(35px) hue-rotate(${config.hueRotate}deg)`,
+        }}
+        transition={{
+          clipPath: { duration: 0.9, ease: [0.4, 0, 0.2, 1] },
+          scale: { duration: 0.85, ease: [0.4, 0, 0.2, 1] },
+          x: { duration: 0.9, ease: [0.4, 0, 0.2, 1] },
+          y: { duration: 0.9, ease: [0.4, 0, 0.2, 1] },
+          filter: { duration: 1, ease: "easeInOut" },
+        }}
+        style={{
+          background: `radial-gradient(ellipse at center, ${colors.color} 0%, ${colors.color.replace(/[\d.]+\)$/, '0.15)')} 50%, transparent 75%)`,
+          mixBlendMode: isDark ? "screen" : "multiply",
+        }}
+      />
+
+      {/* Secondary accent blob - enhanced visibility */}
+      <motion.div
+        className="absolute top-1/3 right-1/4 w-[450px] h-[450px] xl:w-[550px] xl:h-[550px]"
+        initial={false}
+        animate={{
+          clipPath: config.clipPath,
+          scale: config.scale * 0.85,
+          rotate: [0, 8, -8, 0],
+          x: config.translateX,
+        }}
+        transition={{
+          clipPath: { duration: 1, ease: [0.4, 0, 0.2, 1] },
+          scale: { duration: 0.9, ease: [0.4, 0, 0.2, 1] },
+          x: { duration: 0.9, ease: [0.4, 0, 0.2, 1] },
+          rotate: { duration: 15, repeat: Infinity, ease: "linear" },
+        }}
+        style={{
+          background: `radial-gradient(ellipse at center, ${colors.secondaryColor} 0%, transparent 70%)`,
+          filter: "blur(40px)",
+          mixBlendMode: isDark ? "screen" : "soft-light",
+        }}
+      />
+
+      {/* Core glow - breathing animation with better visibility */}
+      <motion.div
+        className="absolute top-1/2 left-1/2 w-[500px] h-[500px] xl:w-[600px] xl:h-[600px] rounded-full"
+        animate={{
+          scale: [1, 1.08, 1],
+          opacity: [0.5, 0.7, 0.5],
+        }}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        style={{
+          x: "-50%",
+          y: "-50%",
+          background: `radial-gradient(circle at center, ${colors.color} 0%, transparent 65%)`,
+          filter: "blur(45px)",
+          mixBlendMode: isDark ? "screen" : "soft-light",
+        }}
+      />
+    </div>
+  );
+};
+
+// =============================================
+// PARTICLE CONSTELLATION COMPONENT
+// =============================================
+const ParticleConstellation = ({
+  activeSection,
+  isDark,
+  mousePosition,
+}: {
+  activeSection: SectionId;
+  isDark: boolean;
+  mousePosition: { x: number; y: number };
+}) => {
+  const particles = useMemo<Particle[]>(
+    () =>
+      Array.from({ length: 13 }, (_, i) => ({
+        id: i,
+        baseX: 50,
+        baseY: 50,
+        size: 4 + Math.random() * 4, // Larger particles (4-8px instead of 2-5px)
+        delay: i * 0.1,
+        duration: 2.5 + Math.random() * 2,
+      })),
+    []
+  );
+
+  const pattern = PARTICLE_PATTERNS[activeSection];
+  // Higher opacity and better contrast
+  const accentColor = isDark ? "rgba(99, 179, 237, 0.55)" : "rgba(244, 114, 182, 0.5)";
+  const glowColor = isDark ? "rgba(56, 189, 248, 0.45)" : "rgba(236, 72, 153, 0.4)";
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {particles.map((particle, index) => {
+        const targetPos = pattern.positions[index] || { x: 50, y: 50 };
+        // Parallax offset based on mouse position
+        const parallaxX = (mousePosition.x - 50) * 0.02 * (index % 3 + 1);
+        const parallaxY = (mousePosition.y - 50) * 0.02 * (index % 3 + 1);
+
+        return (
+          <motion.div
+            key={particle.id}
+            className="absolute rounded-full"
+            initial={false}
+            animate={{
+              left: `${targetPos.x + parallaxX}%`,
+              top: `${targetPos.y + parallaxY}%`,
+              scale: [1, 1.3, 1],
+              opacity: [0.45, 0.65, 0.45],
+            }}
+            transition={{
+              left: { duration: 0.8, ease: [0.4, 0, 0.2, 1], delay: particle.delay * 0.5 },
+              top: { duration: 0.8, ease: [0.4, 0, 0.2, 1], delay: particle.delay * 0.5 },
+              scale: { duration: particle.duration, repeat: Infinity, ease: "easeInOut", delay: particle.delay },
+              opacity: { duration: particle.duration, repeat: Infinity, ease: "easeInOut", delay: particle.delay },
+            }}
+            style={{
+              width: particle.size,
+              height: particle.size,
+              backgroundColor: accentColor,
+              boxShadow: `0 0 ${particle.size * 3}px ${glowColor}`,
+              transform: "translate(-50%, -50%)",
+            }}
+          />
+        );
+      })}
+
+      {/* Connection lines between particles */}
+      <svg className="absolute inset-0 w-full h-full">
+        <defs>
+          <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor={isDark ? "rgba(99, 179, 237, 0.25)" : "rgba(244, 114, 182, 0.2)"} />
+            <stop offset="100%" stopColor={isDark ? "rgba(56, 189, 248, 0.08)" : "rgba(236, 72, 153, 0.05)"} />
+          </linearGradient>
+        </defs>
+        {pattern.positions.slice(0, -1).map((pos, i) => {
+          const nextPos = pattern.positions[i + 1];
+          if (!nextPos) return null;
+          const parallaxX1 = (mousePosition.x - 50) * 0.02 * (i % 3 + 1);
+          const parallaxY1 = (mousePosition.y - 50) * 0.02 * (i % 3 + 1);
+          const parallaxX2 = (mousePosition.x - 50) * 0.02 * ((i + 1) % 3 + 1);
+          const parallaxY2 = (mousePosition.y - 50) * 0.02 * ((i + 1) % 3 + 1);
+
+          return (
+            <motion.line
+              key={`line-${i}`}
+              x1={`${pos.x + parallaxX1}%`}
+              y1={`${pos.y + parallaxY1}%`}
+              x2={`${nextPos.x + parallaxX2}%`}
+              y2={`${nextPos.y + parallaxY2}%`}
+              stroke="url(#lineGradient)"
+              strokeWidth="1.5"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ pathLength: 1, opacity: 0.6 }}
+              transition={{ duration: 0.7, delay: i * 0.04 }}
+            />
+          );
+        })}
+      </svg>
+    </div>
+  );
+};
+
+// =============================================
+// DYNAMIC BACKGROUND COMPONENT
+// =============================================
+const DynamicBackground = ({
+  activeSection,
+  isDark,
+  backgroundY,
+}: {
+  activeSection: string;
+  isDark: boolean;
+  backgroundY: any;
+}) => {
+  const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
+
+  // Track mouse position for parallax
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const x = (e.clientX / window.innerWidth) * 100;
+      const y = (e.clientY / window.innerHeight) * 100;
+      setMousePosition({ x, y });
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  return (
+    <motion.div className="fixed inset-0 pointer-events-none z-0" style={{ y: backgroundY }}>
+      {/* Morphing gradient blob layer */}
+      <MorphingBlob activeSection={activeSection as SectionId} isDark={isDark} />
+
+      {/* Particle constellation layer */}
+      <ParticleConstellation
+        activeSection={activeSection as SectionId}
+        isDark={isDark}
+        mousePosition={mousePosition}
+      />
+
+      {/* Subtle noise texture overlay */}
+      <div
+        className="absolute inset-0 opacity-[0.02]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+        }}
+      />
+    </motion.div>
+  );
+};
 
 // =============================================
 // FLOATING TAB NAV COMPONENT
@@ -758,21 +1104,21 @@ const SkillTile = ({ skill, index }: { skill: SkillItem; index: number }) => {
         {/* Category color overlay */}
         <div className="absolute inset-0 rounded-[18px]" style={{ backgroundColor: colors.bg }} />
 
-        {/* Border */}
+        {/* Border - minimal shadow for cleaner look */}
         <div
           className="absolute inset-0 rounded-[18px] transition-all duration-300"
           style={{
             border: `1px solid ${colors.border}`,
             boxShadow: isDark
-              ? "inset 0 1px 2px rgba(255,255,255,0.05), 0 8px 24px rgba(0, 0, 0, 0.2)"
-              : "inset 0 1px 2px rgba(255,255,255,0.5), 0 8px 24px rgba(0, 0, 0, 0.06)",
+              ? "inset 0 1px 1px rgba(255,255,255,0.03)"
+              : "inset 0 1px 1px rgba(255,255,255,0.4)",
           }}
         />
 
-        {/* Hover glow */}
+        {/* Hover glow - subtle */}
         <div
           className="absolute inset-0 rounded-[18px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-          style={{ boxShadow: `0 0 30px ${colors.glow}` }}
+          style={{ boxShadow: isDark ? `0 0 20px ${colors.glow}` : `0 0 15px ${colors.glow.replace('0.25', '0.15')}` }}
         />
 
         {/* Shine sweep */}
@@ -887,22 +1233,8 @@ const Resume = () => {
 
   return (
     <div ref={containerRef} className="relative min-h-screen">
-      {/* Animated background */}
-      <motion.div className="fixed inset-0 pointer-events-none z-0" style={{ y: backgroundY }}>
-        <div
-          className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full blur-[100px] animate-pulse"
-          style={{
-            backgroundColor: isDark ? "rgba(66, 129, 164, 0.08)" : "rgba(255, 112, 166, 0.06)",
-          }}
-        />
-        <div
-          className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] rounded-full blur-[80px] animate-pulse"
-          style={{
-            backgroundColor: isDark ? "rgba(66, 129, 164, 0.05)" : "rgba(255, 112, 166, 0.04)",
-            animationDelay: "1.5s",
-          }}
-        />
-      </motion.div>
+      {/* Dynamic adaptive background */}
+      <DynamicBackground activeSection={activeSection} isDark={isDark} backgroundY={backgroundY} />
 
       {/* Floating Tab Navigation */}
       <FloatingTabNav activeSection={activeSection} />
