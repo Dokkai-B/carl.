@@ -5,7 +5,7 @@ import { ArrowRight, Github, Linkedin, Mail } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import SkillNodes, { SkillNodesMobile } from "@/components/SkillNodes";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { slidePocketChild, ANIMATION_CONFIG, coordinatedContainer } from "@/lib/animations";
 
 // Container for staggered hero content - coordinated slide pocket animation
@@ -81,6 +81,12 @@ const HomePage = () => {
     }
   }, [loaderComplete, menuOpen, contentControls, skillsControls]);
 
+  // Hero section mouse handlers for orb scale boost
+  // Name hover handler for orb merge animation - fixed positions
+  const handleNameHover = useCallback((type: "full" | "short" | null) => {
+    window.dispatchEvent(new CustomEvent("nameHover", { detail: { type } }));
+  }, []);
+
   return (
     <div>
       {/* Hero Section - Full Screen Split Design */}
@@ -96,14 +102,19 @@ const HomePage = () => {
               className="space-y-8 z-10 lg:col-span-3"
             >
               {/* Main Heading - Line by line slide pocket animation */}
-              <div className="space-y-1">
+              <div className="space-y-1 cursor-default">
                 <motion.div variants={slidePocketChild}>
                   <span className="text-3xl md:text-4xl lg:text-5xl text-muted-foreground font-normal leading-tight block">
                     Hey, I'm
                   </span>
                 </motion.div>
                 <motion.div variants={slidePocketChild}>
-                  <span className="text-3xl md:text-4xl lg:text-5xl font-bold gradient-text leading-tight block">
+                  <span
+                    data-hero-name="full"
+                    className="text-3xl md:text-4xl lg:text-5xl font-bold gradient-text leading-tight block cursor-pointer transition-all duration-300 ease-out hover:-translate-y-[2px] hover:tracking-wide hover:drop-shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)]"
+                    onMouseEnter={() => handleNameHover("full")}
+                    onMouseLeave={() => handleNameHover(null)}
+                  >
                     Carl Patrick Aguas
                   </span>
                 </motion.div>
@@ -113,7 +124,12 @@ const HomePage = () => {
                   </span>
                 </motion.div>
                 <motion.div variants={slidePocketChild}>
-                  <span className="text-3xl md:text-4xl lg:text-5xl font-bold gradient-text leading-tight block">
+                  <span
+                    data-hero-name="short"
+                    className="text-3xl md:text-4xl lg:text-5xl font-bold gradient-text leading-tight block cursor-pointer transition-all duration-300 ease-out hover:-translate-y-[2px] hover:tracking-wide hover:drop-shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)]"
+                    onMouseEnter={() => handleNameHover("short")}
+                    onMouseLeave={() => handleNameHover(null)}
+                  >
                     Carlo
                   </span>
                 </motion.div>
@@ -122,31 +138,13 @@ const HomePage = () => {
               {/* CTA Buttons */}
               <motion.div variants={slidePocketChild} className="flex flex-wrap gap-4">
                 <Link href="/work">
-                  <Button
-                    size="lg"
-                    className="group gap-2"
-                    onMouseEnter={() =>
-                      window.dispatchEvent(new CustomEvent("orbHover", { detail: "projects" }))
-                    }
-                    onMouseLeave={() =>
-                      window.dispatchEvent(new CustomEvent("orbHover", { detail: null }))
-                    }
-                  >
+                  <Button size="lg" className="group gap-2">
                     see my projects
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
                 <Link href="/resume">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    onMouseEnter={() =>
-                      window.dispatchEvent(new CustomEvent("orbHover", { detail: "about" }))
-                    }
-                    onMouseLeave={() =>
-                      window.dispatchEvent(new CustomEvent("orbHover", { detail: null }))
-                    }
-                  >
+                  <Button size="lg" variant="outline">
                     more about me
                   </Button>
                 </Link>
