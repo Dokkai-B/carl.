@@ -4,7 +4,6 @@ import { motion, AnimatePresence, useAnimation } from "framer-motion";
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
-import { ExternalLink, Github } from "lucide-react";
 
 // =============================================
 // PROJECT DATA
@@ -13,12 +12,12 @@ const projects = [
   {
     id: 1,
     title: "Blue Ward",
-    subtitle: "Full-Stack Web Application",
+    subtitle: "Full-Stack Application",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "A full emergency assistance platform with live bidirectional communication, geolocation tracking, remote media capture, and a multi-service cloud architecture.",
     thumbnail: "/Temp Projects Thumbnail/Blue Ward.png",
-    tech: ["React", "Node.js", "MongoDB"],
-    year: "NA",
+    tech: ["React", "Flutter", "Node.js", "Socket.IO", "AWS S3", "Docker"],
+    year: "2025",
     type: "Web",
     live: "#",
     github: "#",
@@ -27,13 +26,13 @@ const projects = [
   {
     id: 2,
     title: "Earthshaker",
-    subtitle: "Full-Stack Web Application",
+    subtitle: "Mobile Application",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam, quis nostrud exercitation ullamco.",
+      "A real-time earthquake alert system delivering sub-second push notifications across the Philippines using USGS data, Flutter, and a Node.js cloud backend.",
     thumbnail: "/Temp Projects Thumbnail/Earthshaker.png",
-    tech: ["Next.js", "TypeScript", "Prisma"],
-    year: "NA",
-    type: "Web",
+    tech: ["Flutter", "Node.js", "Express", "Render", "Firebase FCM", "USGS API"],
+    year: "2025",
+    type: "Mobile",
     live: "#",
     github: "#",
     orbColors: { primary: "#c7c6c6", secondary: "#aa352c" },
@@ -46,7 +45,7 @@ const projects = [
       "A platform connecting artists with clients, featuring commission management and real-time messaging.",
     thumbnail: "/Temp Projects Thumbnail/Heart to Art.png",
     tech: ["React Native", "Expo", "Firebase"],
-    year: "NA",
+    year: "2024",
     type: "Mobile",
     live: "/assets/research/HearttoArt.pdf",
     github: "https://github.com/vladasblood/SE_HeartToArt",
@@ -60,7 +59,7 @@ const projects = [
       "A community platform helping reunite lost pets with owners and facilitating pet adoptions.",
     thumbnail: "/Temp Projects Thumbnail/LostPaws.png",
     tech: ["PHP", "MySQL", "JavaScript"],
-    year: "NA",
+    year: "2024",
     type: "Web",
     live: "/assets/research/LostPaws.pdf",
     github: "https://github.com/vladasblood/LostPaws",
@@ -71,10 +70,10 @@ const projects = [
     title: "Moonii",
     subtitle: "Mobile Application",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit in voluptate velit.",
+      "A mobile audio storytelling app enabling secure cloud-stored recordings, waveform visualization, playlist management, and synchronized multi-view playback.",
     thumbnail: "/Temp Projects Thumbnail/Moonii.png",
-    tech: ["Flutter", "Dart", "Firebase"],
-    year: "NA",
+    tech: ["Flutter", "Node.js", "AWS S3", "Audio Processing", "Waveform UI"],
+    year: "2025",
     type: "Mobile",
     live: "#",
     github: "#",
@@ -88,7 +87,7 @@ const projects = [
       "A nutrition tracking app that combines dietary planning with budget management for healthier choices.",
     thumbnail: "/Temp Projects Thumbnail/SaveEat.png",
     tech: ["React Native", "Firebase", "Expo"],
-    year: "NA",
+    year: "2024",
     type: "Mobile",
     live: "/assets/research/SaveEat.pdf",
     github: "https://github.com/Dokkai-B/saveeat",
@@ -97,13 +96,13 @@ const projects = [
   {
     id: 7,
     title: "Translate",
-    subtitle: "Web Application",
+    subtitle: "Cross-Platform Application",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Excepteur sint occaecat cupidatat non proident.",
+      "A cross-platform bedtime story audio player with basic scaffolding for playback, file import, multi-platform UI, and early architecture for a future VS Code extension.",
     thumbnail: "/Temp Projects Thumbnail/translate.png",
-    tech: ["React", "API Integration", "TailwindCSS"],
-    year: "NA",
-    type: "Web",
+    tech: ["Flutter", "React Native", "Dart", "Expo", "just_audio"],
+    year: "2025",
+    type: "Mobile",
     live: "#",
     github: "#",
     orbColors: { primary: "#169b78", secondary: "#ef6129" },
@@ -116,7 +115,7 @@ const projects = [
       "A web platform streamlining member, event, and donation management for community organizations.",
     thumbnail: "/Temp Projects Thumbnail/WomensCLUB.png",
     tech: ["React", "Chakra UI", "Firebase", "Vercel"],
-    year: "NA",
+    year: "2024",
     type: "Web",
     live: "https://womensclub.vercel.app/",
     github: "https://github.com/Dokkai-B/womens-club",
@@ -130,7 +129,7 @@ const projects = [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut perspiciatis unde omnis iste natus error sit voluptatem.",
     thumbnail: "/Temp Projects Thumbnail/Yellow Ward.png",
     tech: ["Vue.js", "Express", "PostgreSQL"],
-    year: "NA",
+    year: "2025",
     type: "Web",
     live: "#",
     github: "#",
@@ -420,7 +419,7 @@ const ProjectListItem = ({
             }}
             transition={{ duration: 0.2 }}
           >
-            {project.type}
+            {project.year}
           </motion.span>
         </div>
 
@@ -456,155 +455,70 @@ const MetadataCard = ({
   project: (typeof projects)[0] | null;
   isDark: boolean;
 }) => {
+  // Consistent glass background style
+  const glassStyle = {
+    backgroundColor: isDark ? "rgba(30, 45, 60, 0.5)" : "rgba(255, 255, 255, 0.45)",
+    backdropFilter: "blur(16px)",
+    WebkitBackdropFilter: "blur(16px)",
+    border: `1px solid ${isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.08)"}`,
+    boxShadow: isDark
+      ? "0 16px 48px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255,255,255,0.08)"
+      : "0 16px 48px rgba(0, 0, 0, 0.12), inset 0 1px 1px rgba(255,255,255,0.9)",
+  };
+
   return (
     <AnimatePresence mode="wait">
       {project && (
         <motion.div
           key={project.id}
-          initial={{ opacity: 0, y: 25, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 15, scale: 0.97 }}
-          transition={{ type: "spring", stiffness: 280, damping: 24 }}
-          className="max-w-md"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 10 }}
+          transition={{ type: "spring", stiffness: 300, damping: 25 }}
+          className="w-full max-w-lg p-8 rounded-3xl"
+          style={glassStyle}
         >
-          <div
-            className="p-6 rounded-2xl"
+          {/* Subtitle / Type */}
+          <p
+            className="text-xs font-semibold uppercase tracking-wider mb-3"
+            style={{ color: "var(--accent)" }}
+          >
+            {project.subtitle}
+          </p>
+
+          {/* Description */}
+          <p
+            className="text-base mb-6 leading-relaxed"
             style={{
-              backgroundColor: isDark ? "rgba(30, 41, 59, 0.65)" : "rgba(255, 255, 255, 0.75)",
-              backdropFilter: "blur(24px)",
-              WebkitBackdropFilter: "blur(24px)",
-              border: `1px solid ${isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.06)"}`,
-              boxShadow: isDark
-                ? "0 12px 40px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255,255,255,0.05)"
-                : "0 12px 40px rgba(0, 0, 0, 0.1), inset 0 1px 1px rgba(255,255,255,0.8)",
+              color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)",
             }}
           >
-            {/* Subtitle / Type */}
-            <p
-              className="text-xs font-semibold uppercase tracking-wider mb-2"
-              style={{ color: "var(--accent)" }}
-            >
-              {project.subtitle}
-            </p>
+            {project.description}
+          </p>
 
-            {/* Description */}
-            <p
-              className="text-sm mb-5 leading-relaxed"
-              style={{
-                color: isDark ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.55)",
-              }}
-            >
-              {project.description}
-            </p>
-
-            {/* Tech stack */}
-            <div className="flex flex-wrap gap-2 mb-5">
-              {project.tech.map((tech, i) => (
-                <span
-                  key={i}
-                  className="text-xs px-3 py-1.5 rounded-full font-medium"
-                  style={{
-                    backgroundColor: isDark
-                      ? "rgba(66, 129, 164, 0.15)"
-                      : "rgba(61, 165, 217, 0.1)",
-                    color: isDark ? "rgba(150, 200, 230, 0.9)" : "rgba(50, 120, 170, 0.9)",
-                    border: `1px solid ${
-                      isDark ? "rgba(66, 129, 164, 0.25)" : "rgba(61, 165, 217, 0.2)"
-                    }`,
-                  }}
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-
-            {/* Action links */}
-            <div className="flex gap-4">
-              <a
-                href={project.live}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-sm font-medium transition-all duration-200 group/link"
-                style={{ color: "var(--accent)" }}
-              >
-                <ExternalLink className="w-4 h-4 group-hover/link:rotate-12 transition-transform" />
-                <span className="group-hover/link:underline">View Project</span>
-              </a>
-              <a
-                href={project.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-sm transition-all duration-200 group/link"
+          {/* Tech stack */}
+          <div className="flex flex-wrap gap-2">
+            {project.tech.map((tech, i) => (
+              <span
+                key={i}
+                className="text-xs px-3 py-1.5 rounded-full font-medium"
                 style={{
-                  color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.45)",
+                  backgroundColor: isDark
+                    ? "rgba(66, 129, 164, 0.15)"
+                    : "rgba(61, 165, 217, 0.1)",
+                  color: isDark ? "rgba(150, 200, 230, 0.9)" : "rgba(50, 120, 170, 0.9)",
+                  border: `1px solid ${
+                    isDark ? "rgba(66, 129, 164, 0.25)" : "rgba(61, 165, 217, 0.2)"
+                  }`,
                 }}
               >
-                <Github className="w-4 h-4 group-hover/link:scale-110 transition-transform" />
-                <span className="group-hover/link:underline">Source</span>
-              </a>
-            </div>
+                {tech}
+              </span>
+            ))}
           </div>
         </motion.div>
       )}
     </AnimatePresence>
-  );
-};
-
-// =============================================
-// FILTER CHIPS COMPONENT
-// =============================================
-const FilterChips = ({
-  activeFilter,
-  onFilterChange,
-  isDark,
-}: {
-  activeFilter: string;
-  onFilterChange: (filter: string) => void;
-  isDark: boolean;
-}) => {
-  const filters = ["All", "Web", "Mobile"];
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.3, type: "spring", stiffness: 200, damping: 20 }}
-      className="flex gap-1.5"
-    >
-      {filters.map((filter) => {
-        const isActive = activeFilter === filter;
-        return (
-          <motion.button
-            key={filter}
-            onClick={() => onFilterChange(filter)}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="px-3 py-1.5 text-xs font-medium rounded-full transition-all duration-200"
-            style={{
-              backgroundColor: isActive
-                ? isDark
-                  ? "rgba(66, 129, 164, 0.2)"
-                  : "rgba(61, 165, 217, 0.12)"
-                : "transparent",
-              color: isActive
-                ? "var(--accent)"
-                : isDark
-                ? "rgba(255,255,255,0.4)"
-                : "rgba(0,0,0,0.35)",
-              border: `1px solid ${
-                isActive
-                  ? isDark
-                    ? "rgba(66, 129, 164, 0.35)"
-                    : "rgba(61, 165, 217, 0.25)"
-                  : "transparent"
-              }`,
-            }}
-          >
-            {filter}
-          </motion.button>
-        );
-      })}
-    </motion.div>
   );
 };
 
@@ -615,7 +529,6 @@ const Work = () => {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [hoveredProject, setHoveredProject] = useState<(typeof projects)[0] | null>(null);
-  const [activeFilter, setActiveFilter] = useState("All");
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const contentControls = useAnimation();
@@ -626,10 +539,6 @@ const Work = () => {
   }, []);
 
   const isDark = !mounted || resolvedTheme === "dark";
-
-  // Filter projects
-  const filteredProjects =
-    activeFilter === "All" ? projects : projects.filter((p) => p.type === activeFilter);
 
   // Hover intent handler with delay
   const handleHoverStart = useCallback((project: (typeof projects)[0]) => {
@@ -739,12 +648,6 @@ const Work = () => {
                 A curated selection of work spanning web and mobile development.
               </p>
             </div>
-            {/* Filter chips inline with header */}
-            <FilterChips
-              activeFilter={activeFilter}
-              onFilterChange={setActiveFilter}
-              isDark={isDark}
-            />
           </div>
         </motion.div>
 
@@ -755,7 +658,7 @@ const Work = () => {
             {/* Scrollable container with hidden scrollbar */}
             <div className="scrollable-list flex-1 overflow-y-auto pr-2">
               <div className="space-y-1">
-                {filteredProjects.map((project, index) => (
+                {projects.map((project, index) => (
                   <ProjectListItem
                     key={project.id}
                     project={project}
@@ -770,9 +673,11 @@ const Work = () => {
             </div>
           </div>
 
-          {/* Right: Metadata card (desktop) */}
-          <div className="hidden lg:flex lg:items-start lg:justify-end">
-            <MetadataCard project={hoveredProject} isDark={isDark} />
+          {/* Right: Metadata card (desktop) - centered vertically relative to list */}
+          <div className="hidden lg:flex lg:justify-end">
+            <div className="sticky top-1/3 -translate-y-1/2 h-fit">
+              <MetadataCard project={hoveredProject} isDark={isDark} />
+            </div>
           </div>
         </div>
 
