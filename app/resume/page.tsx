@@ -29,6 +29,17 @@ import {
   FaBriefcase,
   FaGraduationCap,
   FaCode,
+  FaLinux,
+  FaShieldAlt,
+  FaTerminal,
+  FaKey,
+  FaSearch,
+  FaBug,
+  FaLock,
+  FaNetworkWired,
+  FaDatabase,
+  FaSkull,
+  FaUserSecret,
 } from "react-icons/fa";
 
 import {
@@ -40,6 +51,11 @@ import {
   SiCsharp,
   SiCanva,
   SiExpo,
+  SiBurpsuite,
+  SiWireshark,
+  SiKalilinux,
+  SiSplunk,
+  SiOwasp,
 } from "react-icons/si";
 
 // =============================================
@@ -65,7 +81,7 @@ interface EducationItem {
 interface SkillItem {
   icon: React.ReactNode;
   name: string;
-  category: "frontend" | "backend" | "design" | "tools" | "languages";
+  category: "frontend" | "backend" | "design" | "tools" | "languages" | "cybersecurity";
 }
 
 type SectionId = "about" | "experience" | "education" | "skills";
@@ -110,7 +126,8 @@ const BLOB_CONFIGS: Record<SectionId, EnhancedBlobConfig> = {
     hueRotate: 0,
   },
   experience: {
-    clipPath: "polygon(40% 0%, 60% 0%, 75% 15%, 80% 50%, 75% 85%, 60% 100%, 40% 100%, 25% 85%, 20% 50%, 25% 15%)",
+    clipPath:
+      "polygon(40% 0%, 60% 0%, 75% 15%, 80% 50%, 75% 85%, 60% 100%, 40% 100%, 25% 85%, 20% 50%, 25% 15%)",
     color: "rgba(20, 184, 166, 0.35)", // Saturated teal / deep blue
     secondaryColor: "rgba(45, 156, 180, 0.24)",
     scale: 1.12,
@@ -128,7 +145,8 @@ const BLOB_CONFIGS: Record<SectionId, EnhancedBlobConfig> = {
     hueRotate: -8,
   },
   skills: {
-    clipPath: "polygon(50% 0%, 65% 10%, 100% 20%, 85% 50%, 100% 80%, 65% 90%, 50% 100%, 35% 90%, 0% 80%, 15% 50%, 0% 20%, 35% 10%)",
+    clipPath:
+      "polygon(50% 0%, 65% 10%, 100% 20%, 85% 50%, 100% 80%, 65% 90%, 50% 100%, 35% 90%, 0% 80%, 15% 50%, 0% 20%, 35% 10%)",
     color: "rgba(45, 212, 191, 0.30)", // Blue-green / teal
     secondaryColor: "rgba(56, 189, 248, 0.20)",
     scale: 1.15,
@@ -141,33 +159,70 @@ const BLOB_CONFIGS: Record<SectionId, EnhancedBlobConfig> = {
 const PARTICLE_PATTERNS: Record<SectionId, ParticlePattern> = {
   about: {
     positions: [
-      { x: 50, y: 50 }, { x: 35, y: 35 }, { x: 65, y: 35 }, { x: 35, y: 65 }, { x: 65, y: 65 },
-      { x: 50, y: 30 }, { x: 50, y: 70 }, { x: 30, y: 50 }, { x: 70, y: 50 },
-      { x: 42, y: 42 }, { x: 58, y: 42 }, { x: 42, y: 58 }, { x: 58, y: 58 },
+      { x: 50, y: 50 },
+      { x: 35, y: 35 },
+      { x: 65, y: 35 },
+      { x: 35, y: 65 },
+      { x: 65, y: 65 },
+      { x: 50, y: 30 },
+      { x: 50, y: 70 },
+      { x: 30, y: 50 },
+      { x: 70, y: 50 },
+      { x: 42, y: 42 },
+      { x: 58, y: 42 },
+      { x: 42, y: 58 },
+      { x: 58, y: 58 },
     ],
   },
   experience: {
     positions: [
-      { x: 20, y: 20 }, { x: 30, y: 30 }, { x: 40, y: 40 }, { x: 50, y: 50 },
-      { x: 60, y: 60 }, { x: 70, y: 70 }, { x: 80, y: 80 },
-      { x: 25, y: 28 }, { x: 35, y: 38 }, { x: 45, y: 48 }, { x: 55, y: 58 },
-      { x: 65, y: 68 }, { x: 75, y: 78 },
+      { x: 20, y: 20 },
+      { x: 30, y: 30 },
+      { x: 40, y: 40 },
+      { x: 50, y: 50 },
+      { x: 60, y: 60 },
+      { x: 70, y: 70 },
+      { x: 80, y: 80 },
+      { x: 25, y: 28 },
+      { x: 35, y: 38 },
+      { x: 45, y: 48 },
+      { x: 55, y: 58 },
+      { x: 65, y: 68 },
+      { x: 75, y: 78 },
     ],
   },
   education: {
     positions: [
-      { x: 50, y: 25 }, { x: 65, y: 35 }, { x: 70, y: 50 }, { x: 65, y: 65 }, { x: 50, y: 75 },
-      { x: 35, y: 65 }, { x: 30, y: 50 }, { x: 35, y: 35 },
-      { x: 50, y: 40 }, { x: 58, y: 50 }, { x: 50, y: 60 }, { x: 42, y: 50 },
+      { x: 50, y: 25 },
+      { x: 65, y: 35 },
+      { x: 70, y: 50 },
+      { x: 65, y: 65 },
+      { x: 50, y: 75 },
+      { x: 35, y: 65 },
+      { x: 30, y: 50 },
+      { x: 35, y: 35 },
+      { x: 50, y: 40 },
+      { x: 58, y: 50 },
+      { x: 50, y: 60 },
+      { x: 42, y: 50 },
       { x: 50, y: 50 },
     ],
   },
   skills: {
     positions: [
-      { x: 50, y: 50 }, { x: 50, y: 25 }, { x: 72, y: 37 }, { x: 72, y: 63 },
-      { x: 50, y: 75 }, { x: 28, y: 63 }, { x: 28, y: 37 },
-      { x: 50, y: 15 }, { x: 80, y: 30 }, { x: 80, y: 70 }, { x: 50, y: 85 },
-      { x: 20, y: 70 }, { x: 20, y: 30 },
+      { x: 50, y: 50 },
+      { x: 50, y: 25 },
+      { x: 72, y: 37 },
+      { x: 72, y: 63 },
+      { x: 50, y: 75 },
+      { x: 28, y: 63 },
+      { x: 28, y: 37 },
+      { x: 50, y: 15 },
+      { x: 80, y: 30 },
+      { x: 80, y: 70 },
+      { x: 50, y: 85 },
+      { x: 20, y: 70 },
+      { x: 20, y: 30 },
     ],
   },
 };
@@ -179,11 +234,9 @@ const about = {
   title: "About Me",
   info: [
     { fieldName: "Name", fieldValue: "Carl Patrick Adrian Aguas" },
-    { fieldName: "Phone", fieldValue: "(+63) 920 802 3514" },
-    { fieldName: "Experience", fieldValue: "1+ Year" },
+    { fieldName: "Experience", fieldValue: "<1 Year" },
     { fieldName: "Nationality", fieldValue: "Filipino" },
-    { fieldName: "Email", fieldValue: "cpacaguas@mymail.mapua.edu.ph" },
-    { fieldName: "Freelance", fieldValue: "Available" },
+    { fieldName: "Email", fieldValue: "Work / Dump Email" },
     { fieldName: "Languages", fieldValue: "English, Filipino" },
   ],
 };
@@ -192,23 +245,27 @@ const experience = {
   title: "Experience",
   items: [
     {
-      company: "Women's Club",
-      position: "Full-Stack Developer",
-      duration: "April 2024 - May 2024",
+      company: "Chimes Consulting",
+      position: "Full-Stack Developer Intern",
+      duration: "October 2024 – December 2024",
     },
-    { company: "JZ Perfumery", position: "Freelance Graphic Designer", duration: "2021-2023" },
+    {
+      company: "Women's Club",
+      position: "Freelance Full-Stack Website Developer",
+      duration: "April 2024 – May 2024",
+    },
+    { company: "JZ Perfumery", position: "Freelance Brand and Visual Designer", duration: "" },
     {
       company: "Classic Watch MNL",
-      position: "Freelance Logo Designer",
-      duration: "February 2022",
+      position: "Freelance Brand and Visual Designer",
+      duration: "",
     },
     {
       company: "Lufong",
-      position: "Freelance Graphic Designer",
-      duration: "December 2021 - January 2022",
+      position: "Freelance Brand and Visual Designer",
+      duration: "",
     },
-    { company: "Rocket Fuel", position: "Freelance Logo Designer", duration: "June 2021" },
-    { company: "Next", position: "Freelance Video Editor", duration: "February 2020 - March 2020" },
+    { company: "Rocket Fuel", position: "Freelance Brand and Visual Designer", duration: "" },
   ],
 };
 
@@ -218,7 +275,7 @@ const education = {
     {
       institution: "Mapúa University",
       degree: "Bachelor of Science in Computer Science",
-      duration: "2021 - Present",
+      duration: "2021 – 2025 • GWA: 1.57",
     },
     {
       institution: "Centro Escolar University",
@@ -236,25 +293,43 @@ const education = {
 const skills = {
   title: "Skills",
   skillList: [
+    // Frontend
     { icon: <FaHtml5 />, name: "HTML5", category: "frontend" as const },
     { icon: <FaCss3 />, name: "CSS3", category: "frontend" as const },
     { icon: <FaJs />, name: "JavaScript", category: "frontend" as const },
     { icon: <FaReact />, name: "React.js", category: "frontend" as const },
     { icon: <SiNextdotjs />, name: "Next.js", category: "frontend" as const },
     { icon: <SiTailwindcss />, name: "Tailwind CSS", category: "frontend" as const },
+    // Backend
     { icon: <FaNodeJs />, name: "Node.js", category: "backend" as const },
-    { icon: <FaFigma />, name: "Figma", category: "design" as const },
-    { icon: <FaWindows />, name: "Windows", category: "tools" as const },
-    { icon: <FaJava />, name: "Java", category: "languages" as const },
-    { icon: <FaPython />, name: "Python", category: "languages" as const },
     { icon: <FaPhp />, name: "PHP", category: "backend" as const },
-    { icon: <FaAndroid />, name: "Android Studio", category: "tools" as const },
     { icon: <SiFirebase />, name: "Firebase", category: "backend" as const },
     { icon: <SiMysql />, name: "MySQL", category: "backend" as const },
+    { icon: <FaDatabase />, name: "MongoDB", category: "backend" as const },
+    // Design
+    { icon: <FaFigma />, name: "Figma", category: "design" as const },
+    { icon: <SiCanva />, name: "Canva", category: "design" as const },
+    // Tools
+    { icon: <FaWindows />, name: "Windows", category: "tools" as const },
+    { icon: <FaAndroid />, name: "Android Studio", category: "tools" as const },
+    { icon: <SiExpo />, name: "Expo", category: "tools" as const },
+    // Languages
+    { icon: <FaJava />, name: "Java", category: "languages" as const },
+    { icon: <FaPython />, name: "Python", category: "languages" as const },
     { icon: <SiCplusplus />, name: "C++", category: "languages" as const },
     { icon: <SiCsharp />, name: "C#", category: "languages" as const },
-    { icon: <SiCanva />, name: "Canva", category: "design" as const },
-    { icon: <SiExpo />, name: "Expo", category: "tools" as const },
+    // Cybersecurity
+    { icon: <SiBurpsuite />, name: "Burp Suite", category: "cybersecurity" as const },
+    { icon: <SiWireshark />, name: "Wireshark", category: "cybersecurity" as const },
+    { icon: <SiKalilinux />, name: "Kali Linux", category: "cybersecurity" as const },
+    { icon: <FaTerminal />, name: "Sudo", category: "cybersecurity" as const },
+    { icon: <FaSearch />, name: "Nmap", category: "cybersecurity" as const },
+    { icon: <FaBug />, name: "Metasploit", category: "cybersecurity" as const },
+    { icon: <FaKey />, name: "Hydra", category: "cybersecurity" as const },
+    { icon: <FaLock />, name: "John / Hashcat", category: "cybersecurity" as const },
+    { icon: <SiSplunk />, name: "Splunk", category: "cybersecurity" as const },
+    { icon: <FaShieldAlt />, name: "MITRE", category: "cybersecurity" as const },
+    { icon: <SiOwasp />, name: "OWASP", category: "cybersecurity" as const },
   ],
 };
 
@@ -270,7 +345,7 @@ const sections = [
 // =============================================
 const MorphingBlob = ({ activeSection, isDark }: { activeSection: SectionId; isDark: boolean }) => {
   const config = BLOB_CONFIGS[activeSection];
-  
+
   // Light mode uses pink theme with good visibility
   const lightConfig: Record<SectionId, { color: string; secondaryColor: string }> = {
     about: { color: "rgba(251, 113, 133, 0.28)", secondaryColor: "rgba(244, 114, 182, 0.18)" },
@@ -279,7 +354,7 @@ const MorphingBlob = ({ activeSection, isDark }: { activeSection: SectionId; isD
     skills: { color: "rgba(251, 146, 160, 0.26)", secondaryColor: "rgba(196, 181, 253, 0.18)" },
   };
 
-  const colors = isDark 
+  const colors = isDark
     ? { color: config.color, secondaryColor: config.secondaryColor }
     : lightConfig[activeSection];
 
@@ -304,7 +379,9 @@ const MorphingBlob = ({ activeSection, isDark }: { activeSection: SectionId; isD
           filter: { duration: 1, ease: "easeInOut" },
         }}
         style={{
-          background: `radial-gradient(ellipse at center, ${colors.color} 0%, ${colors.color.replace(/[\d.]+\)$/, '0.15)')} 50%, transparent 75%)`,
+          background: `radial-gradient(ellipse at center, ${
+            colors.color
+          } 0%, ${colors.color.replace(/[\d.]+\)$/, "0.15)")} 50%, transparent 75%)`,
           mixBlendMode: isDark ? "screen" : "multiply",
         }}
       />
@@ -391,8 +468,8 @@ const ParticleConstellation = ({
       {particles.map((particle, index) => {
         const targetPos = pattern.positions[index] || { x: 50, y: 50 };
         // Parallax offset based on mouse position
-        const parallaxX = (mousePosition.x - 50) * 0.02 * (index % 3 + 1);
-        const parallaxY = (mousePosition.y - 50) * 0.02 * (index % 3 + 1);
+        const parallaxX = (mousePosition.x - 50) * 0.02 * ((index % 3) + 1);
+        const parallaxY = (mousePosition.y - 50) * 0.02 * ((index % 3) + 1);
 
         return (
           <motion.div
@@ -408,8 +485,18 @@ const ParticleConstellation = ({
             transition={{
               left: { duration: 0.8, ease: [0.4, 0, 0.2, 1], delay: particle.delay * 0.5 },
               top: { duration: 0.8, ease: [0.4, 0, 0.2, 1], delay: particle.delay * 0.5 },
-              scale: { duration: particle.duration, repeat: Infinity, ease: "easeInOut", delay: particle.delay },
-              opacity: { duration: particle.duration, repeat: Infinity, ease: "easeInOut", delay: particle.delay },
+              scale: {
+                duration: particle.duration,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: particle.delay,
+              },
+              opacity: {
+                duration: particle.duration,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: particle.delay,
+              },
             }}
             style={{
               width: particle.size,
@@ -426,17 +513,23 @@ const ParticleConstellation = ({
       <svg className="absolute inset-0 w-full h-full">
         <defs>
           <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor={isDark ? "rgba(99, 179, 237, 0.25)" : "rgba(244, 114, 182, 0.2)"} />
-            <stop offset="100%" stopColor={isDark ? "rgba(56, 189, 248, 0.08)" : "rgba(236, 72, 153, 0.05)"} />
+            <stop
+              offset="0%"
+              stopColor={isDark ? "rgba(99, 179, 237, 0.25)" : "rgba(244, 114, 182, 0.2)"}
+            />
+            <stop
+              offset="100%"
+              stopColor={isDark ? "rgba(56, 189, 248, 0.08)" : "rgba(236, 72, 153, 0.05)"}
+            />
           </linearGradient>
         </defs>
         {pattern.positions.slice(0, -1).map((pos, i) => {
           const nextPos = pattern.positions[i + 1];
           if (!nextPos) return null;
-          const parallaxX1 = (mousePosition.x - 50) * 0.02 * (i % 3 + 1);
-          const parallaxY1 = (mousePosition.y - 50) * 0.02 * (i % 3 + 1);
-          const parallaxX2 = (mousePosition.x - 50) * 0.02 * ((i + 1) % 3 + 1);
-          const parallaxY2 = (mousePosition.y - 50) * 0.02 * ((i + 1) % 3 + 1);
+          const parallaxX1 = (mousePosition.x - 50) * 0.02 * ((i % 3) + 1);
+          const parallaxY1 = (mousePosition.y - 50) * 0.02 * ((i % 3) + 1);
+          const parallaxX2 = (mousePosition.x - 50) * 0.02 * (((i + 1) % 3) + 1);
+          const parallaxY2 = (mousePosition.y - 50) * 0.02 * (((i + 1) % 3) + 1);
 
           return (
             <motion.line
@@ -1065,6 +1158,11 @@ const SkillTile = ({ skill, index }: { skill: SkillItem; index: number }) => {
       border: isDark ? "rgba(139, 92, 246, 0.3)" : "rgba(139, 92, 246, 0.25)",
       glow: "rgba(139, 92, 246, 0.25)",
     },
+    cybersecurity: {
+      bg: isDark ? "rgba(239, 68, 68, 0.15)" : "rgba(239, 68, 68, 0.12)",
+      border: isDark ? "rgba(239, 68, 68, 0.3)" : "rgba(239, 68, 68, 0.25)",
+      glow: "rgba(239, 68, 68, 0.25)",
+    },
   };
 
   const colors = categoryColors[skill.category];
@@ -1118,7 +1216,11 @@ const SkillTile = ({ skill, index }: { skill: SkillItem; index: number }) => {
         {/* Hover glow - subtle */}
         <div
           className="absolute inset-0 rounded-[18px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-          style={{ boxShadow: isDark ? `0 0 20px ${colors.glow}` : `0 0 15px ${colors.glow.replace('0.25', '0.15')}` }}
+          style={{
+            boxShadow: isDark
+              ? `0 0 20px ${colors.glow}`
+              : `0 0 15px ${colors.glow.replace("0.25", "0.15")}`,
+          }}
         />
 
         {/* Shine sweep */}
@@ -1269,13 +1371,30 @@ const Resume = () => {
                 </div>
                 <h3 className="text-xl font-bold mb-3 text-foreground">Profile</h3>
                 <p className="text-foreground/60 leading-relaxed text-sm">
-                  Aspiring developer passionate about creating innovative digital solutions. Strong
-                  in front-end and back-end development. Available for freelance work.
+                  Full Stack Developer with hands-on experience building and deploying scalable web
+                  and mobile applications. Skilled in JavaScript, React, Node.js, Flutter, MySQL,
+                  and Firebase, with additional experience in Java, Python, PHP, and MongoDB.
+                </p>
+                <p className="text-foreground/60 leading-relaxed text-sm mt-3">
+                  Experienced in designing RESTful APIs, managing relational and non-relational
+                  databases, and implementing cloud workflows using Render and AWS S3. Trained in
+                  UI/UX fundamentals and cross-platform development focused on responsive,
+                  high-performance user interfaces.
+                </p>
+                <p className="text-foreground/60 leading-relaxed text-sm mt-3">
+                  Developed foundational expertise in Machine Learning, including data
+                  preprocessing, model training, and fine-tuning for classification and detection
+                  tasks.
+                </p>
+                <p className="text-foreground/60 leading-relaxed text-sm mt-3">
+                  Active in Cybersecurity through TryHackMe with practical experience in
+                  reconnaissance, network analysis, exploitation workflows, and vulnerability
+                  identification. Currently at 17 badges and 100 rooms completed.
                 </p>
 
                 {/* Tags */}
                 <div className="flex flex-wrap gap-2 mt-5">
-                  {["Full-Stack", "UI/UX", "Freelance"].map((tag, i) => (
+                  {["Full-Stack", "UI/UX", "ML", "Cybersecurity"].map((tag, i) => (
                     <span
                       key={i}
                       className="text-xs px-3 py-1.5 rounded-full transition-all duration-300 hover:scale-105"
@@ -1371,6 +1490,7 @@ const Resume = () => {
                 { label: "Design", color: "rgba(236, 72, 153, 0.5)" },
                 { label: "Tools", color: "rgba(249, 115, 22, 0.5)" },
                 { label: "Languages", color: "rgba(139, 92, 246, 0.5)" },
+                { label: "Cybersecurity", color: "rgba(239, 68, 68, 0.5)" },
               ].map((item) => (
                 <div key={item.label} className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-md" style={{ backgroundColor: item.color }} />
