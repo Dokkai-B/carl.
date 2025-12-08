@@ -9,6 +9,7 @@ import {
 } from "framer-motion";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useTheme } from "next-themes";
+import { usePathname } from "next/navigation";
 
 // Orb state for name-driven merge animation
 type OrbState = "default" | "merging" | "morphing" | "returning" | null;
@@ -109,6 +110,8 @@ const ORB_SIZES = {
 };
 
 export function AnimatedBackground() {
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
   const [orbState, setOrbState] = useState<OrbState>("default");
   const [mounted, setMounted] = useState(false);
   const [isPointerDevice, setIsPointerDevice] = useState(false);
@@ -653,108 +656,113 @@ export function AnimatedBackground() {
           }}
         />
 
-        {/* Orb 1 - Core */}
-        <motion.div
-          ref={orb1Ref}
-          className="absolute top-0 -left-4 w-72 h-72 filter blur-3xl"
-          style={{
-            backgroundColor: orbColors.core,
-            // Apply parallax only in default state
-            translateX: isDefaultState && isPointerDevice ? orb1ParallaxX : 0,
-            translateY: isDefaultState && isPointerDevice ? orb1ParallaxY : 0,
-          }}
-          initial={{ x: 0, y: 0, scale: 1, opacity: 0.7, borderRadius: "50%", rotate: 0 }}
-          animate={
-            isDefaultState
-              ? {
-                  scale: [1, 1.15, 1.05, 1.2, 1],
-                  x: [0, 80, 40, 100, 0],
-                  y: [0, 30, 60, 40, 0],
-                  opacity: 0.7,
-                  borderRadius: "50%",
-                  rotate: 0,
-                }
-              : orb1Controls
-          }
-          transition={
-            isDefaultState
-              ? {
-                  duration: 20,
-                  repeat: Infinity,
-                  repeatType: "reverse",
-                  ease: "easeInOut",
-                }
-              : undefined
-          }
-        />
+        {/* Orbs - Only render on home page */}
+        {isHomePage && (
+          <>
+            {/* Orb 1 - Core */}
+            <motion.div
+              ref={orb1Ref}
+              className="absolute top-0 -left-4 w-72 h-72 filter blur-3xl"
+              style={{
+                backgroundColor: orbColors.core,
+                // Apply parallax only in default state
+                translateX: isDefaultState && isPointerDevice ? orb1ParallaxX : 0,
+                translateY: isDefaultState && isPointerDevice ? orb1ParallaxY : 0,
+              }}
+              initial={{ x: 0, y: 0, scale: 1, opacity: 0.7, borderRadius: "50%", rotate: 0 }}
+              animate={
+                isDefaultState
+                  ? {
+                      scale: [1, 1.15, 1.05, 1.2, 1],
+                      x: [0, 80, 40, 100, 0],
+                      y: [0, 30, 60, 40, 0],
+                      opacity: 0.7,
+                      borderRadius: "50%",
+                      rotate: 0,
+                    }
+                  : orb1Controls
+              }
+              transition={
+                isDefaultState
+                  ? {
+                      duration: 20,
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                      ease: "easeInOut",
+                    }
+                  : undefined
+              }
+            />
 
-        {/* Orb 2 - Satellite 1 */}
-        <motion.div
-          ref={orb2Ref}
-          className="absolute top-1/4 right-0 w-96 h-96 filter blur-3xl"
-          style={{
-            backgroundColor: orbColors.sat1,
-            translateX: isDefaultState && isPointerDevice ? orb2ParallaxX : 0,
-            translateY: isDefaultState && isPointerDevice ? orb2ParallaxY : 0,
-          }}
-          initial={{ x: 0, y: 0, scale: 1, opacity: 0.7, borderRadius: "50%", rotate: 0 }}
-          animate={
-            isDefaultState
-              ? {
-                  scale: [1, 1.2, 1.1, 1.3, 1],
-                  x: [0, -60, -80, -50, 0],
-                  y: [0, 60, 30, 80, 0],
-                  opacity: 0.7,
-                  borderRadius: "50%",
-                  rotate: 0,
-                }
-              : orb2Controls
-          }
-          transition={
-            isDefaultState
-              ? {
-                  duration: 25,
-                  repeat: Infinity,
-                  repeatType: "reverse",
-                  ease: "easeInOut",
-                }
-              : undefined
-          }
-        />
+            {/* Orb 2 - Satellite 1 */}
+            <motion.div
+              ref={orb2Ref}
+              className="absolute top-1/4 right-0 w-96 h-96 filter blur-3xl"
+              style={{
+                backgroundColor: orbColors.sat1,
+                translateX: isDefaultState && isPointerDevice ? orb2ParallaxX : 0,
+                translateY: isDefaultState && isPointerDevice ? orb2ParallaxY : 0,
+              }}
+              initial={{ x: 0, y: 0, scale: 1, opacity: 0.7, borderRadius: "50%", rotate: 0 }}
+              animate={
+                isDefaultState
+                  ? {
+                      scale: [1, 1.2, 1.1, 1.3, 1],
+                      x: [0, -60, -80, -50, 0],
+                      y: [0, 60, 30, 80, 0],
+                      opacity: 0.7,
+                      borderRadius: "50%",
+                      rotate: 0,
+                    }
+                  : orb2Controls
+              }
+              transition={
+                isDefaultState
+                  ? {
+                      duration: 25,
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                      ease: "easeInOut",
+                    }
+                  : undefined
+              }
+            />
 
-        {/* Orb 3 - Satellite 2 */}
-        <motion.div
-          ref={orb3Ref}
-          className="absolute bottom-0 left-1/3 w-80 h-80 filter blur-3xl"
-          style={{
-            backgroundColor: orbColors.sat2,
-            translateX: isDefaultState && isPointerDevice ? orb3ParallaxX : 0,
-            translateY: isDefaultState && isPointerDevice ? orb3ParallaxY : 0,
-          }}
-          initial={{ x: 0, y: 0, scale: 1, opacity: 0.7, borderRadius: "50%", rotate: 0 }}
-          animate={
-            isDefaultState
-              ? {
-                  scale: [1, 1.08, 1.15, 1.05, 1],
-                  x: [0, 30, 60, 20, 0],
-                  y: [0, -30, -20, -50, 0],
-                  opacity: 0.7,
-                  borderRadius: "50%",
-                  rotate: 0,
-                }
-              : orb3Controls
-          }
-          transition={
-            isDefaultState
-              ? {
-                  duration: 22,
-                  repeat: Infinity,
-                  repeatType: "reverse",
-                  ease: "easeInOut",
-                }
-              : undefined
-          }
-        />
+            {/* Orb 3 - Satellite 2 */}
+            <motion.div
+              ref={orb3Ref}
+              className="absolute bottom-0 left-1/3 w-80 h-80 filter blur-3xl"
+              style={{
+                backgroundColor: orbColors.sat2,
+                translateX: isDefaultState && isPointerDevice ? orb3ParallaxX : 0,
+                translateY: isDefaultState && isPointerDevice ? orb3ParallaxY : 0,
+              }}
+              initial={{ x: 0, y: 0, scale: 1, opacity: 0.7, borderRadius: "50%", rotate: 0 }}
+              animate={
+                isDefaultState
+                  ? {
+                      scale: [1, 1.08, 1.15, 1.05, 1],
+                      x: [0, 30, 60, 20, 0],
+                      y: [0, -30, -20, -50, 0],
+                      opacity: 0.7,
+                      borderRadius: "50%",
+                      rotate: 0,
+                    }
+                  : orb3Controls
+              }
+              transition={
+                isDefaultState
+                  ? {
+                      duration: 22,
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                      ease: "easeInOut",
+                    }
+                  : undefined
+              }
+            />
+          </>
+        )}
 
         {/* Subtle grid pattern */}
         <div

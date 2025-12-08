@@ -22,7 +22,7 @@ const projects = [
     type: "Web",
     live: "#",
     github: "#",
-    orbColors: { primary: "#3498db", secondary: "#2980b9" },
+    orbColors: { primary: "#96c8ec", secondary: "#419cb9" },
   },
   {
     id: 2,
@@ -36,7 +36,7 @@ const projects = [
     type: "Web",
     live: "#",
     github: "#",
-    orbColors: { primary: "#8b4513", secondary: "#a0522d" },
+    orbColors: { primary: "#c7c6c6", secondary: "#aa352c" },
   },
   {
     id: 3,
@@ -50,7 +50,7 @@ const projects = [
     type: "Mobile",
     live: "/assets/research/HearttoArt.pdf",
     github: "https://github.com/vladasblood/SE_HeartToArt",
-    orbColors: { primary: "#e74c3c", secondary: "#c0392b" },
+    orbColors: { primary: "#b20018", secondary: "#d8d8d8" },
   },
   {
     id: 4,
@@ -64,7 +64,7 @@ const projects = [
     type: "Web",
     live: "/assets/research/LostPaws.pdf",
     github: "https://github.com/vladasblood/LostPaws",
-    orbColors: { primary: "#9b59b6", secondary: "#8e44ad" },
+    orbColors: { primary: "#18b24f", secondary: "#ffffff" },
   },
   {
     id: 5,
@@ -78,7 +78,7 @@ const projects = [
     type: "Mobile",
     live: "#",
     github: "#",
-    orbColors: { primary: "#6c5ce7", secondary: "#5f4fcf" },
+    orbColors: { primary: "#a77bbe", secondary: "#607ac2" },
   },
   {
     id: 6,
@@ -92,7 +92,7 @@ const projects = [
     type: "Mobile",
     live: "/assets/research/SaveEat.pdf",
     github: "https://github.com/Dokkai-B/saveeat",
-    orbColors: { primary: "#2ecc71", secondary: "#27ae60" },
+    orbColors: { primary: "#fd8f4c", secondary: "#eef0ed" },
   },
   {
     id: 7,
@@ -106,7 +106,7 @@ const projects = [
     type: "Web",
     live: "#",
     github: "#",
-    orbColors: { primary: "#00b894", secondary: "#00a884" },
+    orbColors: { primary: "#169b78", secondary: "#ef6129" },
   },
   {
     id: 8,
@@ -120,7 +120,7 @@ const projects = [
     type: "Web",
     live: "https://womensclub.vercel.app/",
     github: "https://github.com/Dokkai-B/womens-club",
-    orbColors: { primary: "#5dade2", secondary: "#3498db" },
+    orbColors: { primary: "#232289", secondary: "#ffffff" },
   },
   {
     id: 9,
@@ -134,7 +134,7 @@ const projects = [
     type: "Web",
     live: "#",
     github: "#",
-    orbColors: { primary: "#f1c40f", secondary: "#f39c12" },
+    orbColors: { primary: "#ffd600", secondary: "#5a585b" },
   },
 ];
 
