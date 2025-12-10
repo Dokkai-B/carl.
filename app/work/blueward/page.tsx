@@ -33,11 +33,7 @@ interface ProjectData {
   role: string;
   summary: string;
   heroImage: string;
-  mobileGallery: {
-    dark: Array<{ name: string; image: string }>;
-    light: Array<{ name: string; image: string }>;
-  };
-  desktopGallery: Array<{ name: string; image: string }>;
+  gallery: Array<{ name: string; image: string }>;
   links: { prototype: string; github: string };
   features: Array<{ icon: any; text: string }>;
   techStack: string[];
@@ -88,25 +84,12 @@ const projectData: ProjectData = {
     "Render",
     "Vercel",
   ],
-  mobileGallery: {
-    dark: [
-      { name: "Status", image: "/Temp Projects UI/Blue Ward/Mobile/Dark/Status_Dark.png" },
-      { name: "GPS", image: "/Temp Projects UI/Blue Ward/Mobile/Dark/GPS_Dark.png" },
-      { name: "Camera", image: "/Temp Projects UI/Blue Ward/Mobile/Dark/Camera_Dark.png" },
-      { name: "Audio", image: "/Temp Projects UI/Blue Ward/Mobile/Dark/Audio_Dark.png" },
-      { name: "Battery", image: "/Temp Projects UI/Blue Ward/Mobile/Dark/Battery_Dark.png" },
-    ],
-    light: [
-      { name: "Status", image: "/Temp Projects UI/Blue Ward/Mobile/Light/Status_Light.png" },
-      { name: "GPS", image: "/Temp Projects UI/Blue Ward/Mobile/Light/GPS_Light.png" },
-      { name: "Camera", image: "/Temp Projects UI/Blue Ward/Mobile/Light/Camera_Light.png" },
-      { name: "Audio", image: "/Temp Projects UI/Blue Ward/Mobile/Light/Audio_Light.png" },
-      { name: "Status", image: "/Temp Projects UI/Blue Ward/Mobile/Light/Status_Light (2).png" },
-    ],
-  },
-  desktopGallery: [
-    { name: "Login", image: "/Temp Projects UI/Blue Ward/Desktop/Login.png" },
-    { name: "Dashboard", image: "/Temp Projects UI/Blue Ward/Desktop/Dashboard.png" },
+  gallery: [
+    { name: "Status", image: "/Temp Projects UI/Blue Ward/Mobile/Dark/Status_Dark.png" },
+    { name: "GPS", image: "/Temp Projects UI/Blue Ward/Mobile/Dark/GPS_Dark.png" },
+    { name: "Camera", image: "/Temp Projects UI/Blue Ward/Mobile/Dark/Camera_Dark.png" },
+    { name: "Audio", image: "/Temp Projects UI/Blue Ward/Mobile/Dark/Audio_Dark.png" },
+    { name: "Battery", image: "/Temp Projects UI/Blue Ward/Mobile/Dark/Battery_Dark.png" },
   ],
   orbColors: {
     primary: "#96c8ec",
@@ -186,14 +169,13 @@ const BackToTopButton = () => {
 };
 
 // =============================================
-// FULLSCREEN MODAL VIEWER
+// FULLSCREEN MODAL VIEWER - REDESIGNED
 // =============================================
 interface FullscreenModalViewerProps {
   images: Array<{ name: string; image: string }>;
   initialIndex: number;
   onClose: () => void;
   isDark: boolean;
-  isDesktop?: boolean;
 }
 
 const FullscreenModalViewer = ({
@@ -201,7 +183,6 @@ const FullscreenModalViewer = ({
   initialIndex,
   onClose,
   isDark,
-  isDesktop = false,
 }: FullscreenModalViewerProps) => {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -355,6 +336,11 @@ const FullscreenModalViewer = ({
         <X className="w-5 h-5 text-white" />
       </motion.button>
 
+      {/* REDESIGNED: Arrows closer to phone - horizontal hover movement only */}
+      {/* Left arrow removed for cleanliness */}
+
+      {/* Right arrow removed for cleanliness */}
+
       {/* Main content */}
       <motion.div
         className="relative"
@@ -405,8 +391,8 @@ const FullscreenModalViewer = ({
           }}
           className="relative"
           style={{
-            width: isDesktop ? "min(85vw, 1400px)" : "min(420px, 90vw)",
-            aspectRatio: isDesktop ? "16/10" : "9/19",
+            width: "min(420px, 90vw)",
+            aspectRatio: "9/19",
           }}
         >
           <AnimatePresence mode="wait">
@@ -416,60 +402,95 @@ const FullscreenModalViewer = ({
               animate={{ opacity: 1, scale: isZoomed ? 1.8 : 1 }}
               exit={{ opacity: 0, scale: 0.98 }}
               transition={{
-                duration: 0.3,
-                scale: { type: "spring", stiffness: 200, damping: 25 },
+                opacity: { duration: 0.25 },
+                scale: { type: "spring", stiffness: 140, damping: 28 },
               }}
-              className="w-full h-full cursor-pointer"
+              className="relative w-full h-full rounded-[32px] overflow-hidden cursor-pointer"
               onClick={handleImageClick}
               style={{
-                backgroundColor: isDark ? "rgba(20, 30, 40, 0.5)" : "rgba(255, 255, 255, 0.5)",
-                backdropFilter: "blur(20px)",
-                WebkitBackdropFilter: "blur(20px)",
-                borderRadius: isDesktop ? "16px" : "32px",
-                border: `1px solid ${
-                  isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.8)"
-                }`,
-                boxShadow: isDark
-                  ? "0 32px 80px rgba(0, 0, 0, 0.5)"
-                  : "0 24px 64px rgba(0, 0, 0, 0.12)",
-                overflow: "hidden",
+                backgroundColor: "rgba(18, 18, 22, 0.5)",
+                backdropFilter: "blur(10px)",
+                WebkitBackdropFilter: "blur(10px)",
+                border: "1px solid rgba(255, 255, 255, 0.08)",
+                boxShadow: "0 16px 48px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.05)",
               }}
             >
-              <div className="relative w-full h-full">
-                <Image
-                  src={images[currentIndex].image}
-                  alt={images[currentIndex].name}
-                  fill
-                  className="object-contain"
-                  priority
-                />
-              </div>
+              <Image
+                src={images[currentIndex].image}
+                alt={`${projectData.title} — ${images[currentIndex].name}`}
+                fill
+                className="object-cover"
+                style={{
+                  borderRadius: "32px",
+                }}
+                sizes="420px"
+                priority={currentIndex === initialIndex}
+              />
             </motion.div>
           </AnimatePresence>
         </motion.div>
 
-        {/* Image counter */}
+        {/* REDESIGNED: Progress bar closer (-bottom-8) with blue theme and instant hover */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="absolute -bottom-14 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full text-white text-sm font-medium"
-          style={{
-            backgroundColor: "rgba(255, 255, 255, 0.1)",
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
-            border: "1px solid rgba(255, 255, 255, 0.2)",
-          }}
+          className="absolute -bottom-8 left-0 right-0 flex justify-center items-center gap-1.5"
         >
-          {currentIndex + 1} / {images.length} — {images[currentIndex].name}
+          {images.map((_, index) => (
+            <motion.div
+              key={index}
+              className="h-1 rounded-full cursor-pointer"
+              style={{
+                width: index === currentIndex ? "32px" : "8px",
+                backgroundColor:
+                  index === currentIndex ? colors.primary : "rgba(255, 255, 255, 0.25)",
+                boxShadow: index === currentIndex ? `0 0 14px ${colors.primary}70` : "none",
+                transition: "all 0.3s ease",
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setCurrentIndex(index);
+                setIsZoomed(false);
+              }}
+              whileHover={{
+                scale: 1.2,
+                backgroundColor: "rgba(255, 255, 255, 0.5)",
+                transition: { duration: 0.05 },
+              }}
+            />
+          ))}
         </motion.div>
+
+        {/* REDESIGNED: Image name closer (-bottom-16) */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="absolute -bottom-16 left-0 right-0 text-center text-white/60 text-sm font-medium"
+        >
+          {images[currentIndex].name}
+        </motion.p>
+
+        {/* Zoom hint */}
+        {!isZoomed && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ delay: 0.5 }}
+            className="absolute -bottom-24 left-0 right-0 text-center text-white/35 text-xs"
+          >
+            Click to zoom • Use ← → keys
+          </motion.p>
+        )}
       </motion.div>
     </motion.div>
   );
 };
 
 // =============================================
-// PHONE MOCKUP COMPONENT (Mobile)
+// PHONE MOCKUP WITH HOVER OVERLAY - REDESIGNED for center-focused layout
 // =============================================
 interface PhoneMockupProps {
   src: string;
@@ -477,10 +498,17 @@ interface PhoneMockupProps {
   index: number;
   onClick: () => void;
   isDark: boolean;
-  position: "left" | "center" | "right";
+  position?: "left" | "center" | "right";
 }
 
-const PhoneMockup = ({ src, alt, index, onClick, isDark, position }: PhoneMockupProps) => {
+const PhoneMockup = ({
+  src,
+  alt,
+  index,
+  onClick,
+  isDark,
+  position = "center",
+}: PhoneMockupProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
@@ -597,7 +625,7 @@ const PhoneMockup = ({ src, alt, index, onClick, isDark, position }: PhoneMockup
             className="object-cover rounded-[28px]"
           />
 
-          {/* REDESIGNED: "Click to Expand" overlay hint */}
+          {/* REDESIGNED: "Click to expand" overlay hint */}
           <AnimatePresence>
             {isHovered && (
               <motion.div
@@ -623,119 +651,24 @@ const PhoneMockup = ({ src, alt, index, onClick, isDark, position }: PhoneMockup
 };
 
 // =============================================
-// DESKTOP MOCKUP COMPONENT
+// MAIN PROJECT PAGE
 // =============================================
-interface DesktopMockupProps {
-  src: string;
-  alt: string;
-  index: number;
-  onClick: () => void;
-  isDark: boolean;
-  position: "left" | "right";
-}
-
-const DesktopMockup = ({ src, alt, index, onClick, isDark, position }: DesktopMockupProps) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.3 });
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 60, scale: 0.95 }}
-      animate={
-        isInView
-          ? {
-              opacity: 1,
-              y: 0,
-              scale: 1,
-            }
-          : {}
-      }
-      transition={{
-        duration: 0.8,
-        delay: index * 0.2,
-        ease: [0.16, 1, 0.3, 1],
-      }}
-      whileHover={{
-        scale: 1.02,
-        y: -8,
-        transition: { duration: 0.3 },
-      }}
-      onClick={onClick}
-      className="cursor-pointer relative group"
-    >
-      <motion.div
-        className="relative rounded-2xl overflow-hidden"
-        style={{
-          width: "100%",
-          aspectRatio: "16/10",
-          backgroundColor: isDark ? "rgba(30, 45, 60, 0.4)" : "rgba(255, 255, 255, 0.5)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
-          border: `1px solid ${isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.8)"}`,
-          boxShadow: isDark
-            ? "0 24px 64px rgba(0, 0, 0, 0.4)"
-            : "0 16px 48px rgba(0, 0, 0, 0.08)",
-        }}
-      >
-        <div className="relative w-full h-full">
-          <Image src={src} alt={alt} fill className="object-cover" priority />
-        </div>
-
-        {/* Overlay on hover - Click to Expand */}
-        <motion.div
-          className="absolute inset-0 flex items-center justify-center"
-          initial={{ opacity: 0 }}
-          whileHover={{ opacity: 1 }}
-          style={{
-            backgroundColor: "rgba(0, 0, 0, 0.4)",
-            backdropFilter: "blur(4px)",
-            WebkitBackdropFilter: "blur(4px)",
-          }}
-        >
-          <motion.div
-            initial={{ scale: 0.8 }}
-            whileHover={{ scale: 1 }}
-            className="text-white text-lg font-medium"
-          >
-            Click to Expand
-          </motion.div>
-        </motion.div>
-      </motion.div>
-
-      {/* Enhanced glow */}
-      <motion.div
-        className="absolute inset-0 rounded-2xl pointer-events-none -z-10"
-        style={{
-          background: `radial-gradient(circle, ${
-            isDark ? projectData.orbColors.secondary : projectData.orbColors.light.secondary
-          }40, transparent 70%)`,
-          filter: "blur(60px)",
-          opacity: 0.3,
-        }}
-        animate={{
-          opacity: [0.25, 0.35, 0.25],
-        }}
-        transition={{
-          duration: 4,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-    </motion.div>
-  );
-};
-
-// =============================================
-// MAIN PAGE COMPONENT
-// =============================================
-export default function BlueWardPage() {
+export default function BlueWardProject() {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalImages, setModalImages] = useState<Array<{ name: string; image: string }>>([]);
-  const [modalInitialIndex, setModalInitialIndex] = useState(0);
-  const [isDesktopModal, setIsDesktopModal] = useState(false);
+  const [modalIndex, setModalIndex] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const featuresRef = useRef(null);
+  const techStackRef = useRef(null);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+
+  const featuresInView = useInView(featuresRef, { once: true, amount: 0.3 });
+  const techStackInView = useInView(techStackRef, { once: true, amount: 0.3 });
 
   useEffect(() => {
     setMounted(true);
@@ -743,94 +676,111 @@ export default function BlueWardPage() {
 
   const isDark = !mounted || resolvedTheme === "dark";
 
-  // Get theme-appropriate mobile gallery
-  const mobileGallery = isDark ? projectData.mobileGallery.dark : projectData.mobileGallery.light;
-
-  const handleOpenModal = (
-    images: Array<{ name: string; image: string }>,
-    index: number,
-    isDesktop: boolean = false
-  ) => {
-    setModalImages(images);
-    setModalInitialIndex(index);
-    setIsDesktopModal(isDesktop);
+  const handleOpenModal = (index: number) => {
+    setModalIndex(index);
     setModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setModalOpen(false);
   };
 
   return (
     <>
-      {/* Scroll Progress Bar */}
-      <ScrollProgressBar />
+      {/* Hide scrollbar for cleaner look */}
+      <style jsx global>{`
+        body {
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+        }
+        body::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
 
-      {/* Back to Top Button */}
+      <ScrollProgressBar />
       <BackToTopButton />
 
-      <div className="min-h-screen relative overflow-hidden">
-        {/* Animated Background Orbs */}
-        <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-          <motion.div
-            className="absolute rounded-full"
+      <div ref={containerRef} className="min-h-screen relative">
+        {/* Background grid with vignette */}
+        <div className="fixed inset-0 -z-20 overflow-hidden pointer-events-none">
+          <div
+            className="absolute inset-0"
             style={{
-              width: 800,
-              height: 800,
-              background: `radial-gradient(circle, ${
-                isDark ? projectData.orbColors.primary : projectData.orbColors.light.primary
-              }, transparent 70%)`,
-              filter: `blur(${isDark ? 120 : 100}px)`,
-              opacity: isDark ? 0.25 : 0.2,
-              top: "10%",
-              right: "-10%",
-            }}
-            animate={{
-              y: [0, 50, 0],
-              x: [0, 30, 0],
-              scale: [1, 1.1, 1],
-            }}
-            transition={{
-              duration: 15,
-              repeat: Infinity,
-              ease: "easeInOut",
+              backgroundImage: isDark
+                ? `linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                   linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px)`
+                : `linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+                   linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px)`,
+              backgroundSize: "80px 80px",
             }}
           />
-
-          <motion.div
-            className="absolute rounded-full"
+          <div
+            className="absolute inset-0"
             style={{
-              width: 700,
-              height: 700,
-              background: `radial-gradient(circle, ${
-                isDark ? projectData.orbColors.secondary : projectData.orbColors.light.secondary
-              }, transparent 70%)`,
-              filter: `blur(${isDark ? 100 : 80}px)`,
-              opacity: isDark ? 0.2 : 0.15,
-              bottom: "15%",
-              left: "-5%",
-            }}
-            animate={{
-              y: [0, -40, 0],
-              x: [0, -20, 0],
-              scale: [1, 1.15, 1],
-            }}
-            transition={{
-              duration: 18,
-              repeat: Infinity,
-              ease: "easeInOut",
+              background: isDark
+                ? "radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.3) 100%)"
+                : "radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.06) 100%)",
             }}
           />
         </div>
 
+        {/* Background orbs */}
+        <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+          {[
+            {
+              size: 450,
+              x: 12,
+              y: 18,
+              color: isDark ? projectData.orbColors.primary : projectData.orbColors.light.primary,
+              opacity: isDark ? 0.12 : 0.08,
+              duration: 22,
+            },
+            {
+              size: 380,
+              x: 78,
+              y: 58,
+              color: isDark
+                ? projectData.orbColors.secondary
+                : projectData.orbColors.light.secondary,
+              opacity: isDark ? 0.1 : 0.07,
+              duration: 26,
+            },
+            {
+              size: 350,
+              x: 48,
+              y: 82,
+              color: isDark ? projectData.orbColors.primary : projectData.orbColors.light.primary,
+              opacity: isDark ? 0.08 : 0.06,
+              duration: 20,
+            },
+          ].map((orb, i) => (
+            <motion.div
+              key={i}
+              className="absolute rounded-full"
+              style={{
+                width: orb.size,
+                height: orb.size,
+                background: `radial-gradient(circle, ${orb.color}50, transparent 70%)`,
+                opacity: orb.opacity,
+                left: `${orb.x}%`,
+                top: `${orb.y}%`,
+                filter: `blur(${isDark ? 120 : 100}px)`,
+              }}
+              animate={{
+                scale: [1, 1.08, 1],
+              }}
+              transition={{
+                scale: { duration: orb.duration, repeat: Infinity, ease: "easeInOut" },
+              }}
+            />
+          ))}
+        </div>
+
         {/* Main Content */}
-        <div className="container mx-auto px-6 xl:px-12 pt-24 pb-16">
-          {/* Back to Projects Link */}
+        <div className="container mx-auto px-6 md:px-12 lg:px-[120px] py-24">
+          {/* Back Button */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-12"
+            transition={{ duration: 0.5 }}
+            className="mb-16"
           >
             <Link
               href="/work"
@@ -843,11 +793,11 @@ export default function BlueWardPage() {
               <span>Back to Projects</span>
             </Link>
           </motion.div>
-
-          {/* Two-column hero layout */}
+          {/* REDESIGNED: Two-column header layout (50% left, 50% right) */}
           <div className="grid lg:grid-cols-2 gap-16 mb-24">
-            {/* LEFT COLUMN - Text Content */}
+            {/* LEFT COLUMN - 50% */}
             <motion.div
+              layoutId={`project-hero-${projectData.id}`}
               initial={{ opacity: 0, y: 30, filter: "blur(20px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{
@@ -898,7 +848,7 @@ export default function BlueWardPage() {
                 {projectData.summary}
               </p>
 
-              {/* Action buttons */}
+              {/* Action buttons - matching homepage style */}
               <div className="flex items-center gap-4 pt-4">
                 <motion.a
                   href={projectData.links.prototype}
@@ -934,7 +884,7 @@ export default function BlueWardPage() {
               </div>
             </motion.div>
 
-            {/* RIGHT COLUMN - Hero Image */}
+            {/* RIGHT COLUMN - 50% - Hero Image */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -969,7 +919,7 @@ export default function BlueWardPage() {
                 />
               </div>
 
-              {/* Hero image */}
+              {/* Hero image - side by side with text */}
               <div
                 className="relative rounded-3xl overflow-hidden"
                 style={{
@@ -996,48 +946,7 @@ export default function BlueWardPage() {
               </div>
             </motion.div>
           </div>
-
-          {/* Desktop Mockups Section */}
-          <div className="mb-24 py-16">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-12"
-            >
-              <h2
-                className="text-3xl md:text-4xl font-bold"
-                style={{
-                  color: isDark ? "rgba(255,255,255,0.95)" : "rgba(31, 41, 55, 0.95)",
-                }}
-              >
-                Desktop Views
-              </h2>
-              <p
-                className="text-lg mt-2"
-                style={{ color: isDark ? "rgba(255,255,255,0.6)" : "rgba(31, 41, 55, 0.7)" }}
-              >
-                Web-based emergency response dashboard
-              </p>
-            </motion.div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-              {projectData.desktopGallery.map((item, index) => (
-                <DesktopMockup
-                  key={item.name}
-                  src={item.image}
-                  alt={`${projectData.title} — ${item.name}`}
-                  index={index}
-                  onClick={() => handleOpenModal(projectData.desktopGallery, index, true)}
-                  isDark={isDark}
-                  position={index === 0 ? "left" : "right"}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Mobile Mockups Section */}
+          {/* Mobile Mockups Section - REDESIGNED: 3D perspective with depth layering */}
           <div className="mb-24 py-16">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -1058,7 +967,7 @@ export default function BlueWardPage() {
                 className="text-lg mt-2"
                 style={{ color: isDark ? "rgba(255,255,255,0.6)" : "rgba(31, 41, 55, 0.7)" }}
               >
-                Cross-platform mobile emergency assistance
+                Emergency assistance mobile controller
               </p>
             </motion.div>
 
@@ -1066,146 +975,161 @@ export default function BlueWardPage() {
               className="flex justify-center items-end gap-6"
               style={{ transformStyle: "preserve-3d" }}
             >
+              {/* LEFT phone - GPS (3D tilted toward center with overlap) */}
               <PhoneMockup
-                src={mobileGallery[1].image}
-                alt={`${projectData.title} — ${mobileGallery[1].name}`}
+                src={projectData.gallery[1].image}
+                alt={`${projectData.title} — ${projectData.gallery[1].name}`}
                 index={0}
-                onClick={() => handleOpenModal(mobileGallery, 1)}
+                onClick={() => handleOpenModal(1)}
                 isDark={isDark}
                 position="left"
               />
 
+              {/* CENTER phone - Status (larger, faces forward, highest z-index) */}
               <PhoneMockup
-                src={mobileGallery[0].image}
-                alt={`${projectData.title} — ${mobileGallery[0].name}`}
+                src={projectData.gallery[0].image}
+                alt={`${projectData.title} — ${projectData.gallery[0].name}`}
                 index={1}
-                onClick={() => handleOpenModal(mobileGallery, 0)}
+                onClick={() => handleOpenModal(0)}
                 isDark={isDark}
                 position="center"
               />
 
+              {/* RIGHT phone - Camera (3D tilted toward center with overlap) */}
               <PhoneMockup
-                src={mobileGallery[2].image}
-                alt={`${projectData.title} — ${mobileGallery[2].name}`}
+                src={projectData.gallery[2].image}
+                alt={`${projectData.title} — ${projectData.gallery[2].name}`}
                 index={2}
-                onClick={() => handleOpenModal(mobileGallery, 2)}
+                onClick={() => handleOpenModal(2)}
                 isDark={isDark}
                 position="right"
               />
             </div>
-          </div>
-
+          </div>{" "}
           {/* Features & Tech Stack Grid */}
           <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 mb-24">
-            {/* Features Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6 }}
-              className="lg:col-span-2 p-8 rounded-3xl"
-              style={{
-                backgroundColor: isDark ? "rgba(30, 45, 60, 0.4)" : "rgba(255, 255, 255, 0.5)",
-                backdropFilter: "blur(20px)",
-                WebkitBackdropFilter: "blur(20px)",
-                border: `1px solid ${
-                  isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.8)"
-                }`,
-              }}
-            >
-              <h3
-                className="text-2xl font-bold mb-6"
+            {/* Features Card - with scroll animations */}
+            <div ref={featuresRef} className="lg:col-span-2">
+              <div
+                className="p-10 rounded-3xl h-full relative overflow-hidden"
                 style={{
-                  color: isDark ? "rgba(255,255,255,0.95)" : "rgba(31, 41, 55, 0.95)",
+                  backgroundColor: isDark ? "rgba(30, 45, 60, 0.5)" : "rgba(255, 255, 255, 0.6)",
+                  backdropFilter: isDark ? "blur(16px)" : "blur(20px)",
+                  WebkitBackdropFilter: isDark ? "blur(16px)" : "blur(20px)",
+                  boxShadow: isDark
+                    ? "0 16px 48px rgba(0, 0, 0, 0.4)"
+                    : "0 12px 40px rgba(0, 0, 0, 0.06)",
+                  border: `1px solid ${
+                    isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.8)"
+                  }`,
                 }}
               >
-                Key Features
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {projectData.features.map((feature, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
-                    whileHover={{ x: 4, transition: { duration: 0.2 } }}
-                    className="flex items-start gap-3 p-3 rounded-xl cursor-pointer"
-                    style={{
-                      backgroundColor: isDark ? "rgba(255, 255, 255, 0.02)" : "rgba(0, 0, 0, 0.02)",
-                    }}
-                  >
-                    <div
-                      className="p-2 rounded-lg mt-1"
-                      style={{
-                        backgroundColor: `${projectData.orbColors.primary}20`,
-                      }}
-                    >
-                      <feature.icon className="w-5 h-5" style={{ color: projectData.orbColors.primary }} />
-                    </div>
-                    <p
-                      className="text-sm leading-relaxed"
-                      style={{
-                        color: isDark ? "rgba(255,255,255,0.75)" : "rgba(31, 41, 55, 0.8)",
-                      }}
-                    >
-                      {feature.text}
-                    </p>
-                  </motion.div>
-                ))}
+                <h2 className="text-2xl font-bold mb-7">Key Features</h2>
+                <ul className="space-y-4">
+                  {projectData.features.map((feature, i) => {
+                    return (
+                      <motion.li
+                        key={i}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={featuresInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
+                        transition={{
+                          duration: 0.4,
+                          delay: i * 0.1,
+                          ease: [0.16, 1, 0.3, 1],
+                        }}
+                        whileHover={{
+                          x: 4,
+                          backgroundColor: isDark
+                            ? "rgba(255, 255, 255, 0.02)"
+                            : "rgba(0, 0, 0, 0.02)",
+                          transition: { duration: 0.05 },
+                        }}
+                        className="flex items-start gap-3 p-2 rounded-lg"
+                        style={{ lineHeight: "1.6" }}
+                      >
+                        <span
+                          className="mt-1.5 flex-shrink-0 font-semibold text-lg"
+                          style={{
+                            color: isDark
+                              ? projectData.orbColors.primary
+                              : projectData.orbColors.light.primary,
+                          }}
+                        >
+                          —
+                        </span>
+                        <span
+                          style={{
+                            color: isDark ? "rgba(255,255,255,0.8)" : "rgba(31, 41, 55, 0.85)",
+                          }}
+                        >
+                          {feature.text}
+                        </span>
+                      </motion.li>
+                    );
+                  })}
+                </ul>
               </div>
-            </motion.div>
+            </div>
 
-            {/* Tech Stack Card - Using Moonii design */}
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="p-8 rounded-3xl"
-              style={{
-                backgroundColor: isDark ? "rgba(30, 45, 60, 0.4)" : "rgba(255, 255, 255, 0.5)",
-                backdropFilter: "blur(20px)",
-                WebkitBackdropFilter: "blur(20px)",
-                border: `1px solid ${
-                  isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.8)"
-                }`,
-              }}
-            >
-              <h3
-                className="text-2xl font-bold mb-6"
+            {/* Tech Stack Card - with scroll animations */}
+            <div ref={techStackRef} className="lg:col-span-1">
+              <div
+                className="p-10 rounded-3xl h-full relative overflow-hidden"
                 style={{
-                  color: isDark ? "rgba(255,255,255,0.95)" : "rgba(31, 41, 55, 0.95)",
+                  backgroundColor: isDark ? "rgba(30, 45, 60, 0.5)" : "rgba(255, 255, 255, 0.6)",
+                  backdropFilter: isDark ? "blur(16px)" : "blur(20px)",
+                  WebkitBackdropFilter: isDark ? "blur(16px)" : "blur(20px)",
+                  boxShadow: isDark
+                    ? "0 16px 48px rgba(0, 0, 0, 0.4)"
+                    : "0 12px 40px rgba(0, 0, 0, 0.06)",
+                  border: `1px solid ${
+                    isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.8)"
+                  }`,
                 }}
               >
-                Tech Stack
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {projectData.techStack.map((tech, index) => (
-                  <motion.span
-                    key={tech}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    transition={{ duration: 0.3, delay: index * 0.05 }}
-                    className="px-4 py-2 rounded-full text-xs font-medium cursor-default"
-                    style={{
-                      backgroundColor: `${projectData.orbColors.primary}15`,
-                      color: isDark
-                        ? projectData.orbColors.primary
-                        : projectData.orbColors.light.primary,
-                      border: `1px solid ${projectData.orbColors.primary}30`,
-                    }}
-                  >
-                    {tech}
-                  </motion.span>
-                ))}
+                <h2 className="text-2xl font-bold mb-7">Tech Stack</h2>
+                <div className="flex flex-wrap gap-2.5">
+                  {projectData.techStack.map((tech, i) => (
+                    <motion.span
+                      key={i}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{
+                        opacity: techStackInView ? 1 : 0,
+                        scale: techStackInView ? 1 : 0.8,
+                      }}
+                      transition={{
+                        duration: 0.3,
+                        delay: i * 0.05,
+                        ease: [0.16, 1, 0.3, 1],
+                      }}
+                      whileHover={{
+                        scale: 1.05,
+                        y: -2,
+                        transition: { duration: 0.05 },
+                      }}
+                      className="px-4 py-2.5 rounded-full text-sm font-medium cursor-default"
+                      style={{
+                        backgroundColor: isDark
+                          ? `${projectData.orbColors.primary}18`
+                          : `${projectData.orbColors.light.primary}20`,
+                        color: isDark
+                          ? projectData.orbColors.primary
+                          : projectData.orbColors.light.primary,
+                        border: `1px solid ${
+                          isDark
+                            ? `${projectData.orbColors.primary}28`
+                            : `${projectData.orbColors.light.primary}35`
+                        }`,
+                      }}
+                    >
+                      {tech}
+                    </motion.span>
+                  ))}
+                </div>
               </div>
-            </motion.div>
+            </div>
           </div>
-
-          {/* Project Navigation */}
+          {/* Project Navigation - Prev/Next */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1252,15 +1176,14 @@ export default function BlueWardPage() {
           </motion.div>
         </div>
 
-        {/* Fullscreen Modal */}
+        {/* Fullscreen Modal Viewer */}
         <AnimatePresence>
           {modalOpen && (
             <FullscreenModalViewer
-              images={modalImages}
-              initialIndex={modalInitialIndex}
-              onClose={handleCloseModal}
+              images={projectData.gallery}
+              initialIndex={modalIndex}
+              onClose={() => setModalOpen(false)}
               isDark={isDark}
-              isDesktop={isDesktopModal}
             />
           )}
         </AnimatePresence>
