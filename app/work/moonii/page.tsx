@@ -49,8 +49,9 @@ interface ProjectData {
 const projectData: ProjectData = {
   id: 5,
   title: "Moonii",
-  category: "Mobile Application",
+  category: "Mobile Application • 2025",
   year: "2025",
+  role: "",
   summary:
     "A cross-platform mobile application for recording, storing, and playing personalized bedtime stories. It enables parents to capture audio narrations that are securely uploaded to the cloud and accessed by family members through a modern, synchronized audio player interface.",
   heroImage: "/Temp Projects Thumbnail/Moonii.png",
@@ -821,33 +822,17 @@ export default function MooniiProject() {
                 />
               </div>
 
-              {/* Metadata row */}
-              <div className="flex items-center gap-3 flex-wrap text-sm">
+              {/* Category Pill Badge */}
+              <div className="flex items-center gap-3">
                 <span
-                  className="font-semibold"
+                  className="px-4 py-2 rounded-full text-sm font-medium"
                   style={{
-                    color: isDark
-                      ? projectData.orbColors.primary
-                      : projectData.orbColors.light.primary,
+                    backgroundColor: `${projectData.orbColors.primary}20`,
+                    color: projectData.orbColors.primary,
+                    border: `1px solid ${projectData.orbColors.primary}40`,
                   }}
                 >
                   {projectData.category}
-                </span>
-                <span style={{ color: isDark ? "rgba(255,255,255,0.4)" : "rgba(31, 41, 55, 0.4)" }}>
-                  •
-                </span>
-                <span
-                  style={{ color: isDark ? "rgba(255,255,255,0.65)" : "rgba(31, 41, 55, 0.7)" }}
-                >
-                  {projectData.year}
-                </span>
-                <span style={{ color: isDark ? "rgba(255,255,255,0.4)" : "rgba(31, 41, 55, 0.4)" }}>
-                  •
-                </span>
-                <span
-                  style={{ color: isDark ? "rgba(255,255,255,0.65)" : "rgba(31, 41, 55, 0.7)" }}
-                >
-                  {projectData.role}
                 </span>
               </div>
 
