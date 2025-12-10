@@ -636,12 +636,76 @@ const PhoneMockup = ({
                   WebkitBackdropFilter: "blur(4px)",
                 }}
               >
-                <p className="text-white text-sm font-medium">Click to Expand</p>
+                <p className="text-white text-sm font-medium">Click to expand</p>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
       </motion.div>
+    </motion.div>
+  );
+};
+
+// =============================================
+// FLOATING ORB COMPONENT
+// =============================================
+interface OrbConfig {
+  id: number;
+  size: number;
+  initialX: number;
+  initialY: number;
+  floatDuration: number;
+  floatDelay: number;
+}
+
+const FloatingOrb = ({
+  orb,
+  orbColor,
+  isDark,
+}: {
+  orb: OrbConfig;
+  orbColor: string;
+  isDark: boolean;
+}) => {
+  return (
+    <motion.div
+      className="absolute rounded-full pointer-events-none"
+      style={{
+        width: orb.size,
+        height: orb.size,
+        filter: `blur(${orb.size * 0.4}px)`,
+        left: `${orb.initialX}%`,
+        top: `${orb.initialY}%`,
+        x: "-50%",
+        y: "-50%",
+      }}
+      animate={{
+        scale: [1, 1.1, 1, 1.05, 1],
+      }}
+      transition={{
+        scale: {
+          duration: orb.floatDuration,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: orb.floatDelay,
+        },
+      }}
+    >
+      {/* Inner floating animation layer */}
+      <motion.div
+        className="w-full h-full rounded-full"
+        animate={{
+          y: [0, -25, 0, 18, 0],
+          x: [0, 12, 0, -10, 0],
+        }}
+        transition={{
+          duration: orb.floatDuration,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: orb.floatDelay,
+        }}
+        style={{ backgroundColor: orbColor }}
+      />
     </motion.div>
   );
 };
@@ -657,6 +721,14 @@ export default function MooniiProject() {
   const containerRef = useRef<HTMLDivElement>(null);
   const featuresRef = useRef(null);
   const techStackRef = useRef(null);
+
+  // Orb configuration for features and tech stack
+  const orbConfigs: OrbConfig[] = [
+    { id: 1, size: 200, initialX: -15, initialY: 20, floatDuration: 8, floatDelay: 0 },
+    { id: 2, size: 150, initialX: 105, initialY: 75, floatDuration: 10, floatDelay: 0.5 },
+    { id: 3, size: 120, initialX: -8, initialY: 65, floatDuration: 7, floatDelay: 1 },
+    { id: 4, size: 160, initialX: 25, initialY: 72, floatDuration: 9, floatDelay: 1.2 },
+  ];
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -778,15 +850,26 @@ export default function MooniiProject() {
             transition={{ duration: 0.5 }}
             className="mb-16"
           >
-            <Link
-              href="/work"
-              className="inline-flex items-center gap-2 text-sm group"
+            <Link href="/work">
+            <motion.div
+              className="inline-flex items-center gap-2 text-sm\"
               style={{
                 color: isDark ? "rgba(255,255,255,0.65)" : "rgba(31, 41, 55, 0.7)",
               }}
+              whileHover="hover"
+              initial="normal"
             >
-              <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+              <motion.div
+                variants={{
+                  normal: { x: 0, color: isDark ? "rgba(255,255,255,0.65)" : "rgba(31, 41, 55, 0.7)" },
+                  hover: { x: -3, color: projectData.orbColors.primary },
+                }}
+                transition={{ duration: 0.2 }}
+              >
+                <ArrowLeft className="w-4 h-4" />
+              </motion.div>
               <span>Back to Projects</span>
+            </motion.div>
             </Link>
           </motion.div>
           {/* REDESIGNED: Two-column header layout (50% left, 50% right) */}
@@ -1002,85 +1085,101 @@ export default function MooniiProject() {
               />
             </div>
           </div>{" "}
-          {/* Features & Tech Stack Grid */}
-          <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 mb-24">
-            {/* Features Card - with scroll animations */}
-            <div ref={featuresRef} className="lg:col-span-2">
+          {/* Features & Tech Stack Grid with Orbs */}
+          <div className="relative">
+            {/* Floating Orbs Background */}
+            {orbConfigs.map((orb) => (
+              <FloatingOrb
+                key={orb.id}
+                orb={orb}
+                orbColor={
+                  isDark
+                    ? `${projectData.orbColors.primary}66`
+                    : `${projectData.orbColors.light.primary}44`
+                }
+                isDark={isDark}
+              />
+            ))}
+            {/* Features & Tech Stack Grid */}
+            <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 mb-24 relative z-10">
+              {/* Features Card - with scroll animations and icons, glass morphism */}
+              <div ref={featuresRef} className="lg:col-span-2">
               <div
                 className="p-10 rounded-3xl h-full relative overflow-hidden"
                 style={{
-                  backgroundColor: isDark ? "rgba(30, 45, 60, 0.5)" : "rgba(255, 255, 255, 0.6)",
-                  backdropFilter: isDark ? "blur(16px)" : "blur(20px)",
-                  WebkitBackdropFilter: isDark ? "blur(16px)" : "blur(20px)",
+                  backgroundColor: isDark ? "rgba(20, 30, 40, 0.5)" : "rgba(255, 255, 255, 0.4)",
+                  backdropFilter: "blur(20px)",
+                  WebkitBackdropFilter: "blur(20px)",
                   boxShadow: isDark
-                    ? "0 16px 48px rgba(0, 0, 0, 0.4)"
-                    : "0 12px 40px rgba(0, 0, 0, 0.06)",
-                  border: `1px solid ${
-                    isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.8)"
-                  }`,
+                    ? "inset 0 2px 4px rgba(255,255,255,0.05), 0 20px 40px rgba(0, 0, 0, 0.35)"
+                    : "inset 0 2px 4px rgba(255,255,255,0.6), 0 20px 40px rgba(0, 0, 0, 0.08)",
+                  border: `1.5px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.06)"}`,
                 }}
               >
                 <h2 className="text-2xl font-bold mb-7">Key Features</h2>
                 <ul className="space-y-4">
-                  {projectData.features.map((feature, i) => {
-                    return (
-                      <motion.li
-                        key={i}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={featuresInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-                        transition={{
-                          duration: 0.4,
-                          delay: i * 0.1,
-                          ease: [0.16, 1, 0.3, 1],
-                        }}
-                        whileHover={{
-                          x: 4,
+                  {projectData.features.map((feature, i) => (
+                    <motion.li
+                      key={i}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={featuresInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
+                      transition={{
+                        duration: 0.4,
+                        delay: i * 0.1,
+                        ease: [0.16, 1, 0.3, 1],
+                      }}
+                      whileHover={{
+                        x: 4,
+                        backgroundColor: isDark
+                          ? "rgba(255, 255, 255, 0.04)"
+                          : "rgba(0, 0, 0, 0.04)",
+                        transition: { duration: 0.05 },
+                      }}
+                      className="flex items-start gap-4 p-2 rounded-lg"
+                      style={{ lineHeight: "1.6" }}
+                    >
+                      <span
+                        className="mt-1 p-2 rounded-lg flex-shrink-0"
+                        style={{
                           backgroundColor: isDark
-                            ? "rgba(255, 255, 255, 0.02)"
-                            : "rgba(0, 0, 0, 0.02)",
-                          transition: { duration: 0.05 },
+                            ? `${projectData.orbColors.primary}15`
+                            : `${projectData.orbColors.light.primary}20`,
+                          color: isDark
+                            ? projectData.orbColors.primary
+                            : projectData.orbColors.light.primary,
+                          opacity: 0.85,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
                         }}
-                        className="flex items-start gap-3 p-2 rounded-lg"
-                        style={{ lineHeight: "1.6" }}
                       >
-                        <span
-                          className="mt-1.5 flex-shrink-0 font-semibold text-lg"
-                          style={{
-                            color: isDark
-                              ? projectData.orbColors.primary
-                              : projectData.orbColors.light.primary,
-                          }}
-                        >
-                          —
-                        </span>
-                        <span
-                          style={{
-                            color: isDark ? "rgba(255,255,255,0.8)" : "rgba(31, 41, 55, 0.85)",
-                          }}
-                        >
-                          {feature.text}
-                        </span>
-                      </motion.li>
-                    );
-                  })}
+                        <feature.icon className="w-5 h-5" />
+                      </span>
+                      <span
+                        style={{
+                          color: isDark ? "rgba(255,255,255,0.85)" : "rgba(31, 41, 55, 0.85)",
+                        }}
+                      >
+                        {feature.text}
+                      </span>
+                    </motion.li>
+                  ))}
                 </ul>
               </div>
             </div>
 
-            {/* Tech Stack Card - with scroll animations */}
+            {/* Tech Stack Card - with scroll animations, glass morphism */}
             <div ref={techStackRef} className="lg:col-span-1">
               <div
                 className="p-10 rounded-3xl h-full relative overflow-hidden"
                 style={{
-                  backgroundColor: isDark ? "rgba(30, 45, 60, 0.5)" : "rgba(255, 255, 255, 0.6)",
-                  backdropFilter: isDark ? "blur(16px)" : "blur(20px)",
-                  WebkitBackdropFilter: isDark ? "blur(16px)" : "blur(20px)",
+                  backgroundColor: isDark ? "rgba(20, 30, 40, 0.5)" : "rgba(255, 255, 255, 0.4)",
+                  backdropFilter: "blur(20px)",
+                  WebkitBackdropFilter: "blur(20px)",
                   boxShadow: isDark
-                    ? "0 16px 48px rgba(0, 0, 0, 0.4)"
-                    : "0 12px 40px rgba(0, 0, 0, 0.06)",
-                  border: `1px solid ${
-                    isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.8)"
-                  }`,
+                    ? "inset 0 2px 4px rgba(255,255,255,0.05), 0 20px 40px rgba(0, 0, 0, 0.35)"
+                    : "inset 0 2px 4px rgba(255,255,255,0.6), 0 20px 40px rgba(0, 0, 0, 0.08)",
+                  border: `1.5px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.06)"}`,
                 }}
               >
                 <h2 className="text-2xl font-bold mb-7">Tech Stack</h2>
@@ -1116,6 +1215,7 @@ export default function MooniiProject() {
                             ? `${projectData.orbColors.primary}28`
                             : `${projectData.orbColors.light.primary}35`
                         }`,
+                        opacity: 0.85,
                       }}
                     >
                       {tech}
@@ -1124,6 +1224,7 @@ export default function MooniiProject() {
                 </div>
               </div>
             </div>
+          </div>
           </div>
           {/* Project Navigation - Prev/Next */}
           <motion.div
@@ -1138,14 +1239,22 @@ export default function MooniiProject() {
           >
             <div className="flex items-center justify-between">
               {/* Previous Project */}
-              <Link href={`/work/${projectData.prevProject.slug}`} className="group">
+              <Link href={`/work/${projectData.prevProject.slug}`}>
                 <motion.div
-                  whileHover={{ x: -8 }}
-                  transition={{ duration: 0.2 }}
                   className="flex items-center gap-3"
                   style={{ color: isDark ? "rgba(255,255,255,0.75)" : "rgba(31, 41, 55, 0.8)" }}
+                  whileHover="hover"
+                  initial="normal"
                 >
-                  <ArrowLeft className="w-5 h-5" />
+                  <motion.div
+                    variants={{
+                      normal: { x: 0, color: isDark ? "rgba(255,255,255,0.75)" : "rgba(31, 41, 55, 0.8)" },
+                      hover: { x: -8, color: projectData.orbColors.primary },
+                    }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <ArrowLeft className="w-5 h-5" />
+                  </motion.div>
                   <div>
                     <p className="text-xs uppercase tracking-wider opacity-60">Previous</p>
                     <p className="font-medium">{projectData.prevProject.name}</p>
@@ -1154,18 +1263,26 @@ export default function MooniiProject() {
               </Link>
 
               {/* Next Project */}
-              <Link href={`/work/${projectData.nextProject.slug}`} className="group">
+              <Link href={`/work/${projectData.nextProject.slug}`}>
                 <motion.div
-                  whileHover={{ x: 8 }}
-                  transition={{ duration: 0.2 }}
                   className="flex items-center gap-3"
                   style={{ color: isDark ? "rgba(255,255,255,0.75)" : "rgba(31, 41, 55, 0.8)" }}
+                  whileHover="hover"
+                  initial="normal"
                 >
                   <div className="text-right">
                     <p className="text-xs uppercase tracking-wider opacity-60">Next</p>
                     <p className="font-medium">{projectData.nextProject.name}</p>
                   </div>
-                  <ArrowRight className="w-5 h-5" />
+                  <motion.div
+                    variants={{
+                      normal: { x: 0, color: isDark ? "rgba(255,255,255,0.75)" : "rgba(31, 41, 55, 0.8)" },
+                      hover: { x: 8, color: projectData.orbColors.primary },
+                    }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <ArrowRight className="w-5 h-5" />
+                  </motion.div>
                 </motion.div>
               </Link>
             </div>
