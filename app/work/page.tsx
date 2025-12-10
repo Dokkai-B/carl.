@@ -4,6 +4,7 @@ import { motion, AnimatePresence, useAnimation } from "framer-motion";
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
+import Link from "next/link";
 
 // =============================================
 // PROJECT DATA
@@ -77,6 +78,7 @@ const projects = [
     type: "Mobile",
     live: "#",
     github: "#",
+    slug: "moonii",
     orbColors: { primary: "#a77bbe", secondary: "#607ac2" },
   },
   {
@@ -261,6 +263,7 @@ const BackgroundPreview = ({
         {hoveredProject && (
           <motion.div
             key={hoveredProject.id}
+            layoutId={`project-hero-${hoveredProject.id}`}
             className="absolute inset-0"
             initial={{ opacity: 0, scale: 1.08 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -340,108 +343,112 @@ const ProjectListItem = ({
   onLeave: () => void;
   isDark: boolean;
 }) => {
+  const projectSlug = project.slug || project.title.toLowerCase().replace(/\s+/g, "-");
+
   return (
-    <motion.div
-      initial={{ opacity: 0, x: -30 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{
-        type: "spring",
-        stiffness: 250,
-        damping: 22,
-        delay: 0.1 + index * 0.05,
-      }}
-      onMouseEnter={onHover}
-      onMouseLeave={onLeave}
-      className="group cursor-pointer relative"
-    >
-      {/* Hover background glow - uses project orb color */}
+    <Link href={`/work/${projectSlug}`} className="block">
       <motion.div
-        className="absolute -inset-x-4 -inset-y-1 rounded-xl pointer-events-none"
-        style={{
-          background: isHovered
-            ? `linear-gradient(135deg, ${project.orbColors.primary}15 0%, ${project.orbColors.primary}05 100%)`
-            : "transparent",
+        initial={{ opacity: 0, x: -30 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{
+          type: "spring",
+          stiffness: 250,
+          damping: 22,
+          delay: 0.1 + index * 0.05,
         }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: isHovered ? 1 : 0 }}
-        transition={{ duration: 0.3 }}
-      />
-
-      <div className="relative py-4 md:py-5">
-        {/* Title row */}
-        <div className="flex items-center gap-3">
-          {/* Arrow indicator - only visible on hover, uses project color */}
-          <motion.span
-            className="text-lg md:text-xl"
-            style={{ color: isHovered ? project.orbColors.primary : "var(--accent)" }}
-            initial={{ opacity: 0, x: -10, scale: 0.8 }}
-            animate={{
-              opacity: isHovered ? 1 : 0,
-              x: isHovered ? 0 : -10,
-              scale: isHovered ? 1 : 0.8,
-            }}
-            transition={{ type: "spring", stiffness: 500, damping: 25 }}
-          >
-            →
-          </motion.span>
-
-          {/* Project title */}
-          <motion.h2
-            className="text-xl md:text-2xl lg:text-3xl font-light tracking-tight"
-            style={{
-              color: isHovered
-                ? project.orbColors.primary
-                : isDark
-                ? "rgba(255,255,255,0.65)"
-                : "rgba(0,0,0,0.6)",
-            }}
-            animate={{
-              x: isHovered ? 4 : 0,
-            }}
-            transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          >
-            {project.title}
-          </motion.h2>
-
-          {/* Type indicator on the right - uses project orb color on hover */}
-          <motion.span
-            className="text-[10px] font-semibold uppercase tracking-widest ml-auto"
-            style={{
-              color: isHovered
-                ? project.orbColors.primary
-                : isDark
-                ? "rgba(255,255,255,0.3)"
-                : "rgba(0,0,0,0.25)",
-            }}
-            animate={{
-              opacity: isHovered ? 1 : 0.7,
-              scale: isHovered ? 1.05 : 1,
-            }}
-            transition={{ duration: 0.2 }}
-          >
-            {project.year}
-          </motion.span>
-        </div>
-
-        {/* Animated underline - thicker, expands from left with project color gradient */}
+        onMouseEnter={onHover}
+        onMouseLeave={onLeave}
+        className="group cursor-pointer relative"
+      >
+        {/* Hover background glow - uses project orb color */}
         <motion.div
-          className="absolute bottom-0 left-0 right-0"
+          className="absolute -inset-x-4 -inset-y-1 rounded-xl pointer-events-none"
           style={{
-            height: isHovered ? "2px" : "1px",
             background: isHovered
-              ? `linear-gradient(90deg, ${project.orbColors.primary} 0%, ${project.orbColors.primary}40 100%)`
-              : isDark
-              ? "rgba(255,255,255,0.08)"
-              : "rgba(0,0,0,0.06)",
-            transformOrigin: "left",
-            boxShadow: isHovered ? `0 0 8px ${project.orbColors.primary}50` : "none",
+              ? `linear-gradient(135deg, ${project.orbColors.primary}15 0%, ${project.orbColors.primary}05 100%)`
+              : "transparent",
           }}
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: isHovered ? 1 : 0.15 }}
-          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isHovered ? 1 : 0 }}
+          transition={{ duration: 0.3 }}
         />
-      </div>
-    </motion.div>
+
+        <div className="relative py-4 md:py-5">
+          {/* Title row */}
+          <div className="flex items-center gap-3">
+            {/* Arrow indicator - only visible on hover, uses project color */}
+            <motion.span
+              className="text-lg md:text-xl"
+              style={{ color: isHovered ? project.orbColors.primary : "var(--accent)" }}
+              initial={{ opacity: 0, x: -10, scale: 0.8 }}
+              animate={{
+                opacity: isHovered ? 1 : 0,
+                x: isHovered ? 0 : -10,
+                scale: isHovered ? 1 : 0.8,
+              }}
+              transition={{ type: "spring", stiffness: 500, damping: 25 }}
+            >
+              →
+            </motion.span>
+
+            {/* Project title */}
+            <motion.h2
+              className="text-xl md:text-2xl lg:text-3xl font-light tracking-tight"
+              style={{
+                color: isHovered
+                  ? project.orbColors.primary
+                  : isDark
+                  ? "rgba(255,255,255,0.65)"
+                  : "rgba(0,0,0,0.6)",
+              }}
+              animate={{
+                x: isHovered ? 4 : 0,
+              }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            >
+              {project.title}
+            </motion.h2>
+
+            {/* Type indicator on the right - uses project orb color on hover */}
+            <motion.span
+              className="text-[10px] font-semibold uppercase tracking-widest ml-auto"
+              style={{
+                color: isHovered
+                  ? project.orbColors.primary
+                  : isDark
+                  ? "rgba(255,255,255,0.3)"
+                  : "rgba(0,0,0,0.25)",
+              }}
+              animate={{
+                opacity: isHovered ? 1 : 0.7,
+                scale: isHovered ? 1.05 : 1,
+              }}
+              transition={{ duration: 0.2 }}
+            >
+              {project.year}
+            </motion.span>
+          </div>
+
+          {/* Animated underline - thicker, expands from left with project color gradient */}
+          <motion.div
+            className="absolute bottom-0 left-0 right-0"
+            style={{
+              height: isHovered ? "2px" : "1px",
+              background: isHovered
+                ? `linear-gradient(90deg, ${project.orbColors.primary} 0%, ${project.orbColors.primary}40 100%)`
+                : isDark
+                ? "rgba(255,255,255,0.08)"
+                : "rgba(0,0,0,0.06)",
+              transformOrigin: "left",
+              boxShadow: isHovered ? `0 0 8px ${project.orbColors.primary}50` : "none",
+            }}
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: isHovered ? 1 : 0.15 }}
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+          />
+        </div>
+      </motion.div>
+    </Link>
   );
 };
 
@@ -503,9 +510,7 @@ const MetadataCard = ({
                 key={i}
                 className="text-xs px-3 py-1.5 rounded-full font-medium"
                 style={{
-                  backgroundColor: isDark
-                    ? "rgba(66, 129, 164, 0.15)"
-                    : "rgba(61, 165, 217, 0.1)",
+                  backgroundColor: isDark ? "rgba(66, 129, 164, 0.15)" : "rgba(61, 165, 217, 0.1)",
                   color: isDark ? "rgba(150, 200, 230, 0.9)" : "rgba(50, 120, 170, 0.9)",
                   border: `1px solid ${
                     isDark ? "rgba(66, 129, 164, 0.25)" : "rgba(61, 165, 217, 0.2)"
