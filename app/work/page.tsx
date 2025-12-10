@@ -22,6 +22,7 @@ const projects = [
     type: "Web",
     live: "#",
     github: "#",
+    slug: "blueward",
     orbColors: { primary: "#96c8ec", secondary: "#419cb9" },
   },
   {
