@@ -636,7 +636,7 @@ const PhoneMockup = ({
                   WebkitBackdropFilter: "blur(4px)",
                 }}
               >
-                <p className="text-white text-sm font-medium">Click to expand</p>
+                <p className="text-white text-sm font-medium">Click to Expand</p>
               </motion.div>
             )}
           </AnimatePresence>
@@ -944,6 +944,29 @@ export default function MooniiProject() {
           </div>
           {/* Mobile Mockups Section - REDESIGNED: 3D perspective with depth layering */}
           <div className="mb-24 py-16">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12"
+            >
+              <h2
+                className="text-3xl md:text-4xl font-bold"
+                style={{
+                  color: isDark ? "rgba(255,255,255,0.95)" : "rgba(31, 41, 55, 0.95)",
+                }}
+              >
+                Mobile Views
+              </h2>
+              <p
+                className="text-lg mt-2"
+                style={{ color: isDark ? "rgba(255,255,255,0.6)" : "rgba(31, 41, 55, 0.7)" }}
+              >
+                Mobile audio storytelling app
+              </p>
+            </motion.div>
+
             <div
               className="flex justify-center items-end gap-6"
               style={{ transformStyle: "preserve-3d" }}

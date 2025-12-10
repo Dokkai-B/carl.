@@ -543,19 +543,20 @@ const PhoneMockup = ({ src, alt, index, onClick, isDark, position }: PhoneMockup
     >
       <motion.div
         className="relative rounded-[32px] overflow-hidden"
-        style={{
-          width: position === "center" ? "280px" : "240px",
-          aspectRatio: "9/19",
-          backgroundColor: isDark ? "rgba(30, 45, 60, 0.4)" : "rgba(255, 255, 255, 0.5)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
-          border: `1px solid ${isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.8)"}`,
-          boxShadow: isDark
-            ? "0 24px 64px rgba(0, 0, 0, 0.4)"
-            : "0 16px 48px rgba(0, 0, 0, 0.08)",
-        }}
       >
-        <div className="relative w-full h-full">
+        <div
+          className={position === "center" ? "relative w-72 lg:w-80" : "relative w-64 lg:w-72"}
+          style={{
+            aspectRatio: "9/19",",
+            backgroundColor: isDark ? "rgba(30, 45, 60, 0.4)" : "rgba(255, 255, 255, 0.5)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+            border: `1px solid ${isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.8)"}`,
+            boxShadow: isDark
+              ? "0 24px 64px rgba(0, 0, 0, 0.4)"
+              : "0 16px 48px rgba(0, 0, 0, 0.08)",
+          }}
+        >
           <Image src={src} alt={alt} fill className="object-cover" priority />
           
           {/* Overlay - Click to Expand */}
@@ -573,6 +574,7 @@ const PhoneMockup = ({ src, alt, index, onClick, isDark, position }: PhoneMockup
             <span className="text-white text-sm font-medium">Click to Expand</span>
           </motion.div>
         </div>
+      </div>
       </motion.div>
 
       {/* Enhanced glow */}
