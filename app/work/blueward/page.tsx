@@ -481,121 +481,143 @@ interface PhoneMockupProps {
 }
 
 const PhoneMockup = ({ src, alt, index, onClick, isDark, position }: PhoneMockupProps) => {
+  const [isHovered, setIsHovered] = useState(false);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
 
-  const positionConfig = {
-    left: {
-      scale: 0.85,
-      rotateY: 12,
-      x: 30,
-      zIndex: 1,
-    },
-    center: {
-      scale: 1,
-      rotateY: 0,
-      x: 0,
-      zIndex: 3,
-    },
-    right: {
-      scale: 0.85,
-      rotateY: -12,
-      x: -30,
-      zIndex: 2,
-    },
+  const getPositionStyles = () => {
+    switch (position) {
+      case "left":
+        // Slight rotation with overlap toward center
+        return {
+          scale: isHovered ? 1.08 : 1.05,
+          rotateY: isHovered ? 0 : 12,
+          x: isHovered ? 0 : 20,
+          y: isHovered ? -12 : 0,
+        };
+      case "right":
+        // Slight rotation with overlap toward center
+        return {
+          scale: isHovered ? 1.08 : 1.05,
+          rotateY: isHovered ? 0 : -12,
+          x: isHovered ? 0 : -20,
+          y: isHovered ? -12 : 0,
+        };
+      case "center":
+      default:
+        // Center phone: faces forward, slightly larger, highest z-index
+        return {
+          scale: isHovered ? 1.1 : 1.08,
+          rotateY: 0,
+          x: 0,
+          y: isHovered ? -12 : 0,
+        };
+    }
   };
-
-  const config = positionConfig[position];
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 60, scale: 0.9 }}
-      animate={
-        isInView
-          ? {
-              opacity: 1,
-              y: 0,
-              scale: config.scale,
-              rotateY: config.rotateY,
-              x: config.x,
-            }
-          : {}
-      }
+      initial={{ opacity: 0, y: 50 }}
+      animate={isInView ? { opacity: 1, y: 0, ...getPositionStyles() } : { opacity: 0, y: 50 }}
       transition={{
-        duration: 0.8,
+        duration: 0.4,
         delay: index * 0.15,
-        ease: [0.16, 1, 0.3, 1],
+        ease: "easeOut",
       }}
-      whileHover={{
-        scale: position === "center" ? 1.05 : 0.9,
-        rotateY: 0,
-        zIndex: 10,
-        transition: { duration: 0.3 },
-      }}
-      onClick={onClick}
-      className="cursor-pointer relative group"
+      className="relative cursor-pointer group"
       style={{
-        zIndex: config.zIndex,
-        transformStyle: "preserve-3d",
-        perspective: "1000px",
+        perspective: "1200px",
+        zIndex: position === "center" ? (isHovered ? 50 : 20) : isHovered ? 40 : 10,
       }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={onClick}
+      whileTap={{ scale: position === "center" ? 1.06 : 1.0 }}
     >
+      {/* Floating shadow - pointer-events-none to avoid hitbox issues */}
+      <div
+        className="absolute inset-0 rounded-[28px] pointer-events-none"
+        style={{
+          filter: "blur(24px)",
+          background: isDark
+            ? "radial-gradient(ellipse at center, rgba(0, 0, 0, 0.4), transparent 65%)"
+            : "radial-gradient(ellipse at center, rgba(0, 0, 0, 0.15), transparent 65%)",
+          transform: `translateY(${isHovered ? "10px" : "16px"}) scale(0.9)`,
+          opacity: isHovered ? 0.8 : 0.6,
+          transition: "transform 400ms ease-out, opacity 400ms ease-out",
+        }}
+      />
+
+      {/* Phone container with transformStyle preserve-3d */}
       <motion.div
-        className="relative rounded-[32px] overflow-hidden"
+        className="relative overflow-hidden rounded-[28px]"
+        animate={{
+          rotateY:
+            position === "left"
+              ? isHovered
+                ? 0
+                : 12
+              : position === "right"
+              ? isHovered
+                ? 0
+                : -12
+              : 0,
+        }}
+        transition={{
+          duration: 0.4,
+          ease: "easeOut",
+        }}
+        style={{
+          backgroundColor: isDark ? "rgba(255, 255, 255, 0.04)" : "rgba(255, 255, 255, 0.5)",
+          backdropFilter: "blur(14px)",
+          WebkitBackdropFilter: "blur(14px)",
+          border: `1px solid ${isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(255, 255, 255, 0.6)"}`,
+          boxShadow: isHovered
+            ? isDark
+              ? `0 24px 64px rgba(0, 0, 0, 0.5), 0 0 0 1px ${projectData.orbColors.primary}50, 0 0 32px ${projectData.orbColors.primary}20`
+              : `0 16px 48px rgba(0, 0, 0, 0.12), 0 0 0 1px ${projectData.orbColors.light.primary}60, 0 0 24px ${projectData.orbColors.light.primary}15`
+            : isDark
+            ? "0 16px 48px rgba(0, 0, 0, 0.4)"
+            : "0 12px 40px rgba(0, 0, 0, 0.08)",
+          transformStyle: "preserve-3d",
+          transition:
+            "box-shadow 400ms ease-out, background-color 400ms ease-out, border 400ms ease-out",
+        }}
       >
         <div
           className={position === "center" ? "relative w-72 lg:w-80" : "relative w-64 lg:w-72"}
-          style={{
-            aspectRatio: "9/19",",
-            backgroundColor: isDark ? "rgba(30, 45, 60, 0.4)" : "rgba(255, 255, 255, 0.5)",
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
-            border: `1px solid ${isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.8)"}`,
-            boxShadow: isDark
-              ? "0 24px 64px rgba(0, 0, 0, 0.4)"
-              : "0 16px 48px rgba(0, 0, 0, 0.08)",
-          }}
+          style={{ aspectRatio: "9/19", transformStyle: "preserve-3d" }}
         >
-          <Image src={src} alt={alt} fill className="object-cover" priority />
-          
-          {/* Overlay - Click to Expand */}
-          <motion.div
-            className="absolute inset-0 flex items-center justify-center"
-            initial={{ opacity: 0 }}
-            whileHover={{ opacity: 1 }}
-            transition={{ duration: 0.2 }}
-            style={{
-              backgroundColor: "rgba(0, 0, 0, 0.4)",
-              backdropFilter: "blur(4px)",
-              WebkitBackdropFilter: "blur(4px)",
-            }}
-          >
-            <span className="text-white text-sm font-medium">Click to Expand</span>
-          </motion.div>
-        </div>
-      </div>
-      </motion.div>
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            sizes="(max-width: 1024px) 256px, 288px"
+            className="object-cover rounded-[28px]"
+          />
 
-      {/* Enhanced glow */}
-      <motion.div
-        className="absolute inset-0 rounded-[32px] pointer-events-none -z-10"
-        style={{
-          background: `radial-gradient(circle, ${
-            isDark ? projectData.orbColors.primary : projectData.orbColors.light.primary
-          }40, transparent 70%)`,
-          filter: `blur(${position === "center" ? 50 : 40}px)`,
-          opacity: position === "center" ? 0.4 : 0.25,
-        }}
-        animate={{
-          opacity: position === "center" ? [0.35, 0.45, 0.35] : [0.2, 0.3, 0.2],
-        }}
-        transition={{
-          duration: 3,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
+          {/* REDESIGNED: "Click to Expand" overlay hint */}
+          <AnimatePresence>
+            {isHovered && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="absolute inset-0 flex items-center justify-center rounded-[28px]"
+                style={{
+                  backgroundColor: "rgba(0, 0, 0, 0.6)",
+                  backdropFilter: "blur(4px)",
+                  WebkitBackdropFilter: "blur(4px)",
+                }}
+              >
+                <p className="text-white text-sm font-medium">Click to Expand</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </motion.div>
     </motion.div>
   );
 };
