@@ -231,7 +231,7 @@ const PARTICLE_PATTERNS: Record<SectionId, ParticlePattern> = {
 // DATA
 // =============================================
 const about = {
-  title: "About Me",
+  title: "About Carl",
   info: [
     { fieldName: "Name", fieldValue: "Carl Patrick Adrian Aguas" },
     { fieldName: "Experience", fieldValue: "<1 Year" },
