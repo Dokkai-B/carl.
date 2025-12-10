@@ -15,7 +15,7 @@ const projects = [
     title: "Blue Ward",
     subtitle: "Full-Stack Application",
     description:
-      "A full emergency assistance platform with live bidirectional communication, geolocation tracking, remote media capture, and a multi-service cloud architecture.",
+      "A real-time emergency assistance platform designed for critical situations requiring immediate remote support. Enables secure live communication between responders and users through bidirectional messaging, geolocation tracking, and remote media capture.",
     thumbnail: "/Temp Projects Thumbnail/Blue Ward.png",
     tech: ["React", "Flutter", "Node.js", "Socket.IO", "AWS S3", "Docker"],
     year: "2025",
