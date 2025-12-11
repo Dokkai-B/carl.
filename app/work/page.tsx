@@ -112,7 +112,7 @@ const projects = [
   },
   {
     id: 8,
-    title: "Women's Club",
+    title: "Womens CLUB",
     subtitle: "Full-Stack Web Application",
     description:
       "A web platform streamlining member, event, and donation management for community organizations.",
@@ -122,6 +122,7 @@ const projects = [
     type: "Web",
     live: "https://womensclub.vercel.app/",
     github: "https://github.com/Dokkai-B/womens-club",
+    slug: "womens-club",
     orbColors: { primary: "#232289", secondary: "#ffffff" },
   },
   {

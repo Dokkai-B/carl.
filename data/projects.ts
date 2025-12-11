@@ -88,7 +88,7 @@ export const projects: Project[] = [
     type: "mobile-web",
     summary:
       "A real-time emergency assistance platform designed for critical situations requiring immediate remote support. It enables secure live communication between responders and users through bidirectional messaging, geolocation tracking, remote media capture, and a cloud-deployed backend spanning mobile, web, and backend services with a fully integrated real-time architecture.",
-    heroImage: "/Temp Projects Thumbnail/Blue Ward.png",
+    heroImage: "/Temp Photos/HeroPhoto/BlueWard.png",
     links: {
       prototype: "#",
       github: "#",
@@ -131,16 +131,29 @@ export const projects: Project[] = [
       "Vercel",
     ],
     mobileScreens: [
-      { name: "Status", image: "/Temp Projects UI/Blue Ward/Mobile/Dark/Status_Dark.png" },
-      { name: "GPS", image: "/Temp Projects UI/Blue Ward/Mobile/Dark/GPS_Dark.png" },
-      { name: "Camera", image: "/Temp Projects UI/Blue Ward/Mobile/Dark/Camera_Dark.png" },
-      { name: "Audio", image: "/Temp Projects UI/Blue Ward/Mobile/Dark/Audio_Dark.png" },
-      { name: "Battery", image: "/Temp Projects UI/Blue Ward/Mobile/Dark/Battery_Dark.png" },
+      {
+        name: "GPS Tracking",
+        image: "/Temp Photos/UIPhoto/BlueWard/Mobile/Dark/GPSTracking_MobileLeft.png",
+      },
+      {
+        name: "Status Overview",
+        image: "/Temp Photos/UIPhoto/BlueWard/Mobile/Dark/StatusOverview_MobileCenter.png",
+      },
+      {
+        name: "Camera Status",
+        image: "/Temp Photos/UIPhoto/BlueWard/Mobile/Dark/CameraStatus_MobileRight.png",
+      },
+      {
+        name: "Audio Recording",
+        image: "/Temp Photos/UIPhoto/BlueWard/Mobile/Dark/AudioRecording.png",
+      },
     ],
     webViews: [
-      // Add Blue Ward web screenshots here
-      { name: "Dashboard", image: "/Temp Projects UI/Blue Ward/Web/Dashboard.png" },
-      { name: "Agent Panel", image: "/Temp Projects UI/Blue Ward/Web/Agent.png" },
+      {
+        name: "Dashboard",
+        image: "/Temp Photos/UIPhoto/BlueWard/Desktop/Dashboard_DesktopLeft.png",
+      },
+      { name: "Login", image: "/Temp Photos/UIPhoto/BlueWard/Desktop/Login_DesktopRight.png" },
     ],
     colors: {
       primary: "#96c8ec",
@@ -163,7 +176,7 @@ export const projects: Project[] = [
     type: "mobile-only",
     summary:
       "A cross-platform mobile application for recording, storing, and playing personalized bedtime stories. It enables parents to capture audio narrations that are securely uploaded to the cloud and accessed by family members through a modern, synchronized audio player interface.",
-    heroImage: "/Temp Projects Thumbnail/Moonii.png",
+    heroImage: "/Temp Photos/HeroPhoto/Moonii.png",
     links: {
       prototype: "#",
       github: "#",
@@ -202,11 +215,14 @@ export const projects: Project[] = [
       "just_audio",
     ],
     mobileScreens: [
-      { name: "Home", image: "/Temp Projects UI/Moonii/Phone Screenshots/1.png" },
-      { name: "Story List", image: "/Temp Projects UI/Moonii/Phone Screenshots/2.png" },
-      { name: "Recording", image: "/Temp Projects UI/Moonii/Phone Screenshots/3.png" },
-      { name: "Recording Process", image: "/Temp Projects UI/Moonii/Phone Screenshots/4.png" },
-      { name: "Upload", image: "/Temp Projects UI/Moonii/Phone Screenshots/5.png" },
+      {
+        name: "Audio Recording",
+        image: "/Temp Photos/UIPhoto/Moonii/AudioRecording_MobileLeft.png",
+      },
+      { name: "Home", image: "/Temp Photos/UIPhoto/Moonii/Home_MobileCenter.png" },
+      { name: "Audio Upload", image: "/Temp Photos/UIPhoto/Moonii/AudioUpload_MobileRight.png" },
+      { name: "Audio Record", image: "/Temp Photos/UIPhoto/Moonii/AudioRecord.png" },
+      { name: "Story List", image: "/Temp Photos/UIPhoto/Moonii/StoryList.png" },
     ],
     colors: {
       primary: "#957ab6",
@@ -228,7 +244,7 @@ export const projects: Project[] = [
     role: "",
     type: "mobile-only",
     summary: "A mobile application to reduce food waste by connecting users with surplus food.",
-    heroImage: "/Temp Projects Thumbnail/SaveEat.png",
+    heroImage: "/Temp Photos/HeroPhoto/SaveEat.png",
     links: {
       prototype: "#",
       github: "#",
@@ -243,9 +259,13 @@ export const projects: Project[] = [
     ],
     techStack: ["Flutter", "Firebase", "Google Maps", "Dart"],
     mobileScreens: [
-      { name: "Home", image: "/Temp Projects UI/SaveEat/1.png" },
-      { name: "Listings", image: "/Temp Projects UI/SaveEat/2.png" },
-      { name: "Details", image: "/Temp Projects UI/SaveEat/3.png" },
+      { name: "Macros", image: "/Temp Photos/UIPhoto/SaveEat/Macros_MobileLeft.png" },
+      { name: "Logo", image: "/Temp Photos/UIPhoto/SaveEat/Logo_MobileCenter.png" },
+      { name: "Budget", image: "/Temp Photos/UIPhoto/SaveEat/Budget_MobileRight.png" },
+      { name: "Account Details", image: "/Temp Photos/UIPhoto/SaveEat/AccountDetails.png" },
+      { name: "Create Account", image: "/Temp Photos/UIPhoto/SaveEat/CreateAccount.png" },
+      { name: "Current Balance", image: "/Temp Photos/UIPhoto/SaveEat/CurrentBalance.png" },
+      { name: "Login", image: "/Temp Photos/UIPhoto/SaveEat/Login.png" },
     ],
     colors: {
       primary: "#16a34a",
@@ -267,7 +287,7 @@ export const projects: Project[] = [
     role: "",
     type: "mobile-only",
     summary: "A creative mobile application for digital art creation and sharing.",
-    heroImage: "/Temp Projects Thumbnail/Heart to Art.png",
+    heroImage: "/Temp Photos/HeroPhoto/HeartToArt.png",
     links: {
       prototype: "#",
       github: "#",
@@ -282,9 +302,22 @@ export const projects: Project[] = [
     ],
     techStack: ["Flutter", "Canvas API", "Firebase", "Dart"],
     mobileScreens: [
-      { name: "Canvas", image: "/Temp Projects UI/Heart to Art/1.png" },
-      { name: "Gallery", image: "/Temp Projects UI/Heart to Art/2.png" },
-      { name: "Share", image: "/Temp Projects UI/Heart to Art/3.png" },
+      { name: "Chatting", image: "/Temp Photos/UIPhoto/HeartToArt/Chatting_MobileLeft.png" },
+      { name: "Logo", image: "/Temp Photos/UIPhoto/HeartToArt/Logo_MobileCenter.png" },
+      {
+        name: "Transaction Details",
+        image: "/Temp Photos/UIPhoto/HeartToArt/TransactionDetails_MobileRight.png",
+      },
+      { name: "Artist Account", image: "/Temp Photos/UIPhoto/HeartToArt/ArtistAccount.png" },
+      { name: "Artist Rating", image: "/Temp Photos/UIPhoto/HeartToArt/ArtistRating.png" },
+      { name: "Chat List", image: "/Temp Photos/UIPhoto/HeartToArt/ChatList.png" },
+      { name: "Edit Profile", image: "/Temp Photos/UIPhoto/HeartToArt/EditProfile.png" },
+      {
+        name: "Request Confirmation",
+        image: "/Temp Photos/UIPhoto/HeartToArt/RequestConfirmation.png",
+      },
+      { name: "Request List", image: "/Temp Photos/UIPhoto/HeartToArt/RequestList.png" },
+      { name: "User Feed", image: "/Temp Photos/UIPhoto/HeartToArt/UserFeed.png" },
     ],
     colors: {
       primary: "#ec4899",
@@ -306,7 +339,7 @@ export const projects: Project[] = [
     role: "",
     type: "web-only",
     summary: "A web platform to help reunite lost pets with their owners.",
-    heroImage: "/Temp Projects Thumbnail/LostPaws.png",
+    heroImage: "/Temp Photos/HeroPhoto/LostPaws.png",
     links: {
       prototype: "#",
       github: "#",
@@ -322,9 +355,12 @@ export const projects: Project[] = [
     ],
     techStack: ["React.js", "Node.js", "MongoDB", "Google Maps API", "Vercel"],
     webViews: [
-      { name: "Dashboard", image: "/Temp Projects UI/LostPaws/Dashboard.png" },
-      { name: "Map View", image: "/Temp Projects UI/LostPaws/Map.png" },
-      { name: "Pet Details", image: "/Temp Projects UI/LostPaws/Details.png" },
+      { name: "Home", image: "/Temp Photos/UIPhoto/LostPaws/Home_DesktopLeft.png" },
+      { name: "Logo", image: "/Temp Photos/UIPhoto/LostPaws/Logo_DesktopCenter.png" },
+      { name: "Login", image: "/Temp Photos/UIPhoto/LostPaws/Login_DesktopRight.png" },
+      { name: "Adoption", image: "/Temp Photos/UIPhoto/LostPaws/Adoption.png" },
+      { name: "Found Pets", image: "/Temp Photos/UIPhoto/LostPaws/FoundPets.png" },
+      { name: "Lost Pets", image: "/Temp Photos/UIPhoto/LostPaws/LostPets.png" },
     ],
     colors: {
       primary: "#f97316",
@@ -346,7 +382,7 @@ export const projects: Project[] = [
     role: "",
     type: "mobile-only",
     summary: "A seismic monitoring and earthquake awareness mobile application.",
-    heroImage: "/Temp Projects Thumbnail/Earthshaker.png",
+    heroImage: "/Temp Photos/HeroPhoto/Earthshaker.png",
     links: {
       prototype: "#",
       github: "#",
@@ -361,9 +397,12 @@ export const projects: Project[] = [
     ],
     techStack: ["Flutter", "OpenStreetMap", "Firebase", "Dart"],
     mobileScreens: [
-      { name: "Dashboard", image: "/Temp Projects UI/Earthshaker/1.png" },
-      { name: "Map", image: "/Temp Projects UI/Earthshaker/2.png" },
-      { name: "Alerts", image: "/Temp Projects UI/Earthshaker/3.png" },
+      { name: "Settings", image: "/Temp Photos/UIPhoto/Earthshaker/Settings_MobileLeft.png" },
+      { name: "Dashboard", image: "/Temp Photos/UIPhoto/Earthshaker/Dashboard_MobileCenter.png" },
+      {
+        name: "More Settings",
+        image: "/Temp Photos/UIPhoto/Earthshaker/More Settings_MobileRight.png",
+      },
     ],
     colors: {
       primary: "#dc2626",
@@ -379,13 +418,13 @@ export const projects: Project[] = [
   {
     id: 7,
     slug: "womens-club",
-    title: "Women's Club",
+    title: "Womens CLUB",
     category: "Web Platform",
     year: "2024",
     role: "",
     type: "web-only",
     summary: "A community platform for women to connect, share, and support each other.",
-    heroImage: "/Temp Projects Thumbnail/Womens Club.png",
+    heroImage: "/Temp Photos/HeroPhoto/WomensCLUB.png",
     links: {
       prototype: "#",
       github: "#",
@@ -401,9 +440,18 @@ export const projects: Project[] = [
     ],
     techStack: ["React.js", "Node.js", "PostgreSQL", "Socket.IO", "Vercel"],
     webViews: [
-      { name: "Community", image: "/Temp Projects UI/Womens Club/Community.png" },
-      { name: "Mentorship", image: "/Temp Projects UI/Womens Club/Mentorship.png" },
-      { name: "Events", image: "/Temp Projects UI/Womens Club/Events.png" },
+      { name: "Login Page", image: "/Temp Photos/UIPhoto/WomensCLUB/LoginPage_DesktopLeft.png" },
+      { name: "Home", image: "/Temp Photos/UIPhoto/WomensCLUB/Home_DesktopCenter.png" },
+      { name: "Event LIst", image: "/Temp Photos/UIPhoto/WomensCLUB/EventLIst_DesktopRight.png" },
+      { name: "404 Page", image: "/Temp Photos/UIPhoto/WomensCLUB/404Page.png" },
+      { name: "Create Event", image: "/Temp Photos/UIPhoto/WomensCLUB/CreateEvent.png" },
+      { name: "Edit User", image: "/Temp Photos/UIPhoto/WomensCLUB/EditUser.png" },
+      { name: "Event Details", image: "/Temp Photos/UIPhoto/WomensCLUB/EventDetails.png" },
+      {
+        name: "Event Participation",
+        image: "/Temp Photos/UIPhoto/WomensCLUB/EventParticipation.png",
+      },
+      { name: "Member List", image: "/Temp Photos/UIPhoto/WomensCLUB/MemberList.png" },
     ],
     colors: {
       primary: "#d946ef",
