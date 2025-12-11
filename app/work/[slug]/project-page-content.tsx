@@ -238,16 +238,25 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
             transition={{ duration: 0.5 }}
             className="mb-12"
           >
-            <button
+            <motion.button
               onClick={() => router.back()}
-              className="flex items-center gap-2 text-sm font-medium transition-colors"
+              className="flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg"
               style={{
-                color: isDark ? "rgba(255, 255, 255, 0.6)" : "rgba(31, 41, 55, 0.7)",
+                color: isDark ? "rgba(255, 255, 255, 0.7)" : "rgba(31, 41, 55, 0.75)",
+                backgroundColor: isDark ? "rgba(255, 255, 255, 0.05)" : "rgba(255, 255, 255, 0.3)",
+                backdropFilter: "blur(8px)",
+                WebkitBackdropFilter: "blur(8px)",
+                border: `1px solid ${isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.4)"}`,
               }}
+              whileHover={{
+                backgroundColor: isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(255, 255, 255, 0.4)",
+                color: project.colors.primary,
+              }}
+              whileTap={{ scale: 0.98 }}
             >
               <ArrowLeft className="w-4 h-4" />
-              Back
-            </button>
+              Back to Projects
+            </motion.button>
           </motion.div>
 
           <motion.div
@@ -276,19 +285,24 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.2 }}
-                  className="flex items-center gap-2 mb-4"
-                  style={{
-                    borderBottom: `2px solid ${project.colors.primary}40`,
-                    paddingBottom: "12px",
-                  }}
+                  className="flex items-center gap-2 mb-4 flex-wrap"
                 >
-                  <span className="text-sm font-medium" style={{ color: project.colors.primary }}>
+                  <span
+                    className="text-xs font-medium px-3 py-1.5 rounded-full"
+                    style={{
+                      backgroundColor: `${project.colors.primary}20`,
+                      color: project.colors.primary,
+                      border: `1px solid ${project.colors.primary}40`,
+                    }}
+                  >
                     {project.category}
                   </span>
                   <span
-                    className="text-xs"
+                    className="text-xs font-medium px-3 py-1.5 rounded-full"
                     style={{
-                      color: isDark ? "rgba(255, 255, 255, 0.4)" : "rgba(31, 41, 55, 0.5)",
+                      backgroundColor: isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.06)",
+                      color: isDark ? "rgba(255, 255, 255, 0.5)" : "rgba(31, 41, 55, 0.5)",
+                      border: isDark ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid rgba(0, 0, 0, 0.08)",
                     }}
                   >
                     {project.year}
@@ -509,7 +523,19 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-12">Key Features</h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div
+              className="p-8 md:p-12 rounded-3xl"
+              style={{
+                backgroundColor: isDark ? "rgba(255, 255, 255, 0.05)" : "rgba(255, 255, 255, 0.4)",
+                backdropFilter: "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)",
+                border: `1px solid ${isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.6)"}`,
+                boxShadow: isDark
+                  ? "inset 0 1px 2px rgba(255, 255, 255, 0.05), 0 20px 40px rgba(0, 0, 0, 0.3)"
+                  : "inset 0 1px 2px rgba(255, 255, 255, 0.6), 0 20px 40px rgba(0, 0, 0, 0.06)",
+              }}
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {project.features.map((feature, index) => {
                 const Icon = getIcon(feature.icon);
                 return (
@@ -546,6 +572,7 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                   </motion.div>
                 );
               })}
+              </div>
             </div>
           </motion.div>
 
@@ -558,7 +585,18 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-12">Tech Stack</h2>
 
-            <div>
+            <div
+              className="p-8 md:p-12 rounded-3xl"
+              style={{
+                backgroundColor: isDark ? "rgba(255, 255, 255, 0.05)" : "rgba(255, 255, 255, 0.4)",
+                backdropFilter: "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)",
+                border: `1px solid ${isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.6)"}`,
+                boxShadow: isDark
+                  ? "inset 0 1px 2px rgba(255, 255, 255, 0.05), 0 20px 40px rgba(0, 0, 0, 0.3)"
+                  : "inset 0 1px 2px rgba(255, 255, 255, 0.6), 0 20px 40px rgba(0, 0, 0, 0.06)",
+              }}
+            >
               <div className="flex flex-wrap gap-3">
                 {project.techStack.map((tech, i) => (
                   <motion.span

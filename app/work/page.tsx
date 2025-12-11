@@ -16,7 +16,7 @@ const projects = [
     subtitle: "Full-Stack Application",
     description:
       "A real-time emergency assistance platform designed for critical situations requiring immediate remote support. Enables secure live communication between responders and users through bidirectional messaging, geolocation tracking, and remote media capture.",
-    thumbnail: "/Temp Projects Thumbnail/Blue Ward.png",
+    thumbnail: "/Temp Photos/HeroPhoto/BlueWard.png",
     tech: ["React", "Flutter", "Node.js", "Socket.IO", "AWS S3", "Docker"],
     year: "2025",
     type: "Web",
@@ -31,7 +31,7 @@ const projects = [
     subtitle: "Mobile Application",
     description:
       "A real-time earthquake alert system delivering sub-second push notifications across the Philippines using USGS data, Flutter, and a Node.js cloud backend.",
-    thumbnail: "/Temp Projects Thumbnail/Earthshaker.png",
+    thumbnail: "/Temp Photos/HeroPhoto/Earthshaker.png",
     tech: ["Flutter", "Node.js", "Express", "Render", "Firebase FCM", "USGS API"],
     year: "2025",
     type: "Mobile",
@@ -45,7 +45,7 @@ const projects = [
     subtitle: "Mobile Application",
     description:
       "A platform connecting artists with clients, featuring commission management and real-time messaging.",
-    thumbnail: "/Temp Projects Thumbnail/Heart to Art.png",
+    thumbnail: "/Temp Photos/HeroPhoto/HeartToArt.png",
     tech: ["React Native", "Expo", "Firebase"],
     year: "2024",
     type: "Mobile",
@@ -59,7 +59,7 @@ const projects = [
     subtitle: "Full-Stack Web Application",
     description:
       "A community platform helping reunite lost pets with owners and facilitating pet adoptions.",
-    thumbnail: "/Temp Projects Thumbnail/LostPaws.png",
+    thumbnail: "/Temp Photos/HeroPhoto/LostPaws.png",
     tech: ["PHP", "MySQL", "JavaScript"],
     year: "2024",
     type: "Web",
@@ -73,7 +73,7 @@ const projects = [
     subtitle: "Mobile Application",
     description:
       "A mobile audio storytelling app enabling secure cloud-stored recordings, waveform visualization, playlist management, and synchronized multi-view playback.",
-    thumbnail: "/Temp Projects Thumbnail/Moonii.png",
+    thumbnail: "/Temp Photos/HeroPhoto/Moonii.png",
     tech: ["Flutter", "Node.js", "AWS S3", "Audio Processing", "Waveform UI"],
     year: "2025",
     type: "Mobile",
@@ -88,7 +88,7 @@ const projects = [
     subtitle: "Mobile Application",
     description:
       "A nutrition tracking app that combines dietary planning with budget management for healthier choices.",
-    thumbnail: "/Temp Projects Thumbnail/SaveEat.png",
+    thumbnail: "/Temp Photos/HeroPhoto/SaveEat.png",
     tech: ["React Native", "Firebase", "Expo"],
     year: "2024",
     type: "Mobile",
@@ -102,7 +102,7 @@ const projects = [
     subtitle: "Cross-Platform Application",
     description:
       "A cross-platform bedtime story audio player with basic scaffolding for playback, file import, multi-platform UI, and early architecture for a future VS Code extension.",
-    thumbnail: "/Temp Projects Thumbnail/translate.png",
+    thumbnail: "/Temp Photos/HeroPhoto/Translate.png",
     tech: ["Flutter", "React Native", "Dart", "Expo", "just_audio"],
     year: "2025",
     type: "Mobile",
@@ -116,7 +116,7 @@ const projects = [
     subtitle: "Full-Stack Web Application",
     description:
       "A web platform streamlining member, event, and donation management for community organizations.",
-    thumbnail: "/Temp Projects Thumbnail/WomensCLUB.png",
+    thumbnail: "/Temp Photos/HeroPhoto/WomensCLUB.png",
     tech: ["React", "Chakra UI", "Firebase", "Vercel"],
     year: "2024",
     type: "Web",
@@ -131,7 +131,7 @@ const projects = [
     subtitle: "Full-Stack Web Application",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut perspiciatis unde omnis iste natus error sit voluptatem.",
-    thumbnail: "/Temp Projects Thumbnail/Yellow Ward.png",
+    thumbnail: "/Temp Photos/HeroPhoto/YellowWard.png",
     tech: ["Vue.js", "Express", "PostgreSQL"],
     year: "2025",
     type: "Web",
