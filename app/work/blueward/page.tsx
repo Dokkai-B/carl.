@@ -872,25 +872,28 @@ export default function BlueWardProject() {
             className="mb-16"
           >
             <Link href="/work">
-            <motion.div
-              className="inline-flex items-center gap-2 text-sm"
-              style={{
-                color: isDark ? "rgba(255,255,255,0.65)" : "rgba(31, 41, 55, 0.7)",
-              }}
-              whileHover="hover"
-              initial="normal"
-            >
               <motion.div
-                variants={{
-                  normal: { x: 0, color: isDark ? "rgba(255,255,255,0.65)" : "rgba(31, 41, 55, 0.7)" },
-                  hover: { x: -3, color: projectData.orbColors.primary },
+                className="inline-flex items-center gap-2 text-sm"
+                style={{
+                  color: isDark ? "rgba(255,255,255,0.65)" : "rgba(31, 41, 55, 0.7)",
                 }}
-                transition={{ duration: 0.2 }}
+                whileHover="hover"
+                initial="normal"
               >
-                <ArrowLeft className="w-4 h-4" />
+                <motion.div
+                  variants={{
+                    normal: {
+                      x: 0,
+                      color: isDark ? "rgba(255,255,255,0.65)" : "rgba(31, 41, 55, 0.7)",
+                    },
+                    hover: { x: -3, color: projectData.orbColors.primary },
+                  }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                </motion.div>
+                <span>Back to Projects</span>
               </motion.div>
-              <span>Back to Projects</span>
-            </motion.div>
             </Link>
           </motion.div>
           {/* REDESIGNED: Two-column header layout (50% left, 50% right) */}
@@ -1125,127 +1128,127 @@ export default function BlueWardProject() {
             <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 mb-24 relative z-10">
               {/* Features Card - with scroll animations and icons, glass morphism */}
               <div ref={featuresRef} className="lg:col-span-2">
-              <div
-                className="p-10 rounded-3xl h-full relative overflow-hidden"
-                style={{
-                  backgroundColor: isDark ? "rgba(20, 30, 40, 0.5)" : "rgba(255, 255, 255, 0.4)",
-                  backdropFilter: "blur(20px)",
-                  WebkitBackdropFilter: "blur(20px)",
-                  boxShadow: isDark
-                    ? "inset 0 2px 4px rgba(255,255,255,0.05), 0 20px 40px rgba(0, 0, 0, 0.35)"
-                    : "inset 0 2px 4px rgba(255,255,255,0.6), 0 20px 40px rgba(0, 0, 0, 0.08)",
-                  border: `1.5px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.06)"}`,
-                }}
-              >
-                <h2 className="text-2xl font-bold mb-7">Key Features</h2>
-                <ul className="space-y-4">
-                  {projectData.features.map((feature, i) => (
-                    <motion.li
-                      key={i}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={featuresInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-                      transition={{
-                        duration: 0.4,
-                        delay: i * 0.1,
-                        ease: [0.16, 1, 0.3, 1],
-                      }}
-                      whileHover={{
-                        x: 4,
-                        backgroundColor: isDark
-                          ? "rgba(255, 255, 255, 0.04)"
-                          : "rgba(0, 0, 0, 0.04)",
-                        transition: { duration: 0.05 },
-                      }}
-                      className="flex items-start gap-4 p-2 rounded-lg"
-                      style={{ lineHeight: "1.6" }}
-                    >
-                      <span
-                        className="mt-1 p-2 rounded-lg flex-shrink-0"
+                <div
+                  className="p-10 rounded-3xl h-full relative overflow-hidden"
+                  style={{
+                    backgroundColor: isDark ? "rgba(20, 30, 40, 0.5)" : "rgba(255, 255, 255, 0.4)",
+                    backdropFilter: "blur(20px)",
+                    WebkitBackdropFilter: "blur(20px)",
+                    boxShadow: isDark
+                      ? "inset 0 2px 4px rgba(255,255,255,0.05), 0 20px 40px rgba(0, 0, 0, 0.35)"
+                      : "inset 0 2px 4px rgba(255,255,255,0.6), 0 20px 40px rgba(0, 0, 0, 0.08)",
+                    border: `1.5px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.06)"}`,
+                  }}
+                >
+                  <h2 className="text-2xl font-bold mb-7">Key Features</h2>
+                  <ul className="space-y-4">
+                    {projectData.features.map((feature, i) => (
+                      <motion.li
+                        key={i}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={featuresInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
+                        transition={{
+                          duration: 0.4,
+                          delay: i * 0.1,
+                          ease: [0.16, 1, 0.3, 1],
+                        }}
+                        whileHover={{
+                          x: 4,
+                          backgroundColor: isDark
+                            ? "rgba(255, 255, 255, 0.04)"
+                            : "rgba(0, 0, 0, 0.04)",
+                          transition: { duration: 0.05 },
+                        }}
+                        className="flex items-start gap-4 p-2 rounded-lg"
+                        style={{ lineHeight: "1.6" }}
+                      >
+                        <span
+                          className="mt-1 p-2 rounded-lg flex-shrink-0"
+                          style={{
+                            backgroundColor: isDark
+                              ? `${projectData.orbColors.primary}15`
+                              : `${projectData.orbColors.light.primary}20`,
+                            color: isDark
+                              ? projectData.orbColors.primary
+                              : projectData.orbColors.light.primary,
+                            opacity: 0.85,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <feature.icon className="w-5 h-5" />
+                        </span>
+                        <span
+                          style={{
+                            color: isDark ? "rgba(255,255,255,0.85)" : "rgba(31, 41, 55, 0.85)",
+                          }}
+                        >
+                          {feature.text}
+                        </span>
+                      </motion.li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              {/* Tech Stack Card - with scroll animations, glass morphism */}
+              <div ref={techStackRef} className="lg:col-span-1">
+                <div
+                  className="p-10 rounded-3xl h-full relative overflow-hidden"
+                  style={{
+                    backgroundColor: isDark ? "rgba(20, 30, 40, 0.5)" : "rgba(255, 255, 255, 0.4)",
+                    backdropFilter: "blur(20px)",
+                    WebkitBackdropFilter: "blur(20px)",
+                    boxShadow: isDark
+                      ? "inset 0 2px 4px rgba(255,255,255,0.05), 0 20px 40px rgba(0, 0, 0, 0.35)"
+                      : "inset 0 2px 4px rgba(255,255,255,0.6), 0 20px 40px rgba(0, 0, 0, 0.08)",
+                    border: `1.5px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.06)"}`,
+                  }}
+                >
+                  <h2 className="text-2xl font-bold mb-7">Tech Stack</h2>
+                  <div className="flex flex-wrap gap-2.5">
+                    {projectData.techStack.map((tech, i) => (
+                      <motion.span
+                        key={i}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{
+                          opacity: techStackInView ? 1 : 0,
+                          scale: techStackInView ? 1 : 0.8,
+                        }}
+                        transition={{
+                          duration: 0.3,
+                          delay: i * 0.05,
+                          ease: [0.16, 1, 0.3, 1],
+                        }}
+                        whileHover={{
+                          scale: 1.05,
+                          y: -2,
+                          transition: { duration: 0.05 },
+                        }}
+                        className="px-4 py-2.5 rounded-full text-sm font-medium cursor-default"
                         style={{
                           backgroundColor: isDark
-                            ? `${projectData.orbColors.primary}15`
+                            ? `${projectData.orbColors.primary}18`
                             : `${projectData.orbColors.light.primary}20`,
                           color: isDark
                             ? projectData.orbColors.primary
                             : projectData.orbColors.light.primary,
+                          border: `1px solid ${
+                            isDark
+                              ? `${projectData.orbColors.primary}28`
+                              : `${projectData.orbColors.light.primary}35`
+                          }`,
                           opacity: 0.85,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
                         }}
                       >
-                        <feature.icon className="w-5 h-5" />
-                      </span>
-                      <span
-                        style={{
-                          color: isDark ? "rgba(255,255,255,0.85)" : "rgba(31, 41, 55, 0.85)",
-                        }}
-                      >
-                        {feature.text}
-                      </span>
-                    </motion.li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            {/* Tech Stack Card - with scroll animations, glass morphism */}
-            <div ref={techStackRef} className="lg:col-span-1">
-              <div
-                className="p-10 rounded-3xl h-full relative overflow-hidden"
-                style={{
-                  backgroundColor: isDark ? "rgba(20, 30, 40, 0.5)" : "rgba(255, 255, 255, 0.4)",
-                  backdropFilter: "blur(20px)",
-                  WebkitBackdropFilter: "blur(20px)",
-                  boxShadow: isDark
-                    ? "inset 0 2px 4px rgba(255,255,255,0.05), 0 20px 40px rgba(0, 0, 0, 0.35)"
-                    : "inset 0 2px 4px rgba(255,255,255,0.6), 0 20px 40px rgba(0, 0, 0, 0.08)",
-                  border: `1.5px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.06)"}`,
-                }}
-              >
-                <h2 className="text-2xl font-bold mb-7">Tech Stack</h2>
-                <div className="flex flex-wrap gap-2.5">
-                  {projectData.techStack.map((tech, i) => (
-                    <motion.span
-                      key={i}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{
-                        opacity: techStackInView ? 1 : 0,
-                        scale: techStackInView ? 1 : 0.8,
-                      }}
-                      transition={{
-                        duration: 0.3,
-                        delay: i * 0.05,
-                        ease: [0.16, 1, 0.3, 1],
-                      }}
-                      whileHover={{
-                        scale: 1.05,
-                        y: -2,
-                        transition: { duration: 0.05 },
-                      }}
-                      className="px-4 py-2.5 rounded-full text-sm font-medium cursor-default"
-                      style={{
-                        backgroundColor: isDark
-                          ? `${projectData.orbColors.primary}18`
-                          : `${projectData.orbColors.light.primary}20`,
-                        color: isDark
-                          ? projectData.orbColors.primary
-                          : projectData.orbColors.light.primary,
-                        border: `1px solid ${
-                          isDark
-                            ? `${projectData.orbColors.primary}28`
-                            : `${projectData.orbColors.light.primary}35`
-                        }`,
-                        opacity: 0.85,
-                      }}
-                    >
-                      {tech}
-                    </motion.span>
-                  ))}
+                        {tech}
+                      </motion.span>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
           </div>
           {/* Project Navigation - Prev/Next */}
           <motion.div
@@ -1269,7 +1272,10 @@ export default function BlueWardProject() {
                 >
                   <motion.div
                     variants={{
-                      normal: { x: 0, color: isDark ? "rgba(255,255,255,0.75)" : "rgba(31, 41, 55, 0.8)" },
+                      normal: {
+                        x: 0,
+                        color: isDark ? "rgba(255,255,255,0.75)" : "rgba(31, 41, 55, 0.8)",
+                      },
                       hover: { x: -8, color: projectData.orbColors.primary },
                     }}
                     transition={{ duration: 0.2 }}
@@ -1297,7 +1303,10 @@ export default function BlueWardProject() {
                   </div>
                   <motion.div
                     variants={{
-                      normal: { x: 0, color: isDark ? "rgba(255,255,255,0.75)" : "rgba(31, 41, 55, 0.8)" },
+                      normal: {
+                        x: 0,
+                        color: isDark ? "rgba(255,255,255,0.75)" : "rgba(31, 41, 55, 0.8)",
+                      },
                       hover: { x: 8, color: projectData.orbColors.primary },
                     }}
                     transition={{ duration: 0.2 }}
