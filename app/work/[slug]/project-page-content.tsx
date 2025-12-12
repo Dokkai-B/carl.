@@ -34,6 +34,8 @@ import {
 import { Project, hasModuleMobileScreens, hasWebViews, IconName } from "@/data/projects";
 import { FullscreenModalViewer } from "@/components/projects/FullscreenModalViewer";
 import { PhoneMockup } from "@/components/projects/PhoneMockup";
+import { OrbBackground } from "@/components/projects/OrbBackground";
+import { GlassSection } from "@/components/projects/GlassSection";
 
 // Icon map for resolving icon names to components
 const iconMap: Record<IconName, typeof Mic> = {
@@ -85,43 +87,33 @@ const ScrollProgressBar = ({ project }: { project: Project }) => {
 
 const BackToTopButton = ({ project }: { project: Project }) => {
   const [showButton, setShowButton] = useState(false);
-
   useEffect(() => {
-    const handleScroll = () => {
-      setShowButton(window.scrollY > 500);
+    const onScroll = () => {
+      setShowButton(window.scrollY > 300);
     };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
   return (
     <AnimatePresence>
       {showButton && (
         <motion.button
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.8 }}
-          onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-40 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-2 rounded-lg"
           style={{
-            backgroundColor: `${project.colors.primary}33`,
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
-            border: `1px solid ${project.colors.primary}4d`,
+            background: "rgba(0,0,0,0.4)",
+            color: "white",
+            backdropFilter: "blur(6px)",
+            WebkitBackdropFilter: "blur(6px)",
+            border: "1px solid rgba(255,255,255,0.2)",
           }}
-          whileHover={{
-            backgroundColor: `${project.colors.primary}4d`,
-            scale: 1.1,
-          }}
-          whileTap={{ scale: 0.95 }}
-          aria-label="Back to top"
         >
-          <ArrowUp className="w-5 h-5 text-white" />
+          <ArrowUp className="w-4 h-4" />
+          Top
         </motion.button>
       )}
     </AnimatePresence>
@@ -130,11 +122,16 @@ const BackToTopButton = ({ project }: { project: Project }) => {
 
 export default function ProjectPageContent({ project, navigation }: ProjectPageContentProps) {
   const router = useRouter();
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const isDark = mounted ? resolvedTheme === "dark" : false;
   const [modalOpen, setModalOpen] = useState(false);
   const [modalIndex, setModalIndex] = useState(0);
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const openModal = (index: number) => {
     setModalIndex(index);
@@ -182,54 +179,7 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
           />
         </div>
 
-        <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-          {[
-            {
-              size: 450,
-              x: 12,
-              y: 18,
-              color: isDark ? project.colors.primary : project.colors.light.primary,
-              opacity: isDark ? 0.12 : 0.08,
-              duration: 22,
-            },
-            {
-              size: 380,
-              x: 78,
-              y: 58,
-              color: isDark ? project.colors.secondary : project.colors.light.secondary,
-              opacity: isDark ? 0.1 : 0.07,
-              duration: 26,
-            },
-            {
-              size: 350,
-              x: 48,
-              y: 82,
-              color: isDark ? project.colors.primary : project.colors.light.primary,
-              opacity: isDark ? 0.08 : 0.06,
-              duration: 20,
-            },
-          ].map((orb, i) => (
-            <motion.div
-              key={i}
-              className="absolute rounded-full"
-              style={{
-                width: orb.size,
-                height: orb.size,
-                background: `radial-gradient(circle, ${orb.color}50, transparent 70%)`,
-                opacity: orb.opacity,
-                left: `${orb.x}%`,
-                top: `${orb.y}%`,
-                filter: `blur(${isDark ? 120 : 100}px)`,
-              }}
-              animate={{
-                scale: [1, 1.08, 1],
-              }}
-              transition={{
-                scale: { duration: orb.duration, repeat: Infinity, ease: "easeInOut" },
-              }}
-            />
-          ))}
-        </div>
+        {/* Page-level orbs removed - only showing orbs in Key Features and Tech Stack sections */}
 
         <div className="container mx-auto px-6 md:px-12 lg:px-[120px] py-24">
           <motion.div
@@ -238,25 +188,28 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
             transition={{ duration: 0.5 }}
             className="mb-12"
           >
-            <motion.button
+            <motion.div
+              role="button"
               onClick={() => router.back()}
-              className="flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg"
-              style={{
-                color: isDark ? "rgba(255, 255, 255, 0.7)" : "rgba(31, 41, 55, 0.75)",
-                backgroundColor: isDark ? "rgba(255, 255, 255, 0.05)" : "rgba(255, 255, 255, 0.3)",
-                backdropFilter: "blur(8px)",
-                WebkitBackdropFilter: "blur(8px)",
-                border: `1px solid ${isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.4)"}`,
-              }}
-              whileHover={{
-                backgroundColor: isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(255, 255, 255, 0.4)",
-                color: project.colors.primary,
-              }}
-              whileTap={{ scale: 0.98 }}
+              className="flex items-center gap-2 text-sm font-medium cursor-pointer"
+              whileHover="hover"
+              initial="normal"
+              style={{ color: isDark ? "rgba(255, 255, 255, 0.7)" : "rgba(31, 41, 55, 0.75)" }}
             >
-              <ArrowLeft className="w-4 h-4" />
-              Back to Projects
-            </motion.button>
+              <motion.div
+                variants={{
+                  normal: {
+                    x: 0,
+                    color: isDark ? "rgba(255,255,255,0.75)" : "rgba(31, 41, 55, 0.8)",
+                  },
+                  hover: { x: -8, color: project.colors.primary },
+                }}
+                transition={{ duration: 0.2 }}
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </motion.div>
+              <span>Back to Projects</span>
+            </motion.div>
           </motion.div>
 
           <motion.div
@@ -267,25 +220,38 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
           >
             <div className="flex flex-col justify-center">
               <div className="mb-6">
-                <motion.h1
-                  className="text-5xl md:text-6xl font-bold mb-4"
-                  style={{
-                    background: `linear-gradient(135deg, ${isDark ? "white" : "black"}, ${
-                      project.colors.primary
-                    })`,
-                    backgroundClip: "text",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                  }}
-                >
-                  {project.title}
-                </motion.h1>
+                {!mounted ? (
+                  <motion.h1
+                    className="text-5xl md:text-6xl font-bold mb-4"
+                    style={{
+                      color: "#ffffff",
+                    }}
+                  >
+                    {project.title}
+                  </motion.h1>
+                ) : (
+                  <motion.h1
+                    key={isDark ? "dark" : "light"}
+                    className="text-5xl md:text-6xl font-bold mb-4"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                    style={{
+                      background: `linear-gradient(135deg, ${isDark ? "#ffffff" : "#1f2937"}, ${project.colors.primary})`,
+                      backgroundClip: "text",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                    }}
+                  >
+                    {project.title}
+                  </motion.h1>
+                )}
 
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.2 }}
-                  className="flex items-center gap-2 mb-4 flex-wrap"
+                  className="flex items-center gap-2 mb-6 flex-wrap"
                 >
                   <span
                     className="text-xs font-medium px-3 py-1.5 rounded-full"
@@ -302,12 +268,24 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                     style={{
                       backgroundColor: isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.06)",
                       color: isDark ? "rgba(255, 255, 255, 0.5)" : "rgba(31, 41, 55, 0.5)",
-                      border: isDark ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid rgba(0, 0, 0, 0.08)",
+                      border: isDark
+                        ? "1px solid rgba(255, 255, 255, 0.1)"
+                        : "1px solid rgba(0, 0, 0, 0.08)",
                     }}
                   >
                     {project.year}
                   </span>
                 </motion.div>
+
+                <motion.div
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ delay: 0.25, duration: 0.6 }}
+                  className="h-1 mb-6 origin-left w-full"
+                  style={{
+                    background: `linear-gradient(90deg, ${project.colors.primary}, ${project.colors.secondary})`,
+                  }}
+                />
               </div>
 
               <motion.p
@@ -328,7 +306,7 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                 transition={{ delay: 0.4 }}
                 className="flex gap-4 flex-wrap"
               >
-                {project.links.prototype && project.links.prototype !== "#" && (
+                {project.links.prototype && (
                   <Link href={project.links.prototype} target="_blank">
                     <motion.button
                       className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all"
@@ -345,7 +323,7 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                   </Link>
                 )}
 
-                {project.links.github && project.links.github !== "#" && (
+                {project.links.github && (
                   <Link href={project.links.github} target="_blank">
                     <motion.button
                       className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all border"
@@ -415,53 +393,26 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
               </div>
 
               <div className="flex items-center justify-center min-h-[600px]">
-                <div className="flex gap-8 items-center justify-center flex-wrap">
-                  {project.mobileScreens.slice(0, 3).map((screen, index) => {
-                    const position = index === 0 ? "left" : index === 1 ? "center" : "right";
-                    return (
-                      <PhoneMockup
-                        key={index}
-                        src={screen.image}
-                        alt={screen.name}
-                        index={index}
-                        onClick={() => openModal(index)}
-                        isDark={isDark}
-                        position={position as any}
-                        projectColors={project.colors}
-                      />
-                    );
-                  })}
+                <div className="flex items-center justify-center flex-nowrap overflow-visible">
+                  {project.mobileScreens
+                    .filter((screen) => /(MobileLeft|MobileCenter|MobileRight)/.test(screen.image))
+                    .map((screen, index) => {
+                      const position = index === 0 ? "left" : index === 1 ? "center" : "right";
+                      return (
+                        <PhoneMockup
+                          key={index}
+                          src={screen.image}
+                          alt={screen.name}
+                          index={index}
+                          onClick={() => openModal(index)}
+                          isDark={isDark}
+                          position={position as any}
+                          projectColors={project.colors}
+                        />
+                      );
+                    })}
                 </div>
               </div>
-
-              {project.mobileScreens.length > 3 && (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mt-12">
-                  {project.mobileScreens.slice(3).map((screen, index) => (
-                    <motion.div
-                      key={index + 3}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: index * 0.1 }}
-                      className="relative aspect-[9/19.5] rounded-2xl overflow-hidden cursor-pointer group"
-                      onClick={() => openModal(index + 3)}
-                    >
-                      <Image src={screen.image} alt={screen.name} fill className="object-cover" />
-                      <motion.div
-                        className="absolute inset-0 flex items-end justify-center p-4"
-                        initial={{ opacity: 0 }}
-                        whileHover={{ opacity: 1 }}
-                        style={{
-                          background:
-                            "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.8) 100%)",
-                        }}
-                      >
-                        <p className="text-white font-medium">{screen.name}</p>
-                      </motion.div>
-                    </motion.div>
-                  ))}
-                </div>
-              )}
             </motion.div>
           )}
 
@@ -519,61 +470,77 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="mb-24"
+            className="mb-24 relative"
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-12">Key Features</h2>
 
-            <div
-              className="p-8 md:p-12 rounded-3xl"
-              style={{
-                backgroundColor: isDark ? "rgba(255, 255, 255, 0.05)" : "rgba(255, 255, 255, 0.4)",
-                backdropFilter: "blur(20px)",
-                WebkitBackdropFilter: "blur(20px)",
-                border: `1px solid ${isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.6)"}`,
-                boxShadow: isDark
-                  ? "inset 0 1px 2px rgba(255, 255, 255, 0.05), 0 20px 40px rgba(0, 0, 0, 0.3)"
-                  : "inset 0 1px 2px rgba(255, 255, 255, 0.6), 0 20px 40px rgba(0, 0, 0, 0.06)",
-              }}
+            <GlassSection
+              allowOrbOverlap={true}
+              orbSlot="inside"
+              orbs={[
+                { size: 320, x: -8, y: 30, duration: 20, colorIndex: 0 },   // Large - Left edge
+                { size: 240, x: 92, y: -10, duration: 22, colorIndex: 1 },  // Medium - Top right
+                { size: 220, x: 95, y: 85, duration: 18, colorIndex: 0 },   // Medium - Bottom right
+              ]}
+              primaryColor={project.colors.primary}
+              secondaryColor={project.colors.secondary}
+              lightPrimaryColor={project.colors.light.primary}
+              lightSecondaryColor={project.colors.light.secondary}
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {project.features.map((feature, index) => {
-                const Icon = getIcon(feature.icon);
-                return (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.05 }}
-                    className="flex gap-4"
-                  >
+                {project.features.map((feature, index) => {
+                  const Icon = getIcon(feature.icon);
+                  return (
                     <motion.div
-                      className="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center"
-                      style={{
-                        background: isDark
-                          ? `${project.colors.primary}15`
-                          : `${project.colors.primary}20`,
-                      }}
-                      whileHover={{ scale: 1.1 }}
+                      key={index}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.05 }}
+                      className="flex gap-4 group"
+                      whileHover="hover"
+                      initial="normal"
                     >
-                      <Icon className="w-6 h-6" style={{ color: project.colors.primary }} />
-                    </motion.div>
-
-                    <div>
-                      <p
-                        className="font-medium mb-1"
+                      <motion.div
+                        className="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center"
                         style={{
-                          color: isDark ? "rgba(255, 255, 255, 0.9)" : "rgb(31, 41, 55)",
+                          background: isDark
+                            ? `${project.colors.primary}15`
+                            : `${project.colors.primary}20`,
                         }}
+                        whileHover={{ scale: 1.1 }}
                       >
-                        {feature.text}
-                      </p>
-                    </div>
-                  </motion.div>
-                );
-              })}
+                        <Icon className="w-6 h-6" style={{ color: project.colors.primary }} />
+                      </motion.div>
+
+                      <motion.div
+                        className="flex-1 px-3 py-2 rounded-lg transition-colors"
+                        variants={{
+                          normal: {
+                            backgroundColor: "transparent",
+                          },
+                          hover: {
+                            backgroundColor: isDark
+                              ? "rgba(255, 255, 255, 0.08)"
+                              : "rgba(0, 0, 0, 0.06)",
+                          },
+                        }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <p
+                          className="font-medium mb-1"
+                          style={{
+                            color: isDark ? "rgba(255, 255, 255, 0.9)" : "rgb(31, 41, 55)",
+                          }}
+                        >
+                          {feature.text}
+                        </p>
+                      </motion.div>
+                    </motion.div>
+                  );
+                })}
               </div>
-            </div>
+            </GlassSection>
           </motion.div>
 
           <motion.div
@@ -581,21 +548,22 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="mb-24"
+            className="mb-24 relative"
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-12">Tech Stack</h2>
 
-            <div
-              className="p-8 md:p-12 rounded-3xl"
-              style={{
-                backgroundColor: isDark ? "rgba(255, 255, 255, 0.05)" : "rgba(255, 255, 255, 0.4)",
-                backdropFilter: "blur(20px)",
-                WebkitBackdropFilter: "blur(20px)",
-                border: `1px solid ${isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.6)"}`,
-                boxShadow: isDark
-                  ? "inset 0 1px 2px rgba(255, 255, 255, 0.05), 0 20px 40px rgba(0, 0, 0, 0.3)"
-                  : "inset 0 1px 2px rgba(255, 255, 255, 0.6), 0 20px 40px rgba(0, 0, 0, 0.06)",
-              }}
+            <GlassSection
+              allowOrbOverlap={true}
+              orbSlot="inside"
+              orbs={[
+                { size: 250, x: 48, y: -12, duration: 21, colorIndex: 1 },  // Medium - Top center
+                { size: 310, x: -5, y: 90, duration: 23, colorIndex: 0 },   // Large - Bottom left
+                { size: 230, x: 92, y: 88, duration: 19, colorIndex: 1 },   // Medium - Bottom right
+              ]}
+              primaryColor={project.colors.primary}
+              secondaryColor={project.colors.secondary}
+              lightPrimaryColor={project.colors.light.primary}
+              lightSecondaryColor={project.colors.light.secondary}
             >
               <div className="flex flex-wrap gap-3">
                 {project.techStack.map((tech, i) => (
@@ -630,7 +598,7 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                   </motion.span>
                 ))}
               </div>
-            </div>
+            </GlassSection>
           </motion.div>
 
           <motion.div

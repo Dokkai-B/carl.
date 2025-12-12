@@ -29,52 +29,26 @@ export const PhoneMockup = ({
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
 
-  const getPositionStyles = () => {
-    switch (position) {
-      case "left":
-        return {
-          scale: isHovered ? 1.08 : 1.05,
-          rotateY: isHovered ? 0 : 12,
-          x: isHovered ? 0 : 20,
-          y: isHovered ? -12 : 0,
-        };
-      case "right":
-        return {
-          scale: isHovered ? 1.08 : 1.05,
-          rotateY: isHovered ? 0 : -12,
-          x: isHovered ? 0 : -20,
-          y: isHovered ? -12 : 0,
-        };
-      case "center":
-      default:
-        return {
-          scale: isHovered ? 1.1 : 1.08,
-          rotateY: 0,
-          x: 0,
-          y: isHovered ? -12 : 0,
-        };
-    }
-  };
-
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 50 }}
-      animate={isInView ? { opacity: 1, y: 0, ...getPositionStyles() } : { opacity: 0, y: 50 }}
-      transition={{
-        duration: 0.4,
-        delay: index * 0.15,
-        ease: "easeOut",
-      }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: isInView ? 1 : 0 }}
+      transition={{ duration: 0.6, delay: index * 0.2, ease: [0.22, 1, 0.36, 1] }}
       className="relative cursor-pointer group"
       style={{
         perspective: "1200px",
         zIndex: position === "center" ? (isHovered ? 50 : 20) : isHovered ? 40 : 10,
+        transform:
+          position === "left"
+            ? "translateX(24px)"
+            : position === "right"
+            ? "translateX(-24px)"
+            : "translateX(0)",
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={onClick}
-      whileTap={{ scale: position === "center" ? 1.06 : 1.0 }}
     >
       {/* Floating shadow */}
       <div
@@ -85,14 +59,19 @@ export const PhoneMockup = ({
             ? "radial-gradient(ellipse at center, rgba(0, 0, 0, 0.4), transparent 65%)"
             : "radial-gradient(ellipse at center, rgba(0, 0, 0, 0.15), transparent 65%)",
           transform: `translateY(${isHovered ? "10px" : "16px"}) scale(0.9)`,
-          opacity: isHovered ? 0.8 : 0.6,
-          transition: "transform 400ms ease-out, opacity 400ms ease-out",
+          opacity: isHovered ? 0.85 : 0.55,
+          transition:
+            "transform 350ms cubic-bezier(0.16, 1, 0.3, 1), opacity 280ms cubic-bezier(0.16, 1, 0.3, 1)",
         }}
       />
 
       {/* Phone container */}
       <motion.div
-        className="relative overflow-hidden rounded-[28px] w-80"
+        className={
+          position === "center"
+            ? "relative overflow-hidden rounded-[28px] w-80"
+            : "relative overflow-hidden rounded-[28px] w-72"
+        }
         animate={{
           rotateY:
             position === "left"
@@ -104,11 +83,9 @@ export const PhoneMockup = ({
                 ? 0
                 : -12
               : 0,
+          scale: isHovered ? 1.04 : 1.0,
         }}
-        transition={{
-          duration: 0.4,
-          ease: "easeOut",
-        }}
+        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
         style={{
           backgroundColor: isDark ? "rgba(255, 255, 255, 0.04)" : "rgba(255, 255, 255, 0.5)",
           backdropFilter: "blur(14px)",
@@ -121,22 +98,48 @@ export const PhoneMockup = ({
       >
         {/* Phone Frame */}
         <div className="relative overflow-hidden rounded-[26px] bg-black/95 aspect-[9/19.5]">
-          {/* Notch */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10 w-32 h-6 bg-black rounded-b-2xl" />
-
           {/* Screen */}
-          <div className="relative w-full h-full overflow-hidden">
+          <div
+            className="relative w-full h-full overflow-hidden"
+            style={{
+              boxShadow: "inset 0 0 20px rgba(0,0,0,0.08), inset 0 0 12px rgba(0,0,0,0.05)",
+            }}
+          >
+            {/* Rim light */}
+            <div
+              className="pointer-events-none absolute inset-0 rounded-[24px]"
+              style={{
+                border: "1px solid transparent",
+                background:
+                  "linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.08) 40%, rgba(255,255,255,0.02))",
+                maskImage: "linear-gradient(#000,#000)",
+                WebkitMaskImage: "linear-gradient(#000,#000)",
+              }}
+            />
             <Image
               src={src}
               alt={alt}
               fill
               className="object-cover"
-              style={{
-                borderRadius: "20px",
-              }}
+              style={{ borderRadius: "20px" }}
               sizes="320px"
               priority={index === 0}
             />
+
+            {/* Hover overlay: glass blur with gradient and text */}
+            <motion.div
+              className="absolute inset-0 flex items-center justify-center p-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: isHovered ? 1 : 0 }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                background: `linear-gradient(180deg, transparent 0%, ${projectColors.primary}33 70%, ${projectColors.primary}66 100%)`,
+                backdropFilter: "blur(8px)",
+                WebkitBackdropFilter: "blur(8px)",
+              }}
+            >
+              <span className="text-[#1a2735] text-sm font-semibold">Click to Expand</span>
+            </motion.div>
           </div>
         </div>
       </motion.div>
