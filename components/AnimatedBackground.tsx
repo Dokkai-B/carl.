@@ -144,6 +144,8 @@ export function AnimatedBackground() {
   const orb1Controls = useAnimationControls();
   const orb2Controls = useAnimationControls();
   const orb3Controls = useAnimationControls();
+  // Track if component is mounted for safe animation
+  const isMountedRef = useRef(false);
 
   // Normalized mouse position (-1 to 1)
   const mouseX = useMotionValue(0);
@@ -182,6 +184,7 @@ export function AnimatedBackground() {
 
   useEffect(() => {
     setMounted(true);
+    isMountedRef.current = true;
     const hasPointer = window.matchMedia("(pointer: fine)").matches;
     setIsPointerDevice(hasPointer);
 
@@ -211,7 +214,15 @@ export function AnimatedBackground() {
     };
 
     setBasePositions({ orb1: orb1Base, orb2: orb2Base, orb3: orb3Base });
-  }, []);
+
+    return () => {
+      isMountedRef.current = false;
+      // Stop all orb animations on unmount
+      orb1Controls.stop();
+      orb2Controls.stop();
+      orb3Controls.stop();
+    };
+  }, [orb1Controls, orb2Controls, orb3Controls]);
 
   // Mouse tracking for parallax effect (desktop only)
   useEffect(() => {
@@ -261,7 +272,7 @@ export function AnimatedBackground() {
   // Animate orbs to merge cluster - uses BASE positions for consistent behavior
   const animateToCluster = useCallback(
     (target: ClusterTarget) => {
-      if (!basePositions) return;
+      if (!basePositions || !isMountedRef.current) return;
 
       const vw = window.innerWidth;
       const vh = window.innerHeight;
@@ -310,162 +321,178 @@ export function AnimatedBackground() {
       setCurrentTarget(target);
 
       // Phase 1: Smooth glide to cluster positions with tween (not spring)
-      orb1Controls.start(
-        {
-          x: translate1.x,
-          y: translate1.y,
-          scale: 1.3,
-          opacity: 0.5, // Reduced opacity when clustered
-          borderRadius: "50%",
-          rotate: 0,
-        },
-        {
-          duration: 1.2,
-          ease: [0.4, 0, 0.2, 1], // Material Design ease-out
-        }
-      );
-
-      setTimeout(() => {
-        orb2Controls.start(
-          {
-            x: translate2.x,
-            y: translate2.y,
-            scale: 1.25,
-            opacity: 0.45,
-            borderRadius: "50%",
-            rotate: 0,
-          },
-          {
-            duration: 1.1,
-            ease: [0.4, 0, 0.2, 1],
-          }
-        );
-      }, 80);
-
-      setTimeout(() => {
-        orb3Controls.start(
-          {
-            x: translate3.x,
-            y: translate3.y,
-            scale: 1.2,
-            opacity: 0.4,
-            borderRadius: "50%",
-            rotate: 0,
-          },
-          {
-            duration: 1.0,
-            ease: [0.4, 0, 0.2, 1],
-          }
-        );
-      }, 150);
-
-      // Phase 2: Gentle orbit dance (1000ms after pull starts)
-      orbitTimeoutRef.current = setTimeout(() => {
-        const orbitRadius = 10;
-
-        orb2Controls.start(
-          {
-            x: [
-              translate2.x,
-              translate2.x + orbitRadius,
-              translate2.x,
-              translate2.x - orbitRadius,
-              translate2.x,
-            ],
-            y: [
-              translate2.y,
-              translate2.y - orbitRadius,
-              translate2.y,
-              translate2.y + orbitRadius,
-              translate2.y,
-            ],
-          },
-          { duration: 0.6, ease: "easeInOut" }
-        );
-
-        orb3Controls.start(
-          {
-            x: [
-              translate3.x,
-              translate3.x - orbitRadius,
-              translate3.x,
-              translate3.x + orbitRadius,
-              translate3.x,
-            ],
-            y: [
-              translate3.y,
-              translate3.y + orbitRadius,
-              translate3.y,
-              translate3.y - orbitRadius,
-              translate3.y,
-            ],
-          },
-          { duration: 0.6, ease: "easeInOut" }
-        );
-      }, 1000);
-
-      // Phase 3: MORPH into shapes! (1400ms after pull)
-      morphTimeoutRef.current = setTimeout(() => {
-        setIsMorphed(true);
-        setOrbState("morphing");
-        const shapes = MORPH_SHAPES[target.type];
-
-        // Core orb morphs with smooth ease - keep low opacity
+      if (isMountedRef.current) {
         orb1Controls.start(
           {
             x: translate1.x,
             y: translate1.y,
-            scale: [1.3, 1.5, 1.4],
-            borderRadius: shapes.core.borderRadius,
-            rotate: shapes.core.rotate,
-            opacity: 0.55,
+            scale: 1.3,
+            opacity: 0.5, // Reduced opacity when clustered
+            borderRadius: "50%",
+            rotate: 0,
           },
           {
-            duration: 1.0,
-            ease: [0.4, 0, 0.2, 1],
+            duration: 1.2,
+            ease: [0.4, 0, 0.2, 1], // Material Design ease-out
           }
         );
+      }
 
-        // Satellite 1 morphs with delay
-        setTimeout(() => {
+      setTimeout(() => {
+        if (isMountedRef.current) {
           orb2Controls.start(
             {
               x: translate2.x,
               y: translate2.y,
-              scale: [1.25, 1.45, 1.35],
-              borderRadius: shapes.sat1.borderRadius,
-              rotate: shapes.sat1.rotate,
-              opacity: 0.5,
+              scale: 1.25,
+              opacity: 0.45,
+              borderRadius: "50%",
+              rotate: 0,
             },
             {
-              duration: 0.9,
+              duration: 1.1,
               ease: [0.4, 0, 0.2, 1],
             }
           );
-        }, 120);
+        }
+      }, 80);
 
-        // Satellite 2 morphs with delay
-        setTimeout(() => {
+      setTimeout(() => {
+        if (isMountedRef.current) {
           orb3Controls.start(
             {
               x: translate3.x,
               y: translate3.y,
-              scale: [1.2, 1.4, 1.3],
-              borderRadius: shapes.sat2.borderRadius,
-              rotate: shapes.sat2.rotate,
-              opacity: 0.45,
+              scale: 1.2,
+              opacity: 0.4,
+              borderRadius: "50%",
+              rotate: 0,
             },
             {
-              duration: 0.85,
+              duration: 1.0,
               ease: [0.4, 0, 0.2, 1],
             }
           );
-        }, 220);
+        }
+      }, 150);
+
+      // Phase 2: Gentle orbit dance (1000ms after pull starts)
+      orbitTimeoutRef.current = setTimeout(() => {
+        if (isMountedRef.current) {
+          const orbitRadius = 10;
+
+          orb2Controls.start(
+            {
+              x: [
+                translate2.x,
+                translate2.x + orbitRadius,
+                translate2.x,
+                translate2.x - orbitRadius,
+                translate2.x,
+              ],
+              y: [
+                translate2.y,
+                translate2.y - orbitRadius,
+                translate2.y,
+                translate2.y + orbitRadius,
+                translate2.y,
+              ],
+            },
+            { duration: 0.6, ease: "easeInOut" }
+          );
+
+          orb3Controls.start(
+            {
+              x: [
+                translate3.x,
+                translate3.x - orbitRadius,
+                translate3.x,
+                translate3.x + orbitRadius,
+                translate3.x,
+              ],
+              y: [
+                translate3.y,
+                translate3.y + orbitRadius,
+                translate3.y,
+                translate3.y - orbitRadius,
+                translate3.y,
+              ],
+            },
+            { duration: 0.6, ease: "easeInOut" }
+          );
+        }
+      }, 1000);
+
+      // Phase 3: MORPH into shapes! (1400ms after pull)
+      morphTimeoutRef.current = setTimeout(() => {
+        if (isMountedRef.current) {
+          setIsMorphed(true);
+          setOrbState("morphing");
+          const shapes = MORPH_SHAPES[target.type];
+
+          // Core orb morphs with smooth ease - keep low opacity
+          orb1Controls.start(
+            {
+              x: translate1.x,
+              y: translate1.y,
+              scale: [1.3, 1.5, 1.4],
+              borderRadius: shapes.core.borderRadius,
+              rotate: shapes.core.rotate,
+              opacity: 0.55,
+            },
+            {
+              duration: 1.0,
+              ease: [0.4, 0, 0.2, 1],
+            }
+          );
+
+          // Satellite 1 morphs with delay
+          setTimeout(() => {
+            if (isMountedRef.current) {
+              orb2Controls.start(
+                {
+                  x: translate2.x,
+                  y: translate2.y,
+                  scale: [1.25, 1.45, 1.35],
+                  borderRadius: shapes.sat1.borderRadius,
+                  rotate: shapes.sat1.rotate,
+                  opacity: 0.5,
+                },
+                {
+                  duration: 0.9,
+                  ease: [0.4, 0, 0.2, 1],
+                }
+              );
+            }
+          }, 120);
+
+          // Satellite 2 morphs with delay
+          setTimeout(() => {
+            if (isMountedRef.current) {
+              orb3Controls.start(
+                {
+                  x: translate3.x,
+                  y: translate3.y,
+                  scale: [1.2, 1.4, 1.3],
+                  borderRadius: shapes.sat2.borderRadius,
+                  rotate: shapes.sat2.rotate,
+                  opacity: 0.45,
+                },
+                {
+                  duration: 0.85,
+                  ease: [0.4, 0, 0.2, 1],
+                }
+              );
+            }
+          }, 220);
+        }
       }, 1400);
 
       // Phase 4: Settled with pulsing shapes
       settleTimeoutRef.current = setTimeout(() => {
-        setIsSettled(true);
+        if (isMountedRef.current) {
+          setIsSettled(true);
+        }
       }, 2400);
     },
     [basePositions, orb1Controls, orb2Controls, orb3Controls]
@@ -479,56 +506,58 @@ export function AnimatedBackground() {
     setActiveTranslations(null);
 
     // Smooth return to neutral - morph back to circles
-    orb1Controls.start(
-      {
-        x: 0,
-        y: 0,
-        scale: 1,
-        opacity: 0.7,
-        borderRadius: "50%",
-        rotate: 0,
-      },
-      {
-        type: "spring",
-        stiffness: 60,
-        damping: 25,
-        mass: 1,
-      }
-    );
+    if (isMountedRef.current) {
+      orb1Controls.start(
+        {
+          x: 0,
+          y: 0,
+          scale: 1,
+          opacity: 0.7,
+          borderRadius: "50%",
+          rotate: 0,
+        },
+        {
+          type: "spring",
+          stiffness: 60,
+          damping: 25,
+          mass: 1,
+        }
+      );
 
-    orb2Controls.start(
-      {
-        x: 0,
-        y: 0,
-        scale: 1,
-        opacity: 0.7,
-        borderRadius: "50%",
-        rotate: 0,
-      },
-      {
-        type: "spring",
-        stiffness: 50,
-        damping: 28,
-        mass: 1.1,
-      }
-    );
+      orb2Controls.start(
+        {
+          x: 0,
+          y: 0,
+          scale: 1,
+          opacity: 0.7,
+          borderRadius: "50%",
+          rotate: 0,
+        },
+        {
+          type: "spring",
+          stiffness: 50,
+          damping: 28,
+          mass: 1.1,
+        }
+      );
 
-    orb3Controls.start(
-      {
-        x: 0,
-        y: 0,
-        scale: 1,
-        opacity: 0.7,
-        borderRadius: "50%",
-        rotate: 0,
-      },
-      {
-        type: "spring",
-        stiffness: 45,
-        damping: 30,
-        mass: 1.2,
-      }
-    );
+      orb3Controls.start(
+        {
+          x: 0,
+          y: 0,
+          scale: 1,
+          opacity: 0.7,
+          borderRadius: "50%",
+          rotate: 0,
+        },
+        {
+          type: "spring",
+          stiffness: 45,
+          damping: 30,
+          mass: 1.2,
+        }
+      );
+    }
   }, [orb1Controls, orb2Controls, orb3Controls]);
 
   // Listen for name hover events
@@ -564,7 +593,7 @@ export function AnimatedBackground() {
 
   // Pulsing animation for morphed settled state
   useEffect(() => {
-    if (!isSettled || !isMorphed || !currentTarget || !activeTranslations) return;
+    if (!isSettled || !isMorphed || !currentTarget || !activeTranslations || !isMountedRef.current) return;
 
     const shapes = MORPH_SHAPES[currentTarget.type];
     const { translate1, translate2, translate3 } = activeTranslations;

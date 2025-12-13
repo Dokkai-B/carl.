@@ -1,367 +1,353 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { submitContactForm } from "@/app/actions/contact";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
-import { motion, useInView, useAnimation } from "framer-motion";
-import { CheckCircle2, Send } from "lucide-react";
-import {
-  slidePocketContainer,
-  slidePocketChild,
-  ANIMATION_CONFIG,
-  coordinatedContainer,
-} from "@/lib/animations";
-
-// Header container for coordinated staggered animation
-const headerContainer = coordinatedContainer(ANIMATION_CONFIG.stagger.normal, 0);
-
-// Form container
-const formContainer = coordinatedContainer(ANIMATION_CONFIG.stagger.normal, 0.05);
-
-const info = [
-  {
-    icon: <FaPhoneAlt />,
-    title: "Phone",
-    description: "(+63) 920 802 3514",
-    href: "tel:+639208023514",
-  },
-  {
-    icon: <FaEnvelope />,
-    title: "Email",
-    description: "cpacaguas@mymail.mapua.edu.ph",
-    href: "mailto:cpacaguas@mymail.mapua.edu.ph",
-  },
-];
+import { useState, useEffect, useRef } from "react";
+import { motion, useAnimation, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { FaGithub, FaLinkedinIn, FaInstagram } from "react-icons/fa";
+import { slidePocketChild, ANIMATION_CONFIG } from "@/lib/animations";
+import { useTheme } from "next-themes";
 
 const Contact = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<{
-    type: "success" | "error" | null;
-    message: string;
-  }>({ type: null, message: "" });
-  const [selectedService, setSelectedService] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const mountedRef = useRef(false);
   const isExitingRef = useRef(false);
+  const menuTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [shouldAnimate, setShouldAnimate] = useState(false);
+  const { resolvedTheme } = useTheme();
 
-  const formRef = useRef(null);
-  const isInView = useInView(formRef, { once: true, amount: 0.2 });
+  // Generate particle positions only on client to avoid hydration mismatch
+  const [particles] = useState(() =>
+    [...Array(6)].map((_, i) => ({
+      id: i,
+      opacity: 0.3 + Math.random() * 0.4,
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      yEnd1: -100 - Math.random() * 100,
+      yEnd2: -200 - Math.random() * 100,
+      xEnd1: (Math.random() - 0.5) * 100,
+      xEnd2: (Math.random() - 0.5) * 100,
+      duration: 15 + Math.random() * 10,
+      delay: Math.random() * 5,
+    }))
+  );
 
-  const headerControls = useAnimation();
-  const formControls = useAnimation();
-  const infoControls = useAnimation();
+  const isDark = mounted && resolvedTheme === "dark";
+
+  // Orb data for background
+  const orbs = [
+    { id: 1, color: "#5dade2", size: 350, x: "85%", y: "-5%" },
+    { id: 2, color: "#3498db", size: 280, x: "-5%", y: "15%" },
+    { id: 3, color: "#667eea", size: 320, x: "80%", y: "85%" },
+  ];
+
+  // Social links
+  const socialLinks = [
+    {
+      id: 1,
+      label: "GitHub",
+      icon: <FaGithub className="w-6 h-6" />,
+      path: "https://github.com/Dokkai-B?tab=overview&from=2024-09-01&to=2024-09-08",
+      color: "#9b9b9b",
+    },
+    {
+      id: 2,
+      label: "LinkedIn",
+      icon: <FaLinkedinIn className="w-6 h-6" />,
+      path: "https://www.linkedin.com/in/carlaguas",
+      color: "#0a66c2",
+    },
+    {
+      id: 3,
+      label: "Instagram",
+      icon: <FaInstagram className="w-6 h-6" />,
+      path: "https://instagram.com",
+      color: "#e1306c",
+    },
+  ];
 
   // Listen for menu state changes
   useEffect(() => {
+    setMounted(true);
+    mountedRef.current = true;
+    setShouldAnimate(true); // Immediately enable animations
+
     const handleMenuState = (e: CustomEvent<{ isOpen: boolean }>) => {
       setMenuOpen(e.detail.isOpen);
 
       if (e.detail.isOpen) {
-        // Menu opened - slide content up (hide into pocket)
         isExitingRef.current = true;
-        headerControls.start("exit");
-        formControls.start("exit");
-        infoControls.start("exit");
+        setShouldAnimate(false);
       } else {
-        // Menu closed - wait for distraction, then slide content back
         isExitingRef.current = false;
         const enterDelay = ANIMATION_CONFIG.transition.enterDelay * 1000;
-        setTimeout(() => {
+        if (menuTimeoutRef.current) {
+          clearTimeout(menuTimeoutRef.current);
+        }
+        menuTimeoutRef.current = setTimeout(() => {
           if (!isExitingRef.current) {
-            headerControls.start("visible");
-            formControls.start("visible");
-            infoControls.start("visible");
+            setShouldAnimate(true);
           }
         }, enterDelay);
       }
     };
 
     window.addEventListener("menuStateChange", handleMenuState as EventListener);
-    return () => window.removeEventListener("menuStateChange", handleMenuState as EventListener);
-  }, [headerControls, formControls, infoControls]);
-
-  // Initial animation
-  useEffect(() => {
-    if (!menuOpen && !isExitingRef.current) {
-      headerControls.start("visible");
-    }
-  }, [menuOpen, headerControls]);
-
-  // Form and info animations when in view
-  useEffect(() => {
-    if (isInView && !menuOpen && !isExitingRef.current) {
-      formControls.start("visible");
-      infoControls.start("visible");
-    }
-  }, [isInView, menuOpen, formControls, infoControls]);
-
-  // Handler for form submission
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitStatus({ type: null, message: "" });
-
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-    formData.append("service", selectedService);
-
-    try {
-      const result = await submitContactForm(formData);
-
-      if (result.success) {
-        setSubmitStatus({ type: "success", message: result.message });
-        form.reset();
-        setSelectedService("");
-      } else {
-        setSubmitStatus({ type: "error", message: result.message });
+    return () => {
+      window.removeEventListener("menuStateChange", handleMenuState as EventListener);
+      if (menuTimeoutRef.current) {
+        clearTimeout(menuTimeoutRef.current);
       }
-    } catch (error) {
-      setSubmitStatus({
-        type: "error",
-        message: "Something went wrong. Please try again.",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+    };
+  }, []);
+
+  return (
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Grid texture background */}
+      <div className="fixed inset-0 -z-20">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(93, 173, 226, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(93, 173, 226, 0.03) 1px, transparent 1px)",
+            backgroundSize: "80px 80px",
+          }}
+        />
+      </div>
+
+      {/* Floating orbs */}
+      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+        {orbs.map((orb, index) => (
+          <motion.div
+            key={orb.id}
+            style={{
+              position: "absolute",
+              width: orb.size,
+              height: orb.size,
+              borderRadius: "50%",
+              backgroundColor: orb.color,
+              filter: "blur(80px)",
+              opacity: 0.08,
+              left: orb.x,
+              top: orb.y,
+              transform: "translate(-50%, -50%)",
+            }}
+            animate={{
+              scale: [1, 1.15, 1],
+              x: [0, 40, 0],
+              y: [0, 50, 0],
+            }}
+            transition={{
+              duration: 25 + index * 3,
+              repeat: Infinity,
+              repeatType: "reverse",
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Interactive background particles */}
+      <div className="fixed inset-0 -z-5 overflow-hidden pointer-events-none">
+        {mounted && particles.map((particle) => (
+          <motion.div
+            key={`particle-${particle.id}`}
+            style={{
+              position: "absolute",
+              width: "2px",
+              height: "2px",
+              borderRadius: "50%",
+              backgroundColor: `rgba(93, 173, 226, ${particle.opacity})`,
+              left: `${particle.left}%`,
+              top: `${particle.top}%`,
+            }}
+            animate={{
+              y: [0, particle.yEnd1, particle.yEnd2],
+              opacity: [0.3, 0.8, 0],
+              x: [0, particle.xEnd1, particle.xEnd2],
+            }}
+            transition={{
+              duration: particle.duration,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: particle.delay,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Main content */}
+      <div className="container mx-auto px-6 py-20 relative z-10">
+        <motion.div
+          variants={slidePocketChild}
+          initial="hidden"
+          animate={shouldAnimate && !menuOpen ? "visible" : "exit"}
+          className="max-w-2xl mx-auto text-center"
+        >
+          {/* Title */}
+          <motion.h1
+            variants={slidePocketChild}
+            className="text-5xl md:text-6xl font-bold text-center mb-12"
+          >
+            Contacts
+          </motion.h1>
+
+          {/* Email Pill */}
+          <motion.div
+            variants={slidePocketChild}
+            className="flex justify-center mb-16"
+          >
+            <motion.a
+              href="mailto:cpacaguas@mymail.mapua.edu.ph"
+              whileHover={{ scale: 1.05, y: -5 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="relative group"
+            >
+              {/* Pill background blur */}
+              <div
+                className="absolute inset-0 rounded-full"
+                style={{
+                  backgroundColor: isDark ? "rgba(20, 30, 40, 0.6)" : "rgba(255, 255, 255, 0.5)",
+                  backdropFilter: "blur(20px)",
+                  WebkitBackdropFilter: "blur(20px)",
+                }}
+              />
+
+              {/* Pill border and shadow */}
+              <div
+                className="absolute inset-0 rounded-full transition-shadow duration-300"
+                style={{
+                  border: `1.5px solid ${isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.08)"}`,
+                  boxShadow: isDark
+                    ? "inset 0 2px 4px rgba(255,255,255,0.05), 0 10px 30px rgba(93, 173, 226, 0.15)"
+                    : "inset 0 2px 4px rgba(255,255,255,0.6), 0 10px 30px rgba(93, 173, 226, 0.1)",
+                }}
+              />
+
+              {/* Glow on hover */}
+              <div
+                className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                style={{
+                  boxShadow: isDark
+                    ? "0 0 30px rgba(93, 173, 226, 0.3), inset 0 0 20px rgba(93, 173, 226, 0.1)"
+                    : "0 0 30px rgba(93, 173, 226, 0.2), inset 0 0 20px rgba(93, 173, 226, 0.08)",
+                }}
+              />
+
+              {/* Content */}
+              <div className="relative px-8 py-3 font-medium text-foreground">
+                cpacaguas@mymail.mapua.edu.ph
+              </div>
+            </motion.a>
+          </motion.div>
+
+          {/* Social Icons Grid */}
+          <motion.div
+            variants={slidePocketChild}
+            className="flex justify-center gap-6 md:gap-8"
+          >
+            {socialLinks.map((social, index) => (
+              <SocialIconCard key={social.id} social={social} index={index} isDark={isDark} />
+            ))}
+          </motion.div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+// Social Icon Card Component
+const SocialIconCard = ({ social, index, isDark }: { social: any; index: number; isDark: boolean }) => {
+  const [hovered, setHovered] = useState(false);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [8, -8]), { stiffness: 300, damping: 30 });
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-8, 8]), { stiffness: 300, damping: 30 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    x.set((e.clientX - centerX) / rect.width);
+    y.set((e.clientY - centerY) / rect.height);
+  };
+
+  const handleMouseLeave = () => {
+    setHovered(false);
+    x.set(0);
+    y.set(0);
   };
 
   return (
-    <section className="py-12 xl:py-20">
-      <div className="container mx-auto px-4">
-        {/* Header - Slide pocket animation with stagger */}
-        <motion.div
-          variants={headerContainer}
-          initial="hidden"
-          animate={headerControls}
-          exit="exit"
-          className="text-center mb-16"
-        >
-          <motion.h1 variants={slidePocketChild} className="text-4xl md:text-5xl font-bold mb-4">
-            Get In <span className="gradient-text">Touch</span>
-          </motion.h1>
-          <motion.p
-            variants={slidePocketChild}
-            className="text-muted-foreground text-lg max-w-2xl mx-auto"
-          >
-            Have a project in mind? Let's discuss how we can work together to bring your ideas to
-            life.
-          </motion.p>
-        </motion.div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.6 + index * 0.1, duration: 0.5 }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      onMouseEnter={() => setHovered(true)}
+      style={{ rotateX, rotateY, transformStyle: "preserve-3d" } as any}
+      className="relative group"
+    >
+      <motion.a
+        href={social.path}
+        target="_blank"
+        rel="noopener noreferrer"
+        whileHover={{ y: -8 }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      >
+        {/* Background blur */}
+        <div
+          className="absolute inset-0 rounded-2xl"
+          style={{
+            backgroundColor: isDark ? "rgba(20, 30, 40, 0.5)" : "rgba(255, 255, 255, 0.4)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+          }}
+        />
 
-        <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
-          {/* Form */}
-          <motion.div
-            ref={formRef}
-            variants={slidePocketChild}
-            initial="hidden"
-            animate={formControls}
-          >
-            <form
-              className="glass-strong p-8 md:p-10 rounded-3xl border border-border/50 space-y-6"
-              onSubmit={handleSubmit}
-            >
-              <div className="space-y-2 mb-2">
-                <h3 className="text-2xl font-bold">Send me a message</h3>
-                <p className="text-muted-foreground">
-                  Fill out the form below and I'll get back to you as soon as possible.
-                </p>
-              </div>
+        {/* Border and shadow */}
+        <div
+          className="absolute inset-0 rounded-2xl transition-shadow duration-300"
+          style={{
+            border: `1.5px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.06)"}`,
+            boxShadow: isDark
+              ? "inset 0 2px 4px rgba(255,255,255,0.05), 0 20px 40px rgba(0, 0, 0, 0.35)"
+              : "inset 0 2px 4px rgba(255,255,255,0.6), 0 20px 40px rgba(0, 0, 0, 0.08)",
+          }}
+        />
 
-              {/* Input fields with animated focus */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="group">
-                  <Input
-                    name="firstName"
-                    placeholder="First name"
-                    required
-                    className="transition-all duration-300 focus:border-primary/50 focus:shadow-lg focus:shadow-primary/10"
-                  />
-                </div>
-                <div className="group">
-                  <Input
-                    name="lastName"
-                    placeholder="Last name"
-                    required
-                    className="transition-all duration-300 focus:border-primary/50 focus:shadow-lg focus:shadow-primary/10"
-                  />
-                </div>
-                <div className="group">
-                  <Input
-                    name="email"
-                    type="email"
-                    placeholder="Email address"
-                    required
-                    className="transition-all duration-300 focus:border-primary/50 focus:shadow-lg focus:shadow-primary/10"
-                  />
-                </div>
-                <div className="group">
-                  <Input
-                    name="phone"
-                    type="tel"
-                    placeholder="Phone number"
-                    className="transition-all duration-300 focus:border-accent/50 focus:shadow-lg focus:shadow-accent/10"
-                  />
-                </div>
-              </div>
+        {/* Hover glow */}
+        <div
+          className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+          style={{
+            boxShadow: isDark
+              ? `0 0 40px ${social.color}40, inset 0 0 30px ${social.color}20`
+              : `0 0 40px ${social.color}30, inset 0 0 30px ${social.color}15`,
+          }}
+        />
 
-              {/* Select with gradient border on focus */}
-              <Select value={selectedService} onValueChange={setSelectedService}>
-                <SelectTrigger className="w-full transition-all duration-300 hover:border-primary/50">
-                  <SelectValue placeholder="Select a service" />
-                </SelectTrigger>
-                <SelectContent className="glass-strong border-primary/20">
-                  <SelectGroup>
-                    <SelectLabel>Select a service</SelectLabel>
-                    <SelectItem value="Web Development">Web Development</SelectItem>
-                    <SelectItem value="UI/UX Design">UI/UX Design</SelectItem>
-                    <SelectItem value="Logo Design">Logo Design</SelectItem>
-                    <SelectItem value="Mobile App Development">Mobile App Development</SelectItem>
-                    <SelectItem value="Other">Other</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-
-              {/* Textarea with gradient border */}
-              <Textarea
-                name="message"
-                required
-                className="min-h-[200px] transition-all duration-300 focus:border-primary/50 focus:shadow-lg focus:shadow-primary/10 resize-none"
-                placeholder="Tell me about your project..."
-              />
-
-              {/* Status message */}
-              {submitStatus.type && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`p-4 rounded-xl border ${
-                    submitStatus.type === "success"
-                      ? "bg-green-500/10 border-green-500/30 text-green-500"
-                      : "bg-red-500/10 border-red-500/30 text-red-500"
-                  }`}
-                >
-                  <div className="flex items-center gap-2">
-                    {submitStatus.type === "success" && <CheckCircle2 className="w-5 h-5" />}
-                    <p>{submitStatus.message}</p>
-                  </div>
-                </motion.div>
-              )}
-
-              {/* Submit button with animation */}
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full md:w-auto min-w-[200px] group relative overflow-hidden"
-              >
-                <span className="relative z-10 flex items-center justify-center gap-2">
-                  {isSubmitting ? (
-                    <>
-                      <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                        className="w-5 h-5 border-2 border-current border-t-transparent rounded-full"
-                      />
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                      Send message
-                    </>
-                  )}
-                </span>
-              </Button>
-            </form>
-          </motion.div>
-
-          {/* Contact Info & Additional Options */}
-          <motion.div
-            variants={formContainer}
-            initial="hidden"
-            animate={infoControls}
-            className="space-y-8"
-          >
-            {/* Contact Cards */}
-            <div className="space-y-4">
-              <h3 className="text-2xl font-bold mb-6">Contact Information</h3>
-              {info.map((item, index) => (
-                <motion.a
-                  key={index}
-                  href={item.href}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ delay: index * 0.1 + 0.3 }}
-                  className="block group"
-                >
-                  <div className="glass p-6 rounded-2xl border border-border/50 hover:border-primary/50 transition-all duration-300 hover:scale-[1.02]">
-                    <div className="flex items-center gap-5">
-                      <div className="w-14 h-14 glass-strong rounded-xl flex items-center justify-center text-primary text-2xl group-hover:scale-110 transition-transform">
-                        {item.icon}
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm text-muted-foreground font-medium mb-1">
-                          {item.title}
-                        </p>
-                        <h3 className="text-base md:text-lg font-semibold group-hover:text-primary transition-colors">
-                          {item.description}
-                        </h3>
-                      </div>
-                    </div>
-                  </div>
-                </motion.a>
-              ))}
-            </div>
-
-            {/* Additional Info Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.5 }}
-              className="glass-strong p-8 rounded-2xl border border-border/50"
-            >
-              <h4 className="text-xl font-bold mb-4">Why Work With Me?</h4>
-              <ul className="space-y-3 text-muted-foreground">
-                <li className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <div className="w-2 h-2 rounded-full bg-primary" />
-                  </div>
-                  <span>Fast response time within 24 hours</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <div className="w-2 h-2 rounded-full bg-primary" />
-                  </div>
-                  <span>Clean, modern, and responsive designs</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <div className="w-2 h-2 rounded-full bg-primary" />
-                  </div>
-                  <span>Collaborative approach to every project</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <div className="w-2 h-2 rounded-full bg-primary" />
-                  </div>
-                  <span>Commitment to quality and deadlines</span>
-                </li>
-              </ul>
-            </motion.div>
-          </motion.div>
+        {/* Shine sweep */}
+        <div className="absolute inset-0 rounded-2xl overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/8 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
         </div>
-      </div>
-    </section>
+
+        {/* Content */}
+        <div className="relative p-6 flex flex-col items-center gap-2" style={{ transform: "translateZ(20px)" } as any}>
+          <div style={{ color: social.color }} className="text-2xl">
+            {social.icon}
+          </div>
+          <motion.span
+            initial={{ opacity: 0, y: -5 }}
+            animate={hovered ? { opacity: 1, y: 0 } : { opacity: 0, y: -5 }}
+            transition={{ duration: 0.2 }}
+            className="text-xs font-medium uppercase tracking-wide"
+          >
+            {social.label}
+          </motion.span>
+        </div>
+      </motion.a>
+    </motion.div>
   );
 };
 

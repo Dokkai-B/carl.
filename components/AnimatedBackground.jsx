@@ -98,6 +98,7 @@ export function AnimatedBackground() {
   const orbitTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const settleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const morphTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isMountedRef = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
 
@@ -125,9 +126,17 @@ export function AnimatedBackground() {
 
   useEffect(() => {
     setMounted(true);
+    isMountedRef.current = true;
     const hasPointer = window.matchMedia("(pointer: fine)").matches;
     setIsPointerDevice(hasPointer);
-  }, []);
+    
+    return () => {
+      isMountedRef.current = false;
+      orb1Controls.stop();
+      orb2Controls.stop();
+      orb3Controls.stop();
+    };
+  }, [orb1Controls, orb2Controls, orb3Controls]);
 
   // Mouse tracking for parallax effect (desktop only)
   useEffect(() => {
@@ -172,6 +181,8 @@ export function AnimatedBackground() {
 
   // Animate orbs to merge cluster
   const animateToCluster = useCallback((target: ClusterTarget) => {
+    if (!isMountedRef.current) return;
+    
     const positions = CLUSTER_POSITIONS[target.type];
     setIsSettled(false);
     setIsMorphed(false);
@@ -191,6 +202,7 @@ export function AnimatedBackground() {
     });
 
     setTimeout(() => {
+      if (!isMountedRef.current) return;
       orb2Controls.start({
         x: positions.sat1.x,
         y: positions.sat1.y,
@@ -205,6 +217,7 @@ export function AnimatedBackground() {
     }, 40);
 
     setTimeout(() => {
+      if (!isMountedRef.current) return;
       orb3Controls.start({
         x: positions.sat2.x,
         y: positions.sat2.y,
@@ -220,6 +233,7 @@ export function AnimatedBackground() {
 
     // Phase 2: Quick orbit dance (180ms after pull)
     orbitTimeoutRef.current = setTimeout(() => {
+      if (!isMountedRef.current) return;
       const orbitRadius = 15;
       
       orb2Controls.start({
@@ -235,6 +249,7 @@ export function AnimatedBackground() {
 
     // Phase 3: MORPH into shapes (500ms after pull)
     morphTimeoutRef.current = setTimeout(() => {
+      if (!isMountedRef.current) return;
       setIsMorphed(true);
       setOrbState("morphing");
       const shapes = MORPH_SHAPES[target.type];
@@ -251,8 +266,7 @@ export function AnimatedBackground() {
         ease: [0.34, 1.56, 0.64, 1],
       });
 
-      setTimeout(() => {
-        orb2Controls.start({
+      setTimeout(() => {        if (!isMountedRef.current) return;        orb2Controls.start({
           x: positions.sat1.x,
           y: positions.sat1.y,
           scale: [1.4, 1.7, 1.5],
@@ -265,8 +279,7 @@ export function AnimatedBackground() {
         });
       }, 80);
 
-      setTimeout(() => {
-        orb3Controls.start({
+      setTimeout(() => {        if (!isMountedRef.current) return;        orb3Controls.start({
           x: positions.sat2.x,
           y: positions.sat2.y,
           scale: [1.35, 1.6, 1.45],
@@ -281,13 +294,14 @@ export function AnimatedBackground() {
     }, 500);
 
     // Phase 4: Settled with pulsing shapes
-    settleTimeoutRef.current = setTimeout(() => {
-      setIsSettled(true);
+    settleTimeoutRef.current = setTimeout(() => {      if (!isMountedRef.current) return;      setIsSettled(true);
     }, 1100);
   }, [orb1Controls, orb2Controls, orb3Controls]);
 
   // Animate orbs back to neutral
   const animateToNeutral = useCallback(() => {
+    if (!isMountedRef.current) return;
+    
     setIsSettled(false);
     setIsMorphed(false);
     setCurrentTarget(null);
@@ -365,7 +379,7 @@ export function AnimatedBackground() {
 
   // Pulsing animation for morphed settled state
   useEffect(() => {
-    if (!isSettled || !isMorphed || !currentTarget) return;
+    if (!isSettled || !isMorphed || !currentTarget || !isMountedRef.current) return;
 
     const positions = CLUSTER_POSITIONS[currentTarget.type];
     const shapes = MORPH_SHAPES[currentTarget.type];

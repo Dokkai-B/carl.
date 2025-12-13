@@ -5,6 +5,8 @@ import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import { useEffect, useState, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
+import NetworkLayer from "./NetworkLayer";
+import OrbLayer from "./OrbLayer";
 import {
   menuPreset,
   slidePocketChild,
@@ -15,8 +17,8 @@ import {
 
 const links = [
   { name: "Home", path: "/" },
-  { name: "Resume", path: "/resume" },
-  { name: "Projects", path: "/work" },
+  { name: "About Me", path: "/resume" },
+  { name: "Work", path: "/work" },
   { name: "Contacts", path: "/contact" },
 ];
 
@@ -123,8 +125,9 @@ const Header = () => {
   const { scrollY } = useScroll();
   const isNavigatingRef = useRef(false);
 
-  const headerPadding = useTransform(scrollY, [0, 100], ["1.5rem", "0.75rem"]);
-  const logoSize = useTransform(scrollY, [0, 100], ["2rem", "1.5rem"]);
+  // Shrink more aggressively for minimal footprint
+  const headerPadding = useTransform(scrollY, [0, 120], ["1.25rem", "0.5rem"]);
+  const logoSize = useTransform(scrollY, [0, 120], ["2rem", "1.35rem"]);
 
   useEffect(() => {
     setMounted(true);
@@ -147,11 +150,20 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
+    let scrollTimeout: NodeJS.Timeout;
+    
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        setIsScrolled(window.scrollY > 50);
+      }, 16); // ~60fps debounce
     };
+    
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearTimeout(scrollTimeout);
+    };
   }, []);
 
   // Close menu when route changes
@@ -213,13 +225,26 @@ const Header = () => {
   return (
     <>
       <motion.header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled && !isMenuOpen ? "glass-strong border-b border-border/50" : "bg-transparent"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300`}
         style={{ paddingTop: headerPadding, paddingBottom: headerPadding }}
       >
-        <div className="container mx-auto flex justify-between items-center px-4">
-          {/* Logo */}
+        {/* Ultra-minimal backdrop presence when scrolled */}
+        {isScrolled && !isMenuOpen && (
+          <motion.div
+            className="absolute inset-0 -z-10"
+            initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
+            animate={{ opacity: 1, backdropFilter: "blur(4px)" }}
+            exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
+            transition={{ duration: 0.28, ease: [0.22, 0.61, 0.36, 1] }}
+            style={{
+              background: "transparent",
+              WebkitBackdropFilter: "blur(4px)",
+            }}
+          />
+        )}
+
+        <div className="container mx-auto flex justify-between items-center px-4 relative z-20">
+          {/* Logo - default "Carl." then on scroll compress "arl" and slide dot toward C */}
           <Link href="/" className="z-50">
             <motion.h1
               className="font-bold"
@@ -228,16 +253,27 @@ const Header = () => {
               animate={animationReady ? { opacity: 1, y: 0 } : { opacity: 0, y: -8 }}
               transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
             >
+              {/* C */}
+              <motion.span className={`${isMenuOpen ? "text-foreground" : "gradient-text"}`}>C</motion.span>
+              {/* arl - compress & fade out on scroll */}
               <motion.span
-                className={`transition-colors duration-300 ${
-                  isMenuOpen ? "text-foreground" : "gradient-text"
-                }`}
-                whileHover={{ scale: 1.05 }}
-                transition={{ type: "spring", stiffness: 400 }}
+                className={`${isMenuOpen ? "text-foreground" : "gradient-text"} inline-block overflow-hidden align-middle`}
+                initial={false}
+                animate={{ width: isScrolled ? 0 : "auto", opacity: isScrolled ? 0 : 1 }}
+                transition={{ duration: 0.3, ease: [0.22, 0.61, 0.36, 1] }}
+                style={{ display: "inline-block", whiteSpace: "nowrap" }}
               >
-                Carl
+                arl
               </motion.span>
-              <span className="text-accent">.</span>
+              {/* dot - gently slides left toward C when scrolled */}
+              <motion.span
+                className="text-accent inline-block"
+                initial={false}
+                animate={{ x: isScrolled ? -8 : 0 }}
+                transition={{ duration: 0.3, ease: [0.22, 0.61, 0.36, 1] }}
+              >
+                .
+              </motion.span>
             </motion.h1>
           </Link>
 
@@ -264,6 +300,12 @@ const Header = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
+            {/* Orb Layer - fades in at 400ms */}
+            <OrbLayer isMenuOpen={isMenuOpen} />
+
+            {/* Network Layer - nodes appear at 600ms, lines draw at 800ms */}
+            <NetworkLayer isMenuOpen={isMenuOpen} />
+
             {/* Background decoration */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
               <motion.div
@@ -299,34 +341,6 @@ const Header = () => {
                     onClick={() => handleNavigation(link.path)}
                   />
                 ))}
-              </motion.div>
-
-              {/* Bottom section */}
-              <motion.div
-                className="absolute bottom-8 left-8 right-8"
-                variants={slidePocketChild}
-                initial="hidden"
-                animate={menuAnimationReady ? "visible" : "hidden"}
-                exit="exit"
-              >
-                <div className="flex flex-col items-center gap-4 pt-8 border-t border-border/30">
-                  <p className="text-muted-foreground text-sm">Available for freelance work</p>
-                  <Link
-                    href="/contact"
-                    onClick={() => handleNavigation("/contact")}
-                    className="inline-flex items-center gap-2 text-accent hover:text-accent-hover transition-colors"
-                  >
-                    <span className="text-sm font-medium">Let's work together</span>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17 8l4 4m0 0l-4 4m4-4H3"
-                      />
-                    </svg>
-                  </Link>
-                </div>
               </motion.div>
             </nav>
           </motion.div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence, useAnimation } from "framer-motion";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { ANIMATION_CONFIG } from "@/lib/animations";
 
 // =============================================
@@ -62,10 +62,21 @@ export const TransitionOverlay = ({ children }: TransitionOverlayProps) => {
   const [isActive, setIsActive] = useState(false);
   const [transitionSource, setTransitionSource] = useState<TransitionEvent["source"]>("page");
   const overlayControls = useAnimation();
+  const isMountedRef = useRef(false);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+      overlayControls.stop();
+    };
+  }, [overlayControls]);
 
   // Handle transition trigger
   const triggerDistraction = useCallback(
     async (source: TransitionEvent["source"]) => {
+      if (!isMountedRef.current) return;
+      
       setTransitionSource(source);
       setIsActive(true);
       dispatchTransitionEvent("distraction", source);

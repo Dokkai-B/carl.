@@ -16,12 +16,17 @@ const skillCardsContainer = coordinatedContainer(ANIMATION_CONFIG.stagger.slow, 
 
 const HomePage = () => {
   const [loaderComplete, setLoaderComplete] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const mountedRef = useRef(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const contentControls = useAnimation();
-  const skillsControls = useAnimation();
+  const [shouldAnimate, setShouldAnimate] = useState(false);
   const isExitingRef = useRef(false);
+  const menuTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
+    setMounted(true);
+    mountedRef.current = true;
+    setShouldAnimate(true); // Immediately enable animations
     // Always wait for loader to complete on page load/refresh
     const handleLoaderComplete = () => {
       setLoaderComplete(true);
@@ -33,14 +38,17 @@ const HomePage = () => {
     // Give a small timeout in case the event already fired
     const fallbackTimer = setTimeout(() => {
       if (!loaderComplete) {
-        // If no loader event after 5 seconds, assume it's done
+        // If no loader event after 3 seconds, assume it's done
         setLoaderComplete(true);
       }
-    }, 5000);
+    }, 3000);
 
     return () => {
       window.removeEventListener("loaderComplete", handleLoaderComplete);
       clearTimeout(fallbackTimer);
+      if (menuTimeoutRef.current) {
+        clearTimeout(menuTimeoutRef.current);
+      }
     };
   }, []);
 
@@ -52,34 +60,32 @@ const HomePage = () => {
       if (e.detail.isOpen) {
         // Menu opened - slide content up (hide into pocket)
         isExitingRef.current = true;
-        contentControls.start("exit");
-        skillsControls.start("exit");
+        setShouldAnimate(false);
       } else {
         // Menu closed - wait for distraction animation, then slide content back
         isExitingRef.current = false;
 
         // Delay content re-entry to sync with distraction animation
         const enterDelay = ANIMATION_CONFIG.transition.enterDelay * 1000;
-        setTimeout(() => {
+        if (menuTimeoutRef.current) {
+          clearTimeout(menuTimeoutRef.current);
+        }
+        menuTimeoutRef.current = setTimeout(() => {
           if (!isExitingRef.current) {
-            contentControls.start("visible");
-            skillsControls.start("visible");
+            setShouldAnimate(true);
           }
         }, enterDelay);
       }
     };
 
     window.addEventListener("menuStateChange", handleMenuState as EventListener);
-    return () => window.removeEventListener("menuStateChange", handleMenuState as EventListener);
-  }, [contentControls, skillsControls]);
-
-  // Trigger initial animation when loader completes
-  useEffect(() => {
-    if (loaderComplete && !menuOpen && !isExitingRef.current) {
-      contentControls.start("visible");
-      skillsControls.start("visible");
-    }
-  }, [loaderComplete, menuOpen, contentControls, skillsControls]);
+    return () => {
+      window.removeEventListener("menuStateChange", handleMenuState as EventListener);
+      if (menuTimeoutRef.current) {
+        clearTimeout(menuTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Hero section mouse handlers for orb scale boost
   // Name hover handler for orb merge animation - fixed positions
@@ -97,8 +103,7 @@ const HomePage = () => {
             <motion.div
               variants={heroContainer}
               initial="hidden"
-              animate={contentControls}
-              exit="exit"
+              animate={shouldAnimate && !menuOpen ? "visible" : "hidden"}
               className="space-y-8 z-10 lg:col-span-3"
             >
               {/* Main Heading - Line by line slide pocket animation */}
@@ -183,8 +188,7 @@ const HomePage = () => {
             {/* Right Side - Floating Skill Nodes (takes 2 of 5 columns = 40%) */}
             <motion.div
               initial="hidden"
-              animate={skillsControls}
-              exit="exit"
+              animate={shouldAnimate && !menuOpen ? "visible" : "hidden"}
               variants={skillCardsContainer}
               className="relative hidden lg:block lg:col-span-2"
             >
@@ -201,8 +205,7 @@ const HomePage = () => {
         <div className="container mx-auto px-4">
           <motion.div
             initial="hidden"
-            animate={skillsControls}
-            exit="exit"
+            animate={shouldAnimate && !menuOpen ? "visible" : "exit"}
             variants={skillCardsContainer}
           >
             <motion.h2 variants={slidePocketChild} className="text-2xl font-bold text-center mb-8">

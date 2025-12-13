@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useAnimation } from "framer-motion";
 import Image from "next/image";
 import { ANIMATION_CONFIG } from "@/lib/animations";
@@ -12,6 +12,16 @@ export default function PageLoader() {
   const [textVisible, setTextVisible] = useState(false);
   const textControls = useAnimation();
   const iconControls = useAnimation();
+  const isMountedRef = useRef(false);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+      textControls.stop();
+      iconControls.stop();
+    };
+  }, [textControls, iconControls]);
 
   useEffect(() => {
     // =============================================
@@ -24,33 +34,37 @@ export default function PageLoader() {
     // =============================================
 
     // Start icon fade in animation
-    iconControls.start({
-      opacity: 1,
-      y: [0, -8, 0],
-      scale: 1,
-      transition: {
-        opacity: { duration: 0.6 },
-        scale: { duration: 0.6 },
-        y: {
-          duration: 2.5,
-          repeat: Infinity,
-          ease: "easeInOut",
+    if (isMountedRef.current) {
+      iconControls.start({
+        opacity: 1,
+        y: [0, -8, 0],
+        scale: 1,
+        transition: {
+          opacity: { duration: 0.6 },
+          scale: { duration: 0.6 },
+          y: {
+            duration: 2.5,
+            repeat: Infinity,
+            ease: "easeInOut",
+          },
         },
-      },
-    });
+      });
+    }
 
     // Start text enter animation after a short delay
     const textEnterTimer = setTimeout(() => {
-      setTextVisible(true);
-      textControls.start({
-        y: 0,
-        opacity: 1,
-        transition: {
-          type: "spring",
-          stiffness: ANIMATION_CONFIG.spring.stiffness,
-          damping: ANIMATION_CONFIG.spring.damping,
-        },
-      });
+      if (isMountedRef.current) {
+        setTextVisible(true);
+        textControls.start({
+          y: 0,
+          opacity: 1,
+          transition: {
+            type: "spring",
+            stiffness: ANIMATION_CONFIG.spring.stiffness,
+            damping: ANIMATION_CONFIG.spring.damping,
+          },
+        });
+      }
     }, 300);
 
     const interval = setInterval(() => {
@@ -78,7 +92,7 @@ export default function PageLoader() {
 
   // Handle exit animations when loading is complete
   useEffect(() => {
-    if (loadingComplete && textVisible) {
+    if (loadingComplete && textVisible && isMountedRef.current) {
       // Animate text sliding back up (into pocket)
       textControls.start({
         y: ANIMATION_CONFIG.slideDistance.exit,
@@ -92,24 +106,26 @@ export default function PageLoader() {
 
       // Animate icon sliding up and fading out (slightly delayed from text)
       setTimeout(() => {
-        iconControls
-          .start({
-            y: ANIMATION_CONFIG.slideDistance.exit * 1.5,
-            opacity: 0,
-            scale: 0.9,
-            transition: {
-              type: "spring",
-              stiffness: ANIMATION_CONFIG.spring.stiffness,
-              damping: ANIMATION_CONFIG.spring.damping,
-            },
-          })
-          .then(() => {
-            // After both exit, hide the loader
-            setTimeout(() => {
-              setIsLoading(false);
-              window.dispatchEvent(new CustomEvent("loaderComplete"));
-            }, 100);
-          });
+        if (isMountedRef.current) {
+          iconControls
+            .start({
+              y: ANIMATION_CONFIG.slideDistance.exit * 1.5,
+              opacity: 0,
+              scale: 0.9,
+              transition: {
+                type: "spring",
+                stiffness: ANIMATION_CONFIG.spring.stiffness,
+                damping: ANIMATION_CONFIG.spring.damping,
+              },
+            })
+            .then(() => {
+              // After both exit, hide the loader
+              setTimeout(() => {
+                setIsLoading(false);
+                window.dispatchEvent(new CustomEvent("loaderComplete"));
+              }, 100);
+            });
+        }
       }, 100);
     }
   }, [loadingComplete, textVisible, textControls, iconControls]);
@@ -157,6 +173,7 @@ export default function PageLoader() {
               src="/loader/1.png"
               alt="Loading"
               fill
+              sizes="(max-width: 768px) 40vw, (max-width: 1200px) 30vw, 20vw"
               className="object-contain opacity-20"
               priority
             />
@@ -175,6 +192,7 @@ export default function PageLoader() {
                 src="/loader/2.png"
                 alt="Loading progress"
                 fill
+                sizes="(max-width: 768px) 40vw, (max-width: 1200px) 30vw, 20vw"
                 className="object-contain"
                 priority
               />

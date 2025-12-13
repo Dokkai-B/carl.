@@ -69,6 +69,15 @@ export function useSlideAnimation(options: UseSlideAnimationOptions = {}): UseSl
 
   const [isReady, setIsReady] = useState(false);
   const controls = useAnimation();
+  const isMountedRef = useRef(false);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+      controls.stop();
+    };
+  }, [controls]);
 
   useEffect(() => {
     // Check if this is initial load or navigation
@@ -104,11 +113,15 @@ export function useSlideAnimation(options: UseSlideAnimationOptions = {}): UseSl
   }, [waitForLoader, delay]);
 
   const animateIn = useCallback(async () => {
-    await controls.start("visible");
+    if (isMountedRef.current) {
+      await controls.start("visible");
+    }
   }, [controls]);
 
   const animateOut = useCallback(async () => {
-    await controls.start("exit");
+    if (isMountedRef.current) {
+      await controls.start("exit");
+    }
   }, [controls]);
 
   return {
@@ -224,11 +237,21 @@ interface UseLoaderTextAnimationReturn {
 export function useLoaderTextAnimation(): UseLoaderTextAnimationReturn {
   const [state, setState] = useState<"entering" | "idle" | "exiting" | "done">("entering");
   const controls = useAnimation();
+  const isMountedRef = useRef(false);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+      controls.stop();
+    };
+  }, [controls]);
 
   useEffect(() => {
     // Animate in on mount
     const animateIn = async () => {
-      await controls.start({
+      if (isMountedRef.current) {
+        await controls.start({
         y: 0,
         opacity: 1,
         transition: {
@@ -245,17 +268,19 @@ export function useLoaderTextAnimation(): UseLoaderTextAnimationReturn {
   }, [controls]);
 
   const triggerExit = useCallback(async () => {
-    setState("exiting");
-    await controls.start({
-      y: ANIMATION_CONFIG.slideDistance.exit,
-      opacity: 0,
-      transition: {
-        type: "spring",
-        stiffness: ANIMATION_CONFIG.spring.stiffness,
-        damping: ANIMATION_CONFIG.spring.damping,
-      },
-    });
-    setState("done");
+    if (isMountedRef.current) {
+      setState("exiting");
+      await controls.start({
+        y: ANIMATION_CONFIG.slideDistance.exit,
+        opacity: 0,
+        transition: {
+          type: "spring",
+          stiffness: ANIMATION_CONFIG.spring.stiffness,
+          damping: ANIMATION_CONFIG.spring.damping,
+        },
+      });
+      setState("done");
+    }
   }, [controls]);
 
   return {
@@ -335,6 +360,15 @@ export function useCoordinatedTransition(
   const [loaderComplete, setLoaderComplete] = useState(false);
   const controls = useAnimation();
   const isExitingRef = useRef(false);
+  const isMountedRef = useRef(false);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+      controls.stop();
+    };
+  }, [controls]);
 
   // Wait for loader to complete
   useEffect(() => {
@@ -369,7 +403,9 @@ export function useCoordinatedTransition(
         // Menu opening - exit content with coordinated transition
         isExitingRef.current = true;
         setPhase("exiting");
-        await controls.start("exit");
+        if (isMountedRef.current) {
+          await controls.start("exit");
+        }
 
         // Trigger distraction animation after exit completes
         triggerTransition("menu");
@@ -388,9 +424,11 @@ export function useCoordinatedTransition(
 
             // Delay content entry to sync with distraction end
             setTimeout(async () => {
-              await controls.start("visible");
-              setIsVisible(true);
-              setPhase("idle");
+              if (isMountedRef.current) {
+                await controls.start("visible");
+                setIsVisible(true);
+                setPhase("idle");
+              }
             }, ANIMATION_CONFIG.transition.enterDelay * 1000);
 
             window.removeEventListener("transitionPhase", handleEntering as EventListener);
@@ -407,11 +445,13 @@ export function useCoordinatedTransition(
 
   // Initial animation after loader
   useEffect(() => {
-    if (loaderComplete && !isMenuOpen && !isExitingRef.current) {
+    if (loaderComplete && !isMenuOpen && !isExitingRef.current && isMountedRef.current) {
       setPhase("entering");
       controls.start("visible").then(() => {
-        setIsVisible(true);
-        setPhase("idle");
+        if (isMountedRef.current) {
+          setIsVisible(true);
+          setPhase("idle");
+        }
       });
     }
   }, [loaderComplete, isMenuOpen, controls]);
@@ -419,14 +459,16 @@ export function useCoordinatedTransition(
   // Coordinated exit function
   const triggerCoordinatedExit = useCallback(
     async (source: TransitionSource = "page") => {
-      isExitingRef.current = true;
-      setPhase("exiting");
-      await controls.start("exit");
+      if (isMountedRef.current) {
+        isExitingRef.current = true;
+        setPhase("exiting");
+        await controls.start("exit");
 
-      // Trigger distraction animation
-      triggerTransition(source);
-      setPhase("distraction");
-      setIsVisible(false);
+        // Trigger distraction animation
+        triggerTransition(source);
+        setPhase("distraction");
+        setIsVisible(false);
+      }
     },
     [controls]
   );

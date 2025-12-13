@@ -532,17 +532,41 @@ const MetadataCard = ({
 // =============================================
 // MAIN WORK PAGE COMPONENT
 // =============================================
+
+// Animation variants for content
+const contentVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -20 }
+};
+
 const Work = () => {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const mountedRef = useRef(false);
   const [hoveredProject, setHoveredProject] = useState<(typeof projects)[0] | null>(null);
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const menuTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const contentControls = useAnimation();
+  const [shouldAnimate, setShouldAnimate] = useState(false);
   const isExitingRef = useRef(false);
+  const isMountedRef = useRef(false);
 
   useEffect(() => {
     setMounted(true);
+    mountedRef.current = true;
+    isMountedRef.current = true;
+    setShouldAnimate(true); // Immediately enable animations
+    return () => {
+      isMountedRef.current = false;
+      // Clear any pending timeouts
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
+      if (menuTimeoutRef.current) {
+        clearTimeout(menuTimeoutRef.current);
+      }
+    };
   }, []);
 
   const isDark = !mounted || resolvedTheme === "dark";
@@ -570,36 +594,35 @@ const Work = () => {
       setMenuOpen(e.detail.isOpen);
       if (e.detail.isOpen) {
         isExitingRef.current = true;
-        contentControls.start({ opacity: 0, y: -20 });
+        setShouldAnimate(false);
       } else {
         isExitingRef.current = false;
-        setTimeout(() => {
+        if (menuTimeoutRef.current) {
+          clearTimeout(menuTimeoutRef.current);
+        }
+        menuTimeoutRef.current = setTimeout(() => {
           if (!isExitingRef.current) {
-            contentControls.start({ opacity: 1, y: 0 });
+            setShouldAnimate(true);
           }
         }, 300);
       }
     };
 
     window.addEventListener("menuStateChange", handleMenuState as EventListener);
-    return () => window.removeEventListener("menuStateChange", handleMenuState as EventListener);
-  }, [contentControls]);
-
-  // Initial animation
-  useEffect(() => {
-    if (!menuOpen && !isExitingRef.current) {
-      contentControls.start({ opacity: 1, y: 0 });
-    }
-  }, [menuOpen, contentControls]);
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
     return () => {
-      if (hoverTimeoutRef.current) {
-        clearTimeout(hoverTimeoutRef.current);
+      window.removeEventListener("menuStateChange", handleMenuState as EventListener);
+      if (menuTimeoutRef.current) {
+        clearTimeout(menuTimeoutRef.current);
       }
     };
   }, []);
+
+  // Initial animation - trigger when mounted
+  useEffect(() => {
+    if (mounted && !menuOpen && !isExitingRef.current) {
+      setShouldAnimate(true);
+    }
+  }, [mounted, menuOpen]);
 
   return (
     <section className="relative h-screen overflow-hidden">
@@ -625,38 +648,25 @@ const Work = () => {
       `}</style>
 
       {/* Dynamic background with orbs and preview */}
-      <BackgroundPreview hoveredProject={hoveredProject} isDark={isDark} />
+      <div className="absolute inset-0 -z-10">
+        <BackgroundPreview hoveredProject={hoveredProject} isDark={isDark} />
+      </div>
 
       {/* Main content */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={contentControls}
-        transition={{ duration: 0.5 }}
-        className="relative z-10 h-full flex flex-col container mx-auto px-6 md:px-8 pt-24 md:pt-28 pb-8"
-      >
+      <div className="relative z-10 h-full flex flex-col container mx-auto px-6 md:px-8 pt-24 md:pt-28 pb-8">
         {/* Header - compact */}
-        <motion.div
-          initial={{ opacity: 0, y: 25 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, type: "spring", stiffness: 200, damping: 20 }}
-          className="mb-8 md:mb-10 flex-shrink-0"
-        >
+        <div className="mb-8 md:mb-10 flex-shrink-0">
           <div className="flex items-end justify-between gap-4 flex-wrap">
             <div>
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">
                 Featured <span className="gradient-text">Projects</span>
               </h1>
-              <p
-                className="text-sm md:text-base max-w-lg leading-relaxed"
-                style={{
-                  color: isDark ? "rgba(255,255,255,0.45)" : "rgba(0,0,0,0.4)",
-                }}
-              >
+              <p className="text-sm md:text-base max-w-lg leading-relaxed opacity-70">
                 A curated selection of work spanning web and mobile development.
               </p>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Two-column layout - fills remaining space */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 flex-1 min-h-0">
@@ -665,7 +675,7 @@ const Work = () => {
             {/* Scrollable container with hidden scrollbar */}
             <div className="scrollable-list flex-1 overflow-y-auto pr-2">
               <div className="space-y-1">
-                {projects.map((project, index) => (
+                {mounted && projects.map((project, index) => (
                   <ProjectListItem
                     key={project.id}
                     project={project}
@@ -718,7 +728,7 @@ const Work = () => {
             </div>
           </motion.div>
         )}
-      </motion.div>
+      </div>
     </section>
   );
 };

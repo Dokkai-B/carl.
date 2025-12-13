@@ -606,9 +606,20 @@ const DynamicBackground = ({
 const FloatingTabNav = ({ activeSection }: { activeSection: string }) => {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  // Listen for menu state changes
+  useEffect(() => {
+    const handleMenuState = (e: CustomEvent<{ isOpen: boolean }>) => {
+      setIsMenuOpen(e.detail.isOpen);
+    };
+
+    window.addEventListener("menuStateChange", handleMenuState as EventListener);
+    return () => window.removeEventListener("menuStateChange", handleMenuState as EventListener);
   }, []);
 
   const isDark = !mounted || resolvedTheme === "dark";
@@ -619,6 +630,11 @@ const FloatingTabNav = ({ activeSection }: { activeSection: string }) => {
       element.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
+
+  // Hide floating nav when menu is open
+  if (isMenuOpen) {
+    return null;
+  }
 
   return (
     <>

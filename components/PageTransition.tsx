@@ -42,17 +42,9 @@ const PageTransition = ({ children }: { children: React.ReactNode }) => {
   }, [pathname]);
 
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={pathname}
-        variants={pageTransitionVariants}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-      >
-        {children}
-      </motion.div>
-    </AnimatePresence>
+    <div key={pathname}>
+      {children}
+    </div>
   );
 };
 

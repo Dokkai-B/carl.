@@ -122,16 +122,11 @@ const BackToTopButton = ({ project }: { project: Project }) => {
 
 export default function ProjectPageContent({ project, navigation }: ProjectPageContentProps) {
   const router = useRouter();
-  const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  const isDark = mounted ? resolvedTheme === "dark" : false;
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   const [modalOpen, setModalOpen] = useState(false);
   const [modalIndex, setModalIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const openModal = (index: number) => {
     setModalIndex(index);
@@ -179,7 +174,18 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
           />
         </div>
 
-        {/* Page-level orbs removed - only showing orbs in Key Features and Tech Stack sections */}
+        <OrbBackground
+          orbs={[
+            { size: 450, x: 12, y: 18, duration: 22, colorIndex: 0 },
+            { size: 380, x: 78, y: 58, duration: 26, colorIndex: 1 },
+            { size: 350, x: 48, y: 82, duration: 20, colorIndex: 0 },
+          ]}
+          primaryColor={project.colors.primary}
+          secondaryColor={project.colors.secondary}
+          lightPrimaryColor={project.colors.light.primary}
+          lightSecondaryColor={project.colors.light.secondary}
+          zIndex={-10}
+        />
 
         <div className="container mx-auto px-6 md:px-12 lg:px-[120px] py-24">
           <motion.div
@@ -220,32 +226,19 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
           >
             <div className="flex flex-col justify-center">
               <div className="mb-6">
-                {!mounted ? (
-                  <motion.h1
-                    className="text-5xl md:text-6xl font-bold mb-4"
-                    style={{
-                      color: "#ffffff",
-                    }}
-                  >
-                    {project.title}
-                  </motion.h1>
-                ) : (
-                  <motion.h1
-                    key={isDark ? "dark" : "light"}
-                    className="text-5xl md:text-6xl font-bold mb-4"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.3 }}
-                    style={{
-                      background: `linear-gradient(135deg, ${isDark ? "#ffffff" : "#1f2937"}, ${project.colors.primary})`,
-                      backgroundClip: "text",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                    }}
-                  >
-                    {project.title}
-                  </motion.h1>
-                )}
+                <motion.h1
+                  className="text-5xl md:text-6xl font-bold mb-4"
+                  style={{
+                    background: `linear-gradient(135deg, ${isDark ? "white" : "black"}, ${
+                      project.colors.primary
+                    })`,
+                    backgroundClip: "text",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }}
+                >
+                  {project.title}
+                </motion.h1>
 
                 <motion.div
                   initial={{ opacity: 0 }}
@@ -281,9 +274,10 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: 1 }}
                   transition={{ delay: 0.25, duration: 0.6 }}
-                  className="h-1 mb-6 origin-left w-full"
+                  className="h-1 mb-6 origin-left"
                   style={{
                     background: `linear-gradient(90deg, ${project.colors.primary}, ${project.colors.secondary})`,
+                    width: "80px",
                   }}
                 />
               </div>
@@ -306,7 +300,7 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                 transition={{ delay: 0.4 }}
                 className="flex gap-4 flex-wrap"
               >
-                {project.links.prototype && (
+                {project.links.prototype && project.links.prototype !== "#" && (
                   <Link href={project.links.prototype} target="_blank">
                     <motion.button
                       className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all"
@@ -323,7 +317,7 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                   </Link>
                 )}
 
-                {project.links.github && (
+                {project.links.github && project.links.github !== "#" && (
                   <Link href={project.links.github} target="_blank">
                     <motion.button
                       className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all border"
@@ -472,15 +466,56 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
             transition={{ duration: 0.6 }}
             className="mb-24 relative"
           >
+            {/* Background orbs behind section */}
+            <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+              {[
+                {
+                  size: 360,
+                  x: 8,
+                  y: 14,
+                  color: isDark ? project.colors.primary : project.colors.light.primary,
+                  opacity: isDark ? 0.18 : 0.12,
+                  duration: 22,
+                },
+                {
+                  size: 300,
+                  x: 78,
+                  y: 64,
+                  color: isDark ? project.colors.secondary : project.colors.light.secondary,
+                  opacity: isDark ? 0.15 : 0.1,
+                  duration: 26,
+                },
+              ].map((orb, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute rounded-full"
+                  style={{
+                    width: orb.size,
+                    height: orb.size,
+                    background: `radial-gradient(circle, ${orb.color}60, transparent 70%)`,
+                    opacity: orb.opacity,
+                    left: `${orb.x}%`,
+                    top: `${orb.y}%`,
+                    filter: `blur(${isDark ? 80 : 70}px)`,
+                  }}
+                  animate={{
+                    scale: [1, 1.08, 1],
+                  }}
+                  transition={{
+                    scale: { duration: orb.duration, repeat: Infinity, ease: "easeInOut" },
+                  }}
+                />
+              ))}
+            </div>
+
             <h2 className="text-3xl md:text-4xl font-bold mb-12">Key Features</h2>
 
             <GlassSection
               allowOrbOverlap={true}
               orbSlot="inside"
               orbs={[
-                { size: 320, x: -8, y: 30, duration: 20, colorIndex: 0 },   // Large - Left edge
-                { size: 240, x: 92, y: -10, duration: 22, colorIndex: 1 },  // Medium - Top right
-                { size: 220, x: 95, y: 85, duration: 18, colorIndex: 0 },   // Medium - Bottom right
+                { size: 240, x: 64, y: 10, duration: 18, colorIndex: 0 },
+                { size: 180, x: 22, y: 72, duration: 20, colorIndex: 1 },
               ]}
               primaryColor={project.colors.primary}
               secondaryColor={project.colors.secondary}
@@ -550,15 +585,56 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
             transition={{ duration: 0.6 }}
             className="mb-24 relative"
           >
+            {/* Background orbs behind section */}
+            <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+              {[
+                {
+                  size: 340,
+                  x: 10,
+                  y: 22,
+                  color: isDark ? project.colors.primary : project.colors.light.primary,
+                  opacity: isDark ? 0.17 : 0.12,
+                  duration: 24,
+                },
+                {
+                  size: 280,
+                  x: 74,
+                  y: 50,
+                  color: isDark ? project.colors.secondary : project.colors.light.secondary,
+                  opacity: isDark ? 0.14 : 0.1,
+                  duration: 28,
+                },
+              ].map((orb, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute rounded-full"
+                  style={{
+                    width: orb.size,
+                    height: orb.size,
+                    background: `radial-gradient(circle, ${orb.color}60, transparent 70%)`,
+                    opacity: orb.opacity,
+                    left: `${orb.x}%`,
+                    top: `${orb.y}%`,
+                    filter: `blur(${isDark ? 80 : 70}px)`,
+                  }}
+                  animate={{
+                    scale: [1, 1.08, 1],
+                  }}
+                  transition={{
+                    scale: { duration: orb.duration, repeat: Infinity, ease: "easeInOut" },
+                  }}
+                />
+              ))}
+            </div>
+
             <h2 className="text-3xl md:text-4xl font-bold mb-12">Tech Stack</h2>
 
             <GlassSection
               allowOrbOverlap={true}
               orbSlot="inside"
               orbs={[
-                { size: 250, x: 48, y: -12, duration: 21, colorIndex: 1 },  // Medium - Top center
-                { size: 310, x: -5, y: 90, duration: 23, colorIndex: 0 },   // Large - Bottom left
-                { size: 230, x: 92, y: 88, duration: 19, colorIndex: 1 },   // Medium - Bottom right
+                { size: 230, x: 64, y: 12, duration: 18, colorIndex: 0 },
+                { size: 170, x: 20, y: 70, duration: 20, colorIndex: 1 },
               ]}
               primaryColor={project.colors.primary}
               secondaryColor={project.colors.secondary}
