@@ -82,15 +82,25 @@ const DropInText = ({
   delay = 0,
   href,
   onClick,
+  onHover,
+  onLeave,
 }: {
   text: string;
   isActive: boolean;
   delay?: number;
   href: string;
   onClick: () => void;
+  onHover?: () => void;
+  onLeave?: () => void;
 }) => {
   return (
-    <Link href={href} onClick={onClick} className="block">
+    <Link 
+      href={href} 
+      onClick={onClick} 
+      onMouseEnter={onHover}
+      onMouseLeave={onLeave}
+      className="block"
+    >
       <motion.div
         className={`text-3xl md:text-5xl font-bold tracking-tight transition-colors duration-300 py-1
           ${isActive ? "text-accent" : "text-foreground hover:text-accent"}`}
@@ -120,6 +130,7 @@ const Header = () => {
   const [mounted, setMounted] = useState(false);
   const [animationReady, setAnimationReady] = useState(false);
   const [menuAnimationReady, setMenuAnimationReady] = useState(false);
+  const [hoveredMenuItem, setHoveredMenuItem] = useState<string | null>(null);
   const pathname = usePathname();
   const router = useRouter();
   const { scrollY } = useScroll();
@@ -304,7 +315,7 @@ const Header = () => {
             <OrbLayer isMenuOpen={isMenuOpen} />
 
             {/* Network Layer - nodes appear at 600ms, lines draw at 800ms */}
-            <NetworkLayer isMenuOpen={isMenuOpen} />
+            <NetworkLayer isMenuOpen={isMenuOpen} hoveredMenuItem={hoveredMenuItem} />
 
             {/* Background decoration */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -339,6 +350,8 @@ const Header = () => {
                     isActive={link.path === pathname}
                     delay={0}
                     onClick={() => handleNavigation(link.path)}
+                    onHover={() => setHoveredMenuItem(link.name)}
+                    onLeave={() => setHoveredMenuItem(null)}
                   />
                 ))}
               </motion.div>
