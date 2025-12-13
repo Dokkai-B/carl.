@@ -41,11 +41,7 @@ const PageTransition = ({ children }: { children: React.ReactNode }) => {
     }
   }, [pathname]);
 
-  return (
-    <div key={pathname}>
-      {children}
-    </div>
-  );
+  return <div key={pathname}>{children}</div>;
 };
 
 export default PageTransition;

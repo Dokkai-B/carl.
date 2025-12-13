@@ -88,18 +88,18 @@ const SPRING_CONFIGS = {
 };
 
 export function AnimatedBackground() {
-  const [orbState, setOrbState] = useState<OrbState>("default");
+  const [orbState, setOrbState] = useState < OrbState > ("default");
   const [mounted, setMounted] = useState(false);
   const [isPointerDevice, setIsPointerDevice] = useState(false);
   const [isSettled, setIsSettled] = useState(false);
-  const [currentTarget, setCurrentTarget] = useState<ClusterTarget | null>(null);
+  const [currentTarget, setCurrentTarget] = useState < ClusterTarget | null > (null);
   const [isMorphed, setIsMorphed] = useState(false);
-  const returnTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const orbitTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const settleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const morphTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const returnTimeoutRef = useRef < NodeJS.Timeout | null > (null);
+  const orbitTimeoutRef = useRef < NodeJS.Timeout | null > (null);
+  const settleTimeoutRef = useRef < NodeJS.Timeout | null > (null);
+  const morphTimeoutRef = useRef < NodeJS.Timeout | null > (null);
   const isMountedRef = useRef(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef < HTMLDivElement > (null);
   const { resolvedTheme } = useTheme();
 
   // Animation controls for each orb
@@ -129,7 +129,7 @@ export function AnimatedBackground() {
     isMountedRef.current = true;
     const hasPointer = window.matchMedia("(pointer: fine)").matches;
     setIsPointerDevice(hasPointer);
-    
+
     return () => {
       isMountedRef.current = false;
       orb1Controls.stop();
@@ -182,7 +182,7 @@ export function AnimatedBackground() {
   // Animate orbs to merge cluster
   const animateToCluster = useCallback((target: ClusterTarget) => {
     if (!isMountedRef.current) return;
-    
+
     const positions = CLUSTER_POSITIONS[target.type];
     setIsSettled(false);
     setIsMorphed(false);
@@ -235,7 +235,7 @@ export function AnimatedBackground() {
     orbitTimeoutRef.current = setTimeout(() => {
       if (!isMountedRef.current) return;
       const orbitRadius = 15;
-      
+
       orb2Controls.start({
         x: [positions.sat1.x, positions.sat1.x + orbitRadius, positions.sat1.x, positions.sat1.x - orbitRadius, positions.sat1.x],
         y: [positions.sat1.y, positions.sat1.y - orbitRadius, positions.sat1.y, positions.sat1.y + orbitRadius, positions.sat1.y],
@@ -266,7 +266,8 @@ export function AnimatedBackground() {
         ease: [0.34, 1.56, 0.64, 1],
       });
 
-      setTimeout(() => {        if (!isMountedRef.current) return;        orb2Controls.start({
+      setTimeout(() => {
+        if (!isMountedRef.current) return; orb2Controls.start({
           x: positions.sat1.x,
           y: positions.sat1.y,
           scale: [1.4, 1.7, 1.5],
@@ -279,7 +280,8 @@ export function AnimatedBackground() {
         });
       }, 80);
 
-      setTimeout(() => {        if (!isMountedRef.current) return;        orb3Controls.start({
+      setTimeout(() => {
+        if (!isMountedRef.current) return; orb3Controls.start({
           x: positions.sat2.x,
           y: positions.sat2.y,
           scale: [1.35, 1.6, 1.45],
@@ -294,14 +296,15 @@ export function AnimatedBackground() {
     }, 500);
 
     // Phase 4: Settled with pulsing shapes
-    settleTimeoutRef.current = setTimeout(() => {      if (!isMountedRef.current) return;      setIsSettled(true);
+    settleTimeoutRef.current = setTimeout(() => {
+      if (!isMountedRef.current) return; setIsSettled(true);
     }, 1100);
   }, [orb1Controls, orb2Controls, orb3Controls]);
 
   // Animate orbs back to neutral
   const animateToNeutral = useCallback(() => {
     if (!isMountedRef.current) return;
-    
+
     setIsSettled(false);
     setIsMorphed(false);
     setCurrentTarget(null);
@@ -362,7 +365,7 @@ export function AnimatedBackground() {
       } else {
         setOrbState("returning");
         animateToNeutral();
-        
+
         returnTimeoutRef.current = setTimeout(() => {
           setOrbState("default");
         }, 800);

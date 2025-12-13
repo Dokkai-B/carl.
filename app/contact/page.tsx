@@ -148,31 +148,32 @@ const Contact = () => {
 
       {/* Interactive background particles */}
       <div className="fixed inset-0 -z-5 overflow-hidden pointer-events-none">
-        {mounted && particles.map((particle) => (
-          <motion.div
-            key={`particle-${particle.id}`}
-            style={{
-              position: "absolute",
-              width: "2px",
-              height: "2px",
-              borderRadius: "50%",
-              backgroundColor: `rgba(93, 173, 226, ${particle.opacity})`,
-              left: `${particle.left}%`,
-              top: `${particle.top}%`,
-            }}
-            animate={{
-              y: [0, particle.yEnd1, particle.yEnd2],
-              opacity: [0.3, 0.8, 0],
-              x: [0, particle.xEnd1, particle.xEnd2],
-            }}
-            transition={{
-              duration: particle.duration,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: particle.delay,
-            }}
-          />
-        ))}
+        {mounted &&
+          particles.map((particle) => (
+            <motion.div
+              key={`particle-${particle.id}`}
+              style={{
+                position: "absolute",
+                width: "2px",
+                height: "2px",
+                borderRadius: "50%",
+                backgroundColor: `rgba(93, 173, 226, ${particle.opacity})`,
+                left: `${particle.left}%`,
+                top: `${particle.top}%`,
+              }}
+              animate={{
+                y: [0, particle.yEnd1, particle.yEnd2],
+                opacity: [0.3, 0.8, 0],
+                x: [0, particle.xEnd1, particle.xEnd2],
+              }}
+              transition={{
+                duration: particle.duration,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: particle.delay,
+              }}
+            />
+          ))}
       </div>
 
       {/* Main content */}
@@ -192,10 +193,7 @@ const Contact = () => {
           </motion.h1>
 
           {/* Email Pill */}
-          <motion.div
-            variants={slidePocketChild}
-            className="flex justify-center mb-16"
-          >
+          <motion.div variants={slidePocketChild} className="flex justify-center mb-16">
             <motion.a
               href="mailto:cpacaguas@mymail.mapua.edu.ph"
               whileHover={{ scale: 1.05, y: -5 }}
@@ -242,10 +240,7 @@ const Contact = () => {
           </motion.div>
 
           {/* Social Icons Grid */}
-          <motion.div
-            variants={slidePocketChild}
-            className="flex justify-center gap-6 md:gap-8"
-          >
+          <motion.div variants={slidePocketChild} className="flex justify-center gap-6 md:gap-8">
             {socialLinks.map((social, index) => (
               <SocialIconCard key={social.id} social={social} index={index} isDark={isDark} />
             ))}
@@ -257,7 +252,15 @@ const Contact = () => {
 };
 
 // Social Icon Card Component
-const SocialIconCard = ({ social, index, isDark }: { social: any; index: number; isDark: boolean }) => {
+const SocialIconCard = ({
+  social,
+  index,
+  isDark,
+}: {
+  social: any;
+  index: number;
+  isDark: boolean;
+}) => {
   const [hovered, setHovered] = useState(false);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -333,7 +336,10 @@ const SocialIconCard = ({ social, index, isDark }: { social: any; index: number;
         </div>
 
         {/* Content */}
-        <div className="relative p-6 flex flex-col items-center gap-2" style={{ transform: "translateZ(20px)" } as any}>
+        <div
+          className="relative p-6 flex flex-col items-center gap-2"
+          style={{ transform: "translateZ(20px)" } as any}
+        >
           <div style={{ color: social.color }} className="text-2xl">
             {social.icon}
           </div>

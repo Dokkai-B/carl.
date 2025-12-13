@@ -94,9 +94,9 @@ const DropInText = ({
   onLeave?: () => void;
 }) => {
   return (
-    <Link 
-      href={href} 
-      onClick={onClick} 
+    <Link
+      href={href}
+      onClick={onClick}
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
       className="block"
@@ -162,14 +162,14 @@ const Header = () => {
 
   useEffect(() => {
     let scrollTimeout: NodeJS.Timeout;
-    
+
     const handleScroll = () => {
       clearTimeout(scrollTimeout);
       scrollTimeout = setTimeout(() => {
         setIsScrolled(window.scrollY > 50);
       }, 16); // ~60fps debounce
     };
-    
+
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -265,10 +265,14 @@ const Header = () => {
               transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
             >
               {/* C */}
-              <motion.span className={`${isMenuOpen ? "text-foreground" : "gradient-text"}`}>C</motion.span>
+              <motion.span className={`${isMenuOpen ? "text-foreground" : "gradient-text"}`}>
+                C
+              </motion.span>
               {/* arl - compress & fade out on scroll */}
               <motion.span
-                className={`${isMenuOpen ? "text-foreground" : "gradient-text"} inline-block overflow-hidden align-middle`}
+                className={`${
+                  isMenuOpen ? "text-foreground" : "gradient-text"
+                } inline-block overflow-hidden align-middle`}
                 initial={false}
                 animate={{ width: isScrolled ? 0 : "auto", opacity: isScrolled ? 0 : 1 }}
                 transition={{ duration: 0.3, ease: [0.22, 0.61, 0.36, 1] }}

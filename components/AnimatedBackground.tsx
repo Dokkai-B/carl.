@@ -593,7 +593,8 @@ export function AnimatedBackground() {
 
   // Pulsing animation for morphed settled state
   useEffect(() => {
-    if (!isSettled || !isMorphed || !currentTarget || !activeTranslations || !isMountedRef.current) return;
+    if (!isSettled || !isMorphed || !currentTarget || !activeTranslations || !isMountedRef.current)
+      return;
 
     const shapes = MORPH_SHAPES[currentTarget.type];
     const { translate1, translate2, translate3 } = activeTranslations;

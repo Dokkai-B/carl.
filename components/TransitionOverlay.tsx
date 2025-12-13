@@ -76,7 +76,7 @@ export const TransitionOverlay = ({ children }: TransitionOverlayProps) => {
   const triggerDistraction = useCallback(
     async (source: TransitionEvent["source"]) => {
       if (!isMountedRef.current) return;
-      
+
       setTransitionSource(source);
       setIsActive(true);
       dispatchTransitionEvent("distraction", source);

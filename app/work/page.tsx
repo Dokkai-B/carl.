@@ -537,7 +537,7 @@ const MetadataCard = ({
 const contentVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 }
+  exit: { opacity: 0, y: -20 },
 };
 
 const Work = () => {
@@ -675,17 +675,18 @@ const Work = () => {
             {/* Scrollable container with hidden scrollbar */}
             <div className="scrollable-list flex-1 overflow-y-auto pr-2">
               <div className="space-y-1">
-                {mounted && projects.map((project, index) => (
-                  <ProjectListItem
-                    key={project.id}
-                    project={project}
-                    index={index}
-                    isHovered={hoveredProject?.id === project.id}
-                    onHover={() => handleHoverStart(project)}
-                    onLeave={handleHoverEnd}
-                    isDark={isDark}
-                  />
-                ))}
+                {mounted &&
+                  projects.map((project, index) => (
+                    <ProjectListItem
+                      key={project.id}
+                      project={project}
+                      index={index}
+                      isHovered={hoveredProject?.id === project.id}
+                      onHover={() => handleHoverStart(project)}
+                      onLeave={handleHoverEnd}
+                      isDark={isDark}
+                    />
+                  ))}
               </div>
             </div>
           </div>

@@ -36,7 +36,7 @@ const defaultNodes: Node[] = [
 
 // Unique constellation patterns for each menu item
 const menuPatterns: Record<string, Node[]> = {
-  home: [
+  Home: [
     // Circular formation near center
     { id: 0, x: 50, y: 35 },
     { id: 1, x: 58, y: 30 },
@@ -49,7 +49,7 @@ const menuPatterns: Record<string, Node[]> = {
     { id: 8, x: 50, y: 26 },
     { id: 9, x: 50, y: 54 },
   ],
-  "about carl": [
+  "About Me": [
     // Scattered organic pattern
     { id: 0, x: 20, y: 15 },
     { id: 1, x: 45, y: 20 },
@@ -62,7 +62,7 @@ const menuPatterns: Record<string, Node[]> = {
     { id: 8, x: 50, y: 75 },
     { id: 9, x: 80, y: 85 },
   ],
-  projects: [
+  Work: [
     // Structured grid-like pattern
     { id: 0, x: 25, y: 25 },
     { id: 1, x: 50, y: 25 },
@@ -75,7 +75,7 @@ const menuPatterns: Record<string, Node[]> = {
     { id: 8, x: 75, y: 65 },
     { id: 9, x: 50, y: 85 },
   ],
-  contacts: [
+  Contacts: [
     // Dense interconnected network
     { id: 0, x: 50, y: 30 },
     { id: 1, x: 40, y: 40 },
@@ -132,15 +132,15 @@ const NetworkLayer = ({ isMenuOpen, hoveredMenuItem }: NetworkLayerProps) => {
 
   // Determine which connections to use
   const activeConnections = useMemo(() => {
-    if (hoveredMenuItem === "contacts") return contactsConnections;
+    if (hoveredMenuItem === "Contacts") return contactsConnections;
     return defaultConnections;
   }, [hoveredMenuItem]);
 
   // Calculate brightness based on menu item
   const brightness = useMemo(() => {
     if (!hoveredMenuItem) return 1;
-    if (hoveredMenuItem === "contacts") return 1.6;
-    if (hoveredMenuItem === "home") return 1.3;
+    if (hoveredMenuItem === "Contacts") return 1.6;
+    if (hoveredMenuItem === "Home") return 1.3;
     return 1.1;
   }, [hoveredMenuItem]);
 
