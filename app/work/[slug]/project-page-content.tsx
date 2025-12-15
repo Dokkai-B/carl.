@@ -124,10 +124,15 @@ const BackToTopButton = ({ project }: { project: Project }) => {
 export default function ProjectPageContent({ project, navigation }: ProjectPageContentProps) {
   const router = useRouter();
   const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const isDark = theme === "dark";
   const [modalOpen, setModalOpen] = useState(false);
   const [modalIndex, setModalIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const openModal = (index: number) => {
     setModalIndex(index);
@@ -136,6 +141,11 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
 
   const showMobileSection = hasModuleMobileScreens(project);
   const showWebSection = hasWebViews(project);
+
+  // Prevent hydration mismatch - don't render theme-dependent content until mounted
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <>
@@ -230,12 +240,7 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                 <motion.h1
                   className="text-5xl md:text-6xl font-bold mb-4"
                   style={{
-                    background: `linear-gradient(135deg, ${isDark ? "white" : "black"}, ${
-                      project.colors.primary
-                    })`,
-                    backgroundClip: "text",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
+                    color: isDark ? "white" : "rgb(17, 24, 39)",
                   }}
                 >
                   {project.title}
