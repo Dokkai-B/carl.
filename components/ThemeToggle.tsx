@@ -39,9 +39,9 @@ const ThemeToggle = () => {
           transition={{ duration: 0.3, ease: "easeInOut" }}
         >
           {isDark ? (
-            <FiSun className="w-5 h-5 text-[var(--accent)]" />
+            <FiSun className="w-5 h-5 text-white" />
           ) : (
-            <FiMoon className="w-5 h-5 text-[var(--foreground)]" />
+            <FiMoon className="w-5 h-5 text-gray-800" />
           )}
         </motion.div>
       </AnimatePresence>

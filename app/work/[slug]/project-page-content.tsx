@@ -37,7 +37,6 @@ import { PhoneMockup } from "@/components/projects/PhoneMockup";
 import { OrbBackground } from "@/components/projects/OrbBackground";
 import { GlassSection } from "@/components/projects/GlassSection";
 import { BrowserMockup } from "@/components/projects/BrowserMockup";
-import { PageTransitionWrapper } from "@/components/PageTransitionWrapper";
 
 // Icon map for resolving icon names to components
 const iconMap: Record<IconName, typeof Mic> = {
@@ -163,8 +162,7 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
       <ScrollProgressBar project={project} />
       <BackToTopButton project={project} />
 
-      <PageTransitionWrapper>
-        <div ref={containerRef} className="min-h-screen relative">
+      <div ref={containerRef} className="min-h-screen relative">
         <div className="fixed inset-0 -z-20 overflow-hidden pointer-events-none">
           <div
             className="absolute inset-0"
@@ -285,7 +283,7 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                   className="h-1 mb-6 origin-left"
                   style={{
                     background: `linear-gradient(90deg, ${project.colors.primary}, ${project.colors.secondary})`,
-                    width: "80px",
+                    width: "160px",
                   }}
                 />
               </div>
@@ -308,7 +306,7 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                 transition={{ delay: 0.4 }}
                 className="flex gap-4 flex-wrap"
               >
-                {project.links.prototype && project.links.prototype !== "#" && (
+                {project.links.prototype && (
                   <Link href={project.links.prototype} target="_blank">
                     <motion.button
                       className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all"
@@ -325,7 +323,7 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                   </Link>
                 )}
 
-                {project.links.github && project.links.github !== "#" && (
+                {project.links.github && (
                   <Link href={project.links.github} target="_blank">
                     <motion.button
                       className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all border"
@@ -451,6 +449,39 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                   const rightView = project.webViews.find((view) =>
                     /DesktopRight/i.test(view.image)
                   );
+
+                  // If no center hero exists (less than 3 images), display side by side
+                  if (!heroView && project.webViews.length <= 2) {
+                    return (
+                      <div className="flex gap-8 items-center justify-center flex-wrap">
+                        {project.webViews.map((view, index) => (
+                          <div
+                            key={index}
+                            style={{
+                              width: "500px",
+                              maxWidth: "45vw",
+                            }}
+                          >
+                            <BrowserMockup
+                              src={view.image}
+                              alt={view.name}
+                              onClick={() =>
+                                openModal(
+                                  showMobileSection && project.mobileScreens
+                                    ? project.mobileScreens.length + index
+                                    : index
+                                )
+                              }
+                              variant="hero"
+                              isDark={isDark}
+                              primaryColor={project.colors.primary}
+                              secondaryColor={project.colors.secondary}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  }
 
                   return (
                     <>
