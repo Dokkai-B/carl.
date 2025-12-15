@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
 import NetworkLayer from "./NetworkLayer";
 import OrbLayer from "./OrbLayer";
+import { useTransition } from "./TransitionContext";
 import {
   menuPreset,
   slidePocketChild,
@@ -126,7 +127,7 @@ const DropInText = ({
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { menuOpen, setMenuOpen } = useTransition();
   const [mounted, setMounted] = useState(false);
   const [animationReady, setAnimationReady] = useState(false);
   const [menuAnimationReady, setMenuAnimationReady] = useState(false);
@@ -182,13 +183,13 @@ const Header = () => {
     if (isNavigatingRef.current) {
       isNavigatingRef.current = false;
     }
-    setIsMenuOpen(false);
+    setMenuOpen(false);
     setMenuAnimationReady(false);
   }, [pathname]);
 
   // Prevent body scroll when menu is open and handle coordinated transitions
   useEffect(() => {
-    if (isMenuOpen) {
+    if (menuOpen) {
       document.body.style.overflow = "hidden";
       // Dispatch event to hide page content (triggers exit animation)
       window.dispatchEvent(new CustomEvent("menuStateChange", { detail: { isOpen: true } }));
@@ -216,18 +217,18 @@ const Header = () => {
     return () => {
       document.body.style.overflow = "unset";
     };
-  }, [isMenuOpen]);
+  }, [menuOpen]);
 
   // Handle navigation from menu with coordinated transition
   const handleNavigation = (href: string) => {
     if (href === pathname) {
       // Same page - just close menu
-      setIsMenuOpen(false);
+      setMenuOpen(false);
       return;
     }
 
     isNavigatingRef.current = true;
-    setIsMenuOpen(false);
+    setMenuOpen(false);
 
     // Navigation will happen via the Link component
     // The page change will trigger the coordinated transition
@@ -240,7 +241,7 @@ const Header = () => {
         style={{ paddingTop: headerPadding, paddingBottom: headerPadding }}
       >
         {/* Ultra-minimal backdrop presence when scrolled */}
-        {isScrolled && !isMenuOpen && (
+        {isScrolled && !menuOpen && (
           <motion.div
             className="absolute inset-0 -z-10"
             initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
@@ -265,13 +266,13 @@ const Header = () => {
               transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
             >
               {/* C */}
-              <motion.span className={`${isMenuOpen ? "text-foreground" : "gradient-text"}`}>
+              <motion.span className={`${menuOpen ? "text-foreground" : "gradient-text"}`}>
                 C
               </motion.span>
               {/* arl - compress & fade out on scroll */}
               <motion.span
                 className={`${
-                  isMenuOpen ? "text-foreground" : "gradient-text"
+                  menuOpen ? "text-foreground" : "gradient-text"
                 } inline-block overflow-hidden align-middle`}
                 initial={false}
                 animate={{ width: isScrolled ? 0 : "auto", opacity: isScrolled ? 0 : 1 }}
@@ -300,14 +301,14 @@ const Header = () => {
             transition={{ duration: 0.5, delay: 0.05, ease: [0.25, 0.1, 0.25, 1] }}
           >
             <ThemeToggle />
-            <MenuButton isOpen={isMenuOpen} onClick={() => setIsMenuOpen(!isMenuOpen)} />
+            <MenuButton isOpen={menuOpen} onClick={() => setMenuOpen(!menuOpen)} />
           </motion.div>
         </div>
       </motion.header>
 
       {/* Fullscreen Navigation Overlay */}
-      <AnimatePresence>
-        {isMenuOpen && (
+      <AnimatePresence mode="wait">
+        {menuOpen && (
           <motion.div
             className="fixed inset-0 z-40 bg-[var(--background)]"
             initial={{ opacity: 0 }}
@@ -316,10 +317,10 @@ const Header = () => {
             transition={{ duration: 0.3 }}
           >
             {/* Orb Layer - fades in at 400ms */}
-            <OrbLayer isMenuOpen={isMenuOpen} />
+            <OrbLayer isMenuOpen={menuOpen} />
 
             {/* Network Layer - nodes appear at 600ms, lines draw at 800ms */}
-            <NetworkLayer isMenuOpen={isMenuOpen} hoveredMenuItem={hoveredMenuItem} />
+            <NetworkLayer isMenuOpen={menuOpen} hoveredMenuItem={hoveredMenuItem} />
 
             {/* Background decoration */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -341,22 +342,52 @@ const Header = () => {
             <nav className="relative h-full flex flex-col items-center justify-center">
               <motion.div
                 className="space-y-2 md:space-y-3 text-left"
-                variants={coordinatedMenuPreset.container}
                 initial="hidden"
-                animate={menuAnimationReady ? "visible" : "hidden"}
+                animate="visible"
                 exit="exit"
+                variants={{
+                  hidden: { opacity: 0, y: -40 },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: {
+                      duration: 0.4,
+                      ease: "easeOut",
+                      staggerChildren: 0.05,
+                      delayChildren: 0.1
+                    }
+                  },
+                  exit: {
+                    opacity: 0,
+                    y: -20,
+                    transition: {
+                      duration: 0.3,
+                      ease: "easeIn",
+                      staggerChildren: 0.03,
+                      staggerDirection: -1
+                    }
+                  }
+                }}
               >
                 {links.map((link, index) => (
-                  <DropInText
+                  <motion.div
                     key={link.path}
-                    text={link.name}
-                    href={link.path}
-                    isActive={link.path === pathname}
-                    delay={0}
-                    onClick={() => handleNavigation(link.path)}
-                    onHover={() => setHoveredMenuItem(link.name)}
-                    onLeave={() => setHoveredMenuItem(null)}
-                  />
+                    variants={{
+                      hidden: { opacity: 0, y: 20 },
+                      visible: { opacity: 1, y: 0 },
+                      exit: { opacity: 0, y: -20 }
+                    }}
+                  >
+                    <DropInText
+                      text={link.name}
+                      href={link.path}
+                      isActive={link.path === pathname}
+                      delay={0}
+                      onClick={() => handleNavigation(link.path)}
+                      onHover={() => setHoveredMenuItem(link.name)}
+                      onLeave={() => setHoveredMenuItem(null)}
+                    />
+                  </motion.div>
                 ))}
               </motion.div>
             </nav>

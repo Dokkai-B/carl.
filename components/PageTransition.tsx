@@ -1,47 +1,90 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef } from "react";
-import { ANIMATION_CONFIG, triggerTransition } from "@/lib/animations";
+import { useTransition } from "./TransitionContext";
+import { useEffect } from "react";
 
-// Page transition variants that complement the slide-pocket content animations
-const pageTransitionVariants = {
-  initial: {
+interface PageTransitionProps {
+  children: React.ReactNode;
+}
+
+// Container variant with staggered children
+const containerVariants = {
+  hidden: {
     opacity: 0,
   },
-  animate: {
+  visible: {
     opacity: 1,
     transition: {
-      duration: ANIMATION_CONFIG.duration.fast,
-      ease: ANIMATION_CONFIG.ease,
-      // Delay to allow distraction animation to complete
-      delay: ANIMATION_CONFIG.transition.distractionDuration,
+      staggerChildren: 0.05, // 50ms stagger
+      delayChildren: 0.1, // 100ms delay after mount
     },
   },
   exit: {
     opacity: 0,
     transition: {
-      duration: ANIMATION_CONFIG.transition.exitDuration,
-      ease: ANIMATION_CONFIG.ease,
+      staggerChildren: 0.05,
+      staggerDirection: -1,
+      duration: 0.3,
     },
   },
 };
 
-const PageTransition = ({ children }: { children: React.ReactNode }) => {
-  const pathname = usePathname();
-  const previousPath = useRef(pathname);
+// Item variant for child elements
+const itemVariants = {
+  hidden: {
+    opacity: 0,
+    y: 20,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.4,
+      ease: "easeOut",
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: -20,
+    transition: {
+      duration: 0.3,
+      ease: "easeIn",
+    },
+  },
+};
 
-  // Trigger distraction animation on route change
+const PageTransition = ({ children }: PageTransitionProps) => {
+  const pathname = usePathname();
+  const { menuOpen, setMenuOpen, startTransition, endTransition } = useTransition();
+
+  // Close menu when pathname changes
   useEffect(() => {
-    if (previousPath.current !== pathname) {
-      // Route changed - trigger the coordinated transition
-      triggerTransition("navigation");
-      previousPath.current = pathname;
+    if (menuOpen) {
+      setMenuOpen(false);
     }
   }, [pathname]);
 
-  return <div key={pathname}>{children}</div>;
+  // Don't render page content when menu is open
+  if (menuOpen) {
+    return null;
+  }
+
+  return (
+    <motion.div
+      key={pathname}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      variants={containerVariants}
+      onAnimationStart={() => startTransition()}
+      onAnimationComplete={() => endTransition()}
+      style={{ width: "100%", minHeight: "100vh" }}
+    >
+      <motion.div variants={itemVariants}>{children}</motion.div>
+    </motion.div>
+  );
 };
 
 export default PageTransition;

@@ -37,6 +37,7 @@ import { PhoneMockup } from "@/components/projects/PhoneMockup";
 import { OrbBackground } from "@/components/projects/OrbBackground";
 import { GlassSection } from "@/components/projects/GlassSection";
 import { BrowserMockup } from "@/components/projects/BrowserMockup";
+import { PageTransitionWrapper } from "@/components/PageTransitionWrapper";
 
 // Icon map for resolving icon names to components
 const iconMap: Record<IconName, typeof Mic> = {
@@ -162,7 +163,8 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
       <ScrollProgressBar project={project} />
       <BackToTopButton project={project} />
 
-      <div ref={containerRef} className="min-h-screen relative">
+      <PageTransitionWrapper>
+        <div ref={containerRef} className="min-h-screen relative">
         <div className="fixed inset-0 -z-20 overflow-hidden pointer-events-none">
           <div
             className="absolute inset-0"

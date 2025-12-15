@@ -87,7 +87,7 @@ export const projects: Project[] = [
     role: "",
     type: "mobile-web",
     summary:
-      "A real-time emergency assistance platform designed for critical situations requiring immediate remote support. It enables secure live communication between responders and users through bidirectional messaging, geolocation tracking, remote media capture, and a cloud-deployed backend spanning mobile, web, and backend services with a fully integrated real-time architecture.",
+      "Blue Ward is a real-time emergency assistance platform enabling secure remote monitoring and response during critical situations. The system integrates mobile, backend, and web dashboard components with live bidirectional communication.",
     heroImage: "/Temp Photos/HeroPhoto/BlueWard.png",
     links: {
       prototype: "#",
@@ -96,37 +96,36 @@ export const projects: Project[] = [
     features: [
       {
         icon: "Radio",
-        text: "Live WebSocket-powered bidirectional messaging between mobile users and web dashboard",
-      },
-      {
-        icon: "Camera",
-        text: "Remote camera and audio capture for visual and auditory context gathering",
+        text: "Real-time bidirectional messaging using WebSockets",
       },
       {
         icon: "MapPin",
-        text: "Continuous geolocation tracking with background services and GPS updates",
+        text: "Live geolocation tracking",
       },
-      { icon: "Shield", text: "Cloud media storage using AWS S3 with secure pre-signed URLs" },
+      {
+        icon: "Camera",
+        text: "Remote camera and audio capture",
+      },
+      { icon: "Cloud", text: "Cloud media storage" },
       {
         icon: "Monitor",
-        text: "Agent dashboard for monitoring active sessions, viewing media, and sending commands",
+        text: "Web-based responder dashboard",
       },
       {
-        icon: "Zap",
-        text: "JWT authentication with bcrypt hashing, Helmet.js, CORS, and rate limiting",
+        icon: "Shield",
+        text: "Secure authentication and access control",
       },
     ],
     techStack: [
       "Node.js",
-      "Express.js",
+      "Express",
       "Socket.IO",
-      "React.js",
-      "Flutter",
-      "AWS S3",
-      "Docker",
-      "Material-UI",
-      "Provider",
       "JWT",
+      "AWS S3",
+      "Flutter",
+      "React",
+      "Material UI",
+      "Docker",
       "Render",
       "Vercel",
     ],
@@ -175,7 +174,7 @@ export const projects: Project[] = [
     role: "",
     type: "mobile-only",
     summary:
-      "A cross-platform mobile application for recording, storing, and playing personalized bedtime stories. It enables parents to capture audio narrations that are securely uploaded to the cloud and accessed by family members through a modern, synchronized audio player interface.",
+      "Moonii is a cross-platform mobile application for recording, storing, and playing personalized bedtime stories. Parents can record audio narrations that are securely uploaded to the cloud and accessed by family members through a synchronized, modern audio player interface.",
     heroImage: "/Temp Photos/HeroPhoto/Moonii.png",
     links: {
       prototype: "#",
@@ -184,35 +183,36 @@ export const projects: Project[] = [
     features: [
       {
         icon: "Mic",
-        text: "Record personalized audio stories with mobile-native microphone access",
+        text: "Audio recording using native mobile microphone access",
       },
       {
         icon: "Cloud",
-        text: "Upload and store audio files securely using AWS S3 with pre-signed URLs",
+        text: "Secure audio upload and storage in the cloud",
       },
       {
         icon: "Music",
-        text: "High-quality AAC-LC encoded M4A audio format for optimized playback",
+        text: "High-quality AAC-LC encoded M4A playback",
       },
       {
         icon: "Play",
-        text: "Modern audio player with waveform visualization and timeline controls",
+        text: "Waveform visualization and timeline controls",
       },
-      { icon: "Shield", text: "Playlist management and multi-view synchronized playback state" },
+      { icon: "Shield", text: "Playlist management" },
       {
         icon: "Zap",
-        text: "Error handling for failed uploads, network issues, and corrupted audio",
+        text: "Robust error handling for network and audio failures",
       },
     ],
     techStack: [
       "Flutter",
-      "Node.js",
-      "AWS S3",
-      "Audio Processing",
-      "Waveform UI",
-      "Express",
       "Dart",
       "just_audio",
+      "audio_waveforms",
+      "record",
+      "Node.js",
+      "Express",
+      "AWS S3",
+      "Render",
     ],
     mobileScreens: [
       {
@@ -234,7 +234,7 @@ export const projects: Project[] = [
     },
   },
 
-  // SaveEat - Mobile Only (Placeholder)
+  // SaveEat - Mobile Only
   {
     id: 2,
     slug: "saveeat",
@@ -243,21 +243,21 @@ export const projects: Project[] = [
     year: "2024",
     role: "",
     type: "mobile-only",
-    summary: "A mobile application to reduce food waste by connecting users with surplus food.",
+    summary: "SaveEat is a mobile application that integrates nutrition tracking with personal budget management to help users make informed dietary and financial decisions.",
     heroImage: "/Temp Photos/HeroPhoto/SaveEat.png",
     links: {
       prototype: "#",
       github: "#",
     },
     features: [
-      { icon: "Heart", text: "Browse nearby surplus food listings" },
-      { icon: "MapPin", text: "Real-time location-based food discovery" },
-      { icon: "Clock", text: "Time-sensitive food listings" },
-      { icon: "Shield", text: "Secure user verification system" },
-      { icon: "Users", text: "Community ratings and reviews" },
-      { icon: "Zap", text: "Instant notification system" },
+      { icon: "Users", text: "Account creation and login with budget setup" },
+      { icon: "Shield", text: "Budget tracking with balance updates" },
+      { icon: "Heart", text: "Macro tracking for calories, fat, protein, and carbs" },
+      { icon: "Clock", text: "Income and expense recording (food and non-food)" },
+      { icon: "Music", text: "Food intake tracking independent of expenses" },
+      { icon: "Zap", text: "Food search and nutritional analysis via Edamam API" },
     ],
-    techStack: ["Flutter", "Firebase", "Google Maps", "Dart"],
+    techStack: ["Flutter", "Dart", "Edamam Food Database API"],
     mobileScreens: [
       { name: "Macros", image: "/Temp Photos/UIPhoto/SaveEat/Macros_MobileLeft.png" },
       { name: "Logo", image: "/Temp Photos/UIPhoto/SaveEat/Logo_MobileCenter.png" },
@@ -277,7 +277,7 @@ export const projects: Project[] = [
     },
   },
 
-  // Heart to Art - Mobile Only (Placeholder)
+  // Heart to Art - Mobile Only
   {
     id: 3,
     slug: "heart-to-art",
@@ -286,21 +286,21 @@ export const projects: Project[] = [
     year: "2024",
     role: "",
     type: "mobile-only",
-    summary: "A creative mobile application for digital art creation and sharing.",
+    summary: "Heart to Art is a mobile application designed to connect artists and clients through an open request and direct commission system. It enables artists to find work and clients to commission artwork within a secure, in-app environment.",
     heroImage: "/Temp Photos/HeroPhoto/HeartToArt.png",
     links: {
       prototype: "#",
       github: "#",
     },
     features: [
-      { icon: "Music", text: "Digital drawing and painting tools" },
-      { icon: "Cloud", text: "Cloud-based artwork storage" },
-      { icon: "Users", text: "Community sharing platform" },
-      { icon: "Zap", text: "Real-time collaboration features" },
-      { icon: "Shield", text: "Artwork protection and licensing" },
-      { icon: "Heart", text: "Inspiration and discovery feed" },
+      { icon: "Users", text: "Client and Artist account types with secure registration" },
+      { icon: "MapPin", text: "Open art requests that become unavailable once claimed" },
+      { icon: "Camera", text: "Direct commissioning through artist search and messaging" },
+      { icon: "Music", text: "Public artist profiles with portfolio and price tiers" },
+      { icon: "Shield", text: "Secure in-app messaging" },
+      { icon: "Heart", text: "Payment release and client rating system" },
     ],
-    techStack: ["Flutter", "Canvas API", "Firebase", "Dart"],
+    techStack: ["React Native", "JavaScript", "Expo", "Firebase Authentication", "Firestore", "Firebase Storage"],
     mobileScreens: [
       { name: "Chatting", image: "/Temp Photos/UIPhoto/HeartToArt/Chatting_MobileLeft.png" },
       { name: "Logo", image: "/Temp Photos/UIPhoto/HeartToArt/Logo_MobileCenter.png" },
@@ -329,7 +329,7 @@ export const projects: Project[] = [
     },
   },
 
-  // LostPaws - Web Only (Placeholder)
+  // LostPaws - Web Only
   {
     id: 4,
     slug: "lostpaws",
@@ -338,7 +338,7 @@ export const projects: Project[] = [
     year: "2024",
     role: "",
     type: "web-only",
-    summary: "A web platform to help reunite lost pets with their owners.",
+    summary: "LostPaws is a mobile web application designed to help locate, adopt, and rehome lost pets by improving the exposure of pets and animal welfare organizations.",
     heroImage: "/Temp Photos/HeroPhoto/LostPaws.png",
     links: {
       prototype: "#",
@@ -346,14 +346,14 @@ export const projects: Project[] = [
       livesite: "#",
     },
     features: [
-      { icon: "MapPin", text: "Interactive map for lost pet sightings" },
-      { icon: "Camera", text: "Photo upload and identification" },
-      { icon: "Users", text: "Community notifications and alerts" },
-      { icon: "Clock", text: "Real-time updates on pet status" },
-      { icon: "Shield", text: "Verified shelter partnerships" },
-      { icon: "Zap", text: "Instant posting to social media" },
+      { icon: "Users", text: "User authentication" },
+      { icon: "MapPin", text: "Listings for lost and adoptable pets" },
+      { icon: "Shield", text: "Organization profiles for animal welfare groups" },
+      { icon: "Heart", text: "Centralized discovery platform for pets and services" },
+      { icon: "Cloud", text: "CRUD-based web application" },
+      { icon: "Lock", text: "Relational database design" },
     ],
-    techStack: ["React.js", "Node.js", "MongoDB", "Google Maps API", "Vercel"],
+    techStack: ["HTML", "CSS", "SQL", "Figma"],
     webViews: [
       { name: "Home", image: "/Temp Photos/UIPhoto/LostPaws/Home_DesktopLeft.png" },
       { name: "Logo", image: "/Temp Photos/UIPhoto/LostPaws/Logo_DesktopCenter.png" },
@@ -372,7 +372,7 @@ export const projects: Project[] = [
     },
   },
 
-  // Earthshaker - Mobile Only (Placeholder)
+  // Earthshaker - Mobile Only
   {
     id: 6,
     slug: "earthshaker",
@@ -381,21 +381,21 @@ export const projects: Project[] = [
     year: "2024",
     role: "",
     type: "mobile-only",
-    summary: "A seismic monitoring and earthquake awareness mobile application.",
+    summary: "Earthshaker is a real-time earthquake alert system for the Philippines that monitors seismic activity and delivers instant push notifications to users. The system prioritizes speed, reliability, and battery efficiency.",
     heroImage: "/Temp Photos/HeroPhoto/Earthshaker.png",
     links: {
       prototype: "#",
       github: "#",
     },
     features: [
-      { icon: "AlertCircle", text: "Real-time earthquake detection and alerts" },
-      { icon: "MapPin", text: "Seismic activity mapping and visualization" },
-      { icon: "Wifi", text: "Offline-first earthquake preparation guides" },
-      { icon: "Shield", text: "Personalized safety recommendations" },
-      { icon: "Users", text: "Community earthquake reporting" },
-      { icon: "Zap", text: "Multi-language support" },
+      { icon: "AlertCircle", text: "Real-time earthquake monitoring via USGS API" },
+      { icon: "Zap", text: "Push notifications with sub-second delivery" },
+      { icon: "Wifi", text: "Topic-based notification architecture" },
+      { icon: "Shield", text: "Duplicate event filtering and in-memory caching" },
+      { icon: "MapPin", text: "Location-based alerting within configurable radius" },
+      { icon: "Cloud", text: "Offline-safe local persistence" },
     ],
-    techStack: ["Flutter", "OpenStreetMap", "Firebase", "Dart"],
+    techStack: ["Flutter", "Dart", "Node.js", "Express", "Firebase Cloud Messaging", "Firebase Admin SDK", "USGS Earthquake API", "Render"],
     mobileScreens: [
       { name: "Settings", image: "/Temp Photos/UIPhoto/Earthshaker/Settings_MobileLeft.png" },
       { name: "Dashboard", image: "/Temp Photos/UIPhoto/Earthshaker/Dashboard_MobileCenter.png" },
@@ -414,7 +414,7 @@ export const projects: Project[] = [
     },
   },
 
-  // Women's Club - Web Only (Placeholder)
+  // Women's Club - Web Only
   {
     id: 7,
     slug: "womens-club",
@@ -423,7 +423,7 @@ export const projects: Project[] = [
     year: "2024",
     role: "",
     type: "web-only",
-    summary: "A community platform for women to connect, share, and support each other.",
+    summary: "Womens Club is a web-based management system developed for a volunteer-driven non-government organization in Womens Club, Quezon City. The platform modernizes their traditional website and supports transparent management of members, events, and donations.",
     heroImage: "/Temp Photos/HeroPhoto/WomensCLUB.png",
     links: {
       prototype: "#",
@@ -431,14 +431,14 @@ export const projects: Project[] = [
       livesite: "#",
     },
     features: [
-      { icon: "Users", text: "Community forums and discussion boards" },
-      { icon: "Heart", text: "Mentorship matching system" },
-      { icon: "Music", text: "Event scheduling and coordination" },
-      { icon: "Shield", text: "Safe and moderated community spaces" },
-      { icon: "Cloud", text: "Resource library and knowledge base" },
-      { icon: "Zap", text: "Real-time notifications and updates" },
+      { icon: "Users", text: "Member registration, authentication, and directory with admin approval" },
+      { icon: "Clock", text: "Event creation, modification, deletion, and volunteer registration" },
+      { icon: "Heart", text: "Donation recording, tracking, and history logs" },
+      { icon: "Shield", text: "Desktop-only website with restricted member and admin access" },
+      { icon: "Lock", text: "No online payment or social media integration" },
+      { icon: "Music", text: "Aligned with UN SDGs for social impact" },
     ],
-    techStack: ["React.js", "Node.js", "PostgreSQL", "Socket.IO", "Vercel"],
+    techStack: ["HTML", "CSS", "JavaScript", "PHP", "Laravel", "MySQL"],
     webViews: [
       { name: "Login Page", image: "/Temp Photos/UIPhoto/WomensCLUB/LoginPage_DesktopLeft.png" },
       { name: "Home", image: "/Temp Photos/UIPhoto/WomensCLUB/Home_DesktopCenter.png" },

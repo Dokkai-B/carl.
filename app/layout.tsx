@@ -11,6 +11,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { AnimatedBackground } from "@/components/AnimatedBackground";
 import CustomCursor from "@/components/CustomCursor";
 import ConditionalFooter from "@/components/ConditionalFooter";
+import AnimatePresenceWrapper from "@/components/AnimatePresenceWrapper";
+import { TransitionProvider } from "@/components/TransitionContext";
 
 // config
 import { siteConfig } from "@/config/site";
@@ -72,16 +74,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <body className={jetbrainsMono.variable}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          <CustomCursor />
-          <PageLoader />
-          <TransitionOverlay />
-          <AnimatedBackground />
-          <Header />
-          <div className="pt-24 min-h-screen">
-            <PageTransition>{children}</PageTransition>
-          </div>
-          <ConditionalFooter />
-          <Analytics />
+          <TransitionProvider>
+            <CustomCursor />
+            <PageLoader />
+            <TransitionOverlay />
+            <AnimatedBackground />
+            <Header />
+            <div className="pt-24 min-h-screen">
+              <AnimatePresenceWrapper>
+                <PageTransition>{children}</PageTransition>
+              </AnimatePresenceWrapper>
+            </div>
+            <ConditionalFooter />
+            <Analytics />
+          </TransitionProvider>
         </ThemeProvider>
       </body>
     </html>
