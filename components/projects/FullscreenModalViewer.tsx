@@ -248,9 +248,7 @@ export const FullscreenModalViewer = ({
               style={{
                 height: "3px",
                 backgroundColor:
-                  index === currentIndex
-                    ? colors.primary
-                    : "rgba(255, 255, 255, 0.2)",
+                  index === currentIndex ? colors.primary : "rgba(255, 255, 255, 0.2)",
                 boxShadow:
                   index === currentIndex
                     ? `0 0 20px ${colors.primary}80, 0 0 40px ${colors.primary}40`
@@ -268,9 +266,7 @@ export const FullscreenModalViewer = ({
               whileHover={{
                 opacity: 1,
                 backgroundColor:
-                  index === currentIndex
-                    ? colors.primary
-                    : "rgba(255, 255, 255, 0.5)",
+                  index === currentIndex ? colors.primary : "rgba(255, 255, 255, 0.5)",
                 scale: 1.1,
               }}
               whileTap={{ scale: 0.95 }}

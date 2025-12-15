@@ -36,6 +36,7 @@ import { FullscreenModalViewer } from "@/components/projects/FullscreenModalView
 import { PhoneMockup } from "@/components/projects/PhoneMockup";
 import { OrbBackground } from "@/components/projects/OrbBackground";
 import { GlassSection } from "@/components/projects/GlassSection";
+import { BrowserMockup } from "@/components/projects/BrowserMockup";
 
 // Icon map for resolving icon names to components
 const iconMap: Record<IconName, typeof Mic> = {
@@ -418,7 +419,7 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
               transition={{ duration: 0.6 }}
               className="mb-24"
             >
-              <div className="mb-12">
+              <div className="mb-16">
                 <h2 className="text-3xl md:text-4xl font-bold mb-4">Web Interface</h2>
                 <p
                   className="text-lg"
@@ -430,31 +431,123 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                 </p>
               </div>
 
-              <div className="space-y-6">
-                {project.webViews.map((view, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 }}
-                    className="relative aspect-video rounded-2xl overflow-hidden cursor-pointer group"
-                    onClick={() => openModal(index)}
-                  >
-                    <Image src={view.image} alt={view.name} fill className="object-cover" />
-                    <motion.div
-                      className="absolute inset-0 flex items-center justify-center"
-                      initial={{ opacity: 0 }}
-                      whileHover={{ opacity: 1 }}
-                      style={{
-                        background: `linear-gradient(135deg, ${project.colors.primary}40, ${project.colors.secondary}40)`,
-                        backdropFilter: "blur(4px)",
-                      }}
-                    >
-                      <p className="text-white font-medium text-lg">{view.name}</p>
-                    </motion.div>
-                  </motion.div>
-                ))}
+              {/* Satellite Orbital Layout - Hero Center with Depth-Based Positioning */}
+              <div
+                className="relative flex items-center justify-center"
+                style={{ minHeight: "700px" }}
+              >
+                {(() => {
+                  const heroView = project.webViews.find((view) =>
+                    /DesktopCenter/i.test(view.image)
+                  );
+                  const leftView = project.webViews.find((view) => /DesktopLeft/i.test(view.image));
+                  const rightView = project.webViews.find((view) =>
+                    /DesktopRight/i.test(view.image)
+                  );
+
+                  return (
+                    <>
+                      {/* Top-Left Satellite - Positioned diagonally, smaller, farther in depth */}
+                      {leftView && (
+                        <div
+                          className="absolute"
+                          style={{
+                            left: "8%",
+                            top: "0%",
+                            width: "350px",
+                            transform: "translateY(-8%)",
+                            zIndex: 5,
+                          }}
+                        >
+                          <BrowserMockup
+                            src={leftView.image}
+                            alt={leftView.name}
+                            onClick={() =>
+                              openModal(
+                                showMobileSection && project.mobileScreens
+                                  ? project.mobileScreens.length +
+                                      project.webViews.findIndex((v) => v.image === leftView.image)
+                                  : project.webViews.findIndex((v) => v.image === leftView.image)
+                              )
+                            }
+                            variant="satellite"
+                            position="top-left"
+                            isDark={isDark}
+                            primaryColor={project.colors.primary}
+                            secondaryColor={project.colors.secondary}
+                            rotationIdle={-12}
+                            depthScale={0.85}
+                            idleOpacity={0.75}
+                          />
+                        </div>
+                      )}
+
+                      {/* Center Hero - Dominant, stable, frontmost */}
+                      {heroView && (
+                        <div
+                          className="relative"
+                          style={{
+                            width: "700px",
+                            maxWidth: "55vw",
+                            zIndex: 20,
+                          }}
+                        >
+                          <BrowserMockup
+                            src={heroView.image}
+                            alt={heroView.name}
+                            onClick={() =>
+                              openModal(
+                                showMobileSection && project.mobileScreens
+                                  ? project.mobileScreens.length +
+                                      project.webViews.findIndex((v) => v.image === heroView.image)
+                                  : project.webViews.findIndex((v) => v.image === heroView.image)
+                              )
+                            }
+                            variant="hero"
+                            isDark={isDark}
+                            primaryColor={project.colors.primary}
+                            secondaryColor={project.colors.secondary}
+                          />
+                        </div>
+                      )}
+
+                      {/* Bottom-Right Satellite - Positioned diagonally opposite, smaller, farther */}
+                      {rightView && (
+                        <div
+                          className="absolute"
+                          style={{
+                            right: "8%",
+                            bottom: "0%",
+                            width: "350px",
+                            transform: "translateY(8%)",
+                            zIndex: 5,
+                          }}
+                        >
+                          <BrowserMockup
+                            src={rightView.image}
+                            alt={rightView.name}
+                            onClick={() =>
+                              openModal(
+                                showMobileSection && project.mobileScreens
+                                  ? project.mobileScreens.length +
+                                      project.webViews.findIndex((v) => v.image === rightView.image)
+                                  : project.webViews.findIndex((v) => v.image === rightView.image)
+                              )
+                            }
+                            variant="satellite"
+                            position="bottom-right"
+                            isDark={isDark}
+                            primaryColor={project.colors.primary}
+                            secondaryColor={project.colors.secondary}
+                            rotationIdle={12}
+                            depthScale={0.85}
+                            idleOpacity={0.75}
+                          />
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
               </div>
             </motion.div>
           )}
