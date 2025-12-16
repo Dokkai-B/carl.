@@ -332,7 +332,10 @@ export const FullscreenModalViewer = ({
               whileTap={{ scale: 0.95 }}
               aria-label="Previous image"
             >
-              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white" strokeWidth={2} />
+              <ChevronLeft
+                className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white"
+                strokeWidth={2}
+              />
             </motion.button>
 
             <motion.button
@@ -358,7 +361,10 @@ export const FullscreenModalViewer = ({
               whileTap={{ scale: 0.95 }}
               aria-label="Next image"
             >
-              <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white" strokeWidth={2} />
+              <ChevronRight
+                className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white"
+                strokeWidth={2}
+              />
             </motion.button>
           </>
         )}

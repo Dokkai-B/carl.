@@ -243,7 +243,8 @@ export const projects: Project[] = [
     year: "2024",
     role: "",
     type: "mobile-only",
-    summary: "SaveEat is a mobile application that integrates nutrition tracking with personal budget management to help users make informed dietary and financial decisions.",
+    summary:
+      "SaveEat is a mobile application that integrates nutrition tracking with personal budget management to help users make informed dietary and financial decisions.",
     heroImage: "/Temp Photos/HeroPhoto/SaveEat.png",
     links: {
       prototype: "#",
@@ -286,7 +287,8 @@ export const projects: Project[] = [
     year: "2024",
     role: "",
     type: "mobile-only",
-    summary: "Heart to Art is a mobile application designed to connect artists and clients through an open request and direct commission system. It enables artists to find work and clients to commission artwork within a secure, in-app environment.",
+    summary:
+      "Heart to Art is a mobile application designed to connect artists and clients through an open request and direct commission system. It enables artists to find work and clients to commission artwork within a secure, in-app environment.",
     heroImage: "/Temp Photos/HeroPhoto/HeartToArt.png",
     links: {
       prototype: "#",
@@ -300,7 +302,14 @@ export const projects: Project[] = [
       { icon: "Shield", text: "Secure in-app messaging" },
       { icon: "Heart", text: "Payment release and client rating system" },
     ],
-    techStack: ["React Native", "JavaScript", "Expo", "Firebase Authentication", "Firestore", "Firebase Storage"],
+    techStack: [
+      "React Native",
+      "JavaScript",
+      "Expo",
+      "Firebase Authentication",
+      "Firestore",
+      "Firebase Storage",
+    ],
     mobileScreens: [
       { name: "Chatting", image: "/Temp Photos/UIPhoto/HeartToArt/Chatting_MobileLeft.png" },
       { name: "Logo", image: "/Temp Photos/UIPhoto/HeartToArt/Logo_MobileCenter.png" },
@@ -338,7 +347,8 @@ export const projects: Project[] = [
     year: "2024",
     role: "",
     type: "web-only",
-    summary: "LostPaws is a mobile web application designed to help locate, adopt, and rehome lost pets by improving the exposure of pets and animal welfare organizations.",
+    summary:
+      "LostPaws is a mobile web application designed to help locate, adopt, and rehome lost pets by improving the exposure of pets and animal welfare organizations.",
     heroImage: "/Temp Photos/HeroPhoto/LostPaws.png",
     links: {
       prototype: "#",
@@ -381,7 +391,8 @@ export const projects: Project[] = [
     year: "2024",
     role: "",
     type: "mobile-only",
-    summary: "Earthshaker is a real-time earthquake alert system for the Philippines that monitors seismic activity and delivers instant push notifications to users. The system prioritizes speed, reliability, and battery efficiency.",
+    summary:
+      "Earthshaker is a real-time earthquake alert system for the Philippines that monitors seismic activity and delivers instant push notifications to users. The system prioritizes speed, reliability, and battery efficiency.",
     heroImage: "/Temp Photos/HeroPhoto/Earthshaker.png",
     links: {
       prototype: "#",
@@ -395,7 +406,16 @@ export const projects: Project[] = [
       { icon: "MapPin", text: "Location-based alerting within configurable radius" },
       { icon: "Cloud", text: "Offline-safe local persistence" },
     ],
-    techStack: ["Flutter", "Dart", "Node.js", "Express", "Firebase Cloud Messaging", "Firebase Admin SDK", "USGS Earthquake API", "Render"],
+    techStack: [
+      "Flutter",
+      "Dart",
+      "Node.js",
+      "Express",
+      "Firebase Cloud Messaging",
+      "Firebase Admin SDK",
+      "USGS Earthquake API",
+      "Render",
+    ],
     mobileScreens: [
       { name: "Settings", image: "/Temp Photos/UIPhoto/Earthshaker/Settings_MobileLeft.png" },
       { name: "Dashboard", image: "/Temp Photos/UIPhoto/Earthshaker/Dashboard_MobileCenter.png" },
@@ -423,7 +443,8 @@ export const projects: Project[] = [
     year: "2024",
     role: "",
     type: "web-only",
-    summary: "Womens Club is a web-based management system developed for a volunteer-driven non-government organization in Womens Club, Quezon City. The platform modernizes their traditional website and supports transparent management of members, events, and donations.",
+    summary:
+      "Womens Club is a web-based management system developed for a volunteer-driven non-government organization in Womens Club, Quezon City. The platform modernizes their traditional website and supports transparent management of members, events, and donations.",
     heroImage: "/Temp Photos/HeroPhoto/WomensCLUB.png",
     links: {
       prototype: "#",
@@ -431,7 +452,10 @@ export const projects: Project[] = [
       livesite: "#",
     },
     features: [
-      { icon: "Users", text: "Member registration, authentication, and directory with admin approval" },
+      {
+        icon: "Users",
+        text: "Member registration, authentication, and directory with admin approval",
+      },
       { icon: "Clock", text: "Event creation, modification, deletion, and volunteer registration" },
       { icon: "Heart", text: "Donation recording, tracking, and history logs" },
       { icon: "Shield", text: "Desktop-only website with restricted member and admin access" },

@@ -67,26 +67,26 @@ const getIcon = (iconName: IconName) => {
 // Helper function to darken a hex color by a percentage
 const darkenColor = (hex: string, percent: number): string => {
   // Remove # if present
-  const cleanHex = hex.replace('#', '');
-  
+  const cleanHex = hex.replace("#", "");
+
   // Parse RGB values
   const r = parseInt(cleanHex.substring(0, 2), 16);
   const g = parseInt(cleanHex.substring(2, 4), 16);
   const b = parseInt(cleanHex.substring(4, 6), 16);
-  
+
   // Darken each component
   const darkenedR = Math.max(0, Math.floor(r * (1 - percent)));
   const darkenedG = Math.max(0, Math.floor(g * (1 - percent)));
   const darkenedB = Math.max(0, Math.floor(b * (1 - percent)));
-  
+
   // Convert back to hex
-  const toHex = (n: number) => n.toString(16).padStart(2, '0');
+  const toHex = (n: number) => n.toString(16).padStart(2, "0");
   return `#${toHex(darkenedR)}${toHex(darkenedG)}${toHex(darkenedB)}`;
 };
 
 // Helper to check if color is white or near-white
 const isLightColor = (hex: string): boolean => {
-  const cleanHex = hex.replace('#', '');
+  const cleanHex = hex.replace("#", "");
   const r = parseInt(cleanHex.substring(0, 2), 16);
   const g = parseInt(cleanHex.substring(2, 4), 16);
   const b = parseInt(cleanHex.substring(4, 6), 16);
@@ -95,15 +95,20 @@ const isLightColor = (hex: string): boolean => {
 };
 
 // Get gradient colors with proper darkening logic
-const getGradientColors = (primary: string, secondary: string, isDark: boolean, projectSlug?: string): { start: string; end: string } => {
+const getGradientColors = (
+  primary: string,
+  secondary: string,
+  isDark: boolean,
+  projectSlug?: string
+): { start: string; end: string } => {
   // Special case for Womens CLUB - lighten in dark mode for readability
-  if (isDark && projectSlug === 'womens-club') {
+  if (isDark && projectSlug === "womens-club") {
     return {
-      start: '#4f46e5', // Lighter blue for dark mode
-      end: '#6366f1',
+      start: "#4f46e5", // Lighter blue for dark mode
+      end: "#6366f1",
     };
   }
-  
+
   // If secondary is white/near-white, use a darker shade of primary instead
   if (isLightColor(secondary)) {
     return {
@@ -111,7 +116,7 @@ const getGradientColors = (primary: string, secondary: string, isDark: boolean, 
       end: darkenColor(primary, 0.35), // Darker variant of primary
     };
   }
-  
+
   // Normal case: darken both colors
   return {
     start: darkenColor(primary, 0.15),
@@ -121,8 +126,8 @@ const getGradientColors = (primary: string, secondary: string, isDark: boolean, 
 
 // Get display color for project (handles Womens CLUB special case)
 const getDisplayColor = (primary: string, isDark: boolean, projectSlug?: string): string => {
-  if (isDark && projectSlug === 'womens-club') {
-    return '#6366f1'; // Lighter blue for dark mode
+  if (isDark && projectSlug === "womens-club") {
+    return "#6366f1"; // Lighter blue for dark mode
   }
   return primary;
 };
@@ -153,7 +158,7 @@ const BackToTopButton = ({ project }: { project: Project }) => {
   const [showButton, setShowButton] = useState(false);
   const { theme } = useTheme();
   const isDark = theme === "dark";
-  
+
   useEffect(() => {
     const onScroll = () => {
       setShowButton(window.scrollY > 300);
@@ -183,7 +188,9 @@ const BackToTopButton = ({ project }: { project: Project }) => {
           whileHover={{
             y: -4,
             scale: 1.08,
-            boxShadow: `0 0 20px ${isDark ? `${project.colors.primary}80` : `${project.colors.light?.primary}60`}`,
+            boxShadow: `0 0 20px ${
+              isDark ? `${project.colors.primary}80` : `${project.colors.light?.primary}60`
+            }`,
           }}
           whileTap={{ scale: 0.95 }}
           aria-label="Scroll to top"
@@ -329,9 +336,17 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                   <span
                     className="text-xs font-medium px-3 py-1.5 rounded-full"
                     style={{
-                      backgroundColor: `${getDisplayColor(project.colors.primary, isDark, project.slug)}20`,
+                      backgroundColor: `${getDisplayColor(
+                        project.colors.primary,
+                        isDark,
+                        project.slug
+                      )}20`,
                       color: getDisplayColor(project.colors.primary, isDark, project.slug),
-                      border: `1px solid ${getDisplayColor(project.colors.primary, isDark, project.slug)}40`,
+                      border: `1px solid ${getDisplayColor(
+                        project.colors.primary,
+                        isDark,
+                        project.slug
+                      )}40`,
                     }}
                   >
                     {project.category}
@@ -357,7 +372,12 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                   className="h-1 mb-6 origin-left"
                   style={{
                     background: (() => {
-                      const colors = getGradientColors(project.colors.primary, project.colors.secondary, isDark, project.slug);
+                      const colors = getGradientColors(
+                        project.colors.primary,
+                        project.colors.secondary,
+                        isDark,
+                        project.slug
+                      );
                       return `linear-gradient(90deg, ${colors.start}, ${colors.end})`;
                     })(),
                     width: "160px",
@@ -389,7 +409,12 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                       className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all"
                       style={{
                         background: (() => {
-                          const colors = getGradientColors(project.colors.primary, project.colors.secondary, isDark, project.slug);
+                          const colors = getGradientColors(
+                            project.colors.primary,
+                            project.colors.secondary,
+                            isDark,
+                            project.slug
+                          );
                           return `linear-gradient(135deg, ${colors.start}, ${colors.end})`;
                         })(),
                         color: "white",
@@ -528,10 +553,7 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                     return (
                       <div className="flex gap-4 md:gap-8 items-center justify-center flex-wrap">
                         {project.webViews.map((view, index) => (
-                          <div
-                            key={index}
-                            className="w-full md:w-[45%] lg:w-[500px]"
-                          >
+                          <div key={index} className="w-full md:w-[45%] lg:w-[500px]">
                             <BrowserMockup
                               src={view.image}
                               alt={view.name}
@@ -566,7 +588,9 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                                 openModal(
                                   showMobileSection && project.mobileScreens
                                     ? project.mobileScreens.length +
-                                        project.webViews.findIndex((v) => v.image === heroView.image)
+                                        project.webViews.findIndex(
+                                          (v) => v.image === heroView.image
+                                        )
                                     : project.webViews.findIndex((v) => v.image === heroView.image)
                                 )
                               }
@@ -586,7 +610,9 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                                 openModal(
                                   showMobileSection && project.mobileScreens
                                     ? project.mobileScreens.length +
-                                        project.webViews.findIndex((v) => v.image === leftView.image)
+                                        project.webViews.findIndex(
+                                          (v) => v.image === leftView.image
+                                        )
                                     : project.webViews.findIndex((v) => v.image === leftView.image)
                                 )
                               }
@@ -606,7 +632,9 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                                 openModal(
                                   showMobileSection && project.mobileScreens
                                     ? project.mobileScreens.length +
-                                        project.webViews.findIndex((v) => v.image === rightView.image)
+                                        project.webViews.findIndex(
+                                          (v) => v.image === rightView.image
+                                        )
                                     : project.webViews.findIndex((v) => v.image === rightView.image)
                                 )
                               }
@@ -620,7 +648,10 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                       </div>
 
                       {/* Desktop: Satellite Orbital Layout (>= 1024px) */}
-                      <div className="hidden lg:flex items-center justify-center relative" style={{ minHeight: "700px" }}>
+                      <div
+                        className="hidden lg:flex items-center justify-center relative"
+                        style={{ minHeight: "700px" }}
+                      >
                         {/* Top-Left Satellite - Positioned diagonally, smaller, farther in depth */}
                         {leftView && (
                           <div
@@ -640,7 +671,9 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                                 openModal(
                                   showMobileSection && project.mobileScreens
                                     ? project.mobileScreens.length +
-                                        project.webViews.findIndex((v) => v.image === leftView.image)
+                                        project.webViews.findIndex(
+                                          (v) => v.image === leftView.image
+                                        )
                                     : project.webViews.findIndex((v) => v.image === leftView.image)
                                 )
                               }
@@ -672,7 +705,9 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                                 openModal(
                                   showMobileSection && project.mobileScreens
                                     ? project.mobileScreens.length +
-                                        project.webViews.findIndex((v) => v.image === heroView.image)
+                                        project.webViews.findIndex(
+                                          (v) => v.image === heroView.image
+                                        )
                                     : project.webViews.findIndex((v) => v.image === heroView.image)
                                 )
                               }
@@ -703,7 +738,9 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                                 openModal(
                                   showMobileSection && project.mobileScreens
                                     ? project.mobileScreens.length +
-                                        project.webViews.findIndex((v) => v.image === rightView.image)
+                                        project.webViews.findIndex(
+                                          (v) => v.image === rightView.image
+                                        )
                                     : project.webViews.findIndex((v) => v.image === rightView.image)
                                 )
                               }
@@ -812,7 +849,12 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                         }}
                         whileHover={{ scale: 1.1 }}
                       >
-                        <Icon className="w-6 h-6" style={{ color: getDisplayColor(project.colors.primary, isDark, project.slug) }} />
+                        <Icon
+                          className="w-6 h-6"
+                          style={{
+                            color: getDisplayColor(project.colors.primary, isDark, project.slug),
+                          }}
+                        />
                       </motion.div>
 
                       <motion.div
@@ -932,7 +974,9 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                         : `${getDisplayColor(project.colors.primary, isDark, project.slug)}20`,
                       color: getDisplayColor(project.colors.primary, isDark, project.slug),
                       border: `1px solid ${
-                        isDark ? `${getDisplayColor(project.colors.primary, isDark, project.slug)}28` : `${getDisplayColor(project.colors.primary, isDark, project.slug)}35`
+                        isDark
+                          ? `${getDisplayColor(project.colors.primary, isDark, project.slug)}28`
+                          : `${getDisplayColor(project.colors.primary, isDark, project.slug)}35`
                       }`,
                       opacity: 0.85,
                     }}

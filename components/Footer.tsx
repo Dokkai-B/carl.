@@ -41,8 +41,8 @@ const Footer = () => {
               </h2>
             </Link>
             <p className="text-muted-foreground max-w-xs">
-              Aspiring Full-Stack Developer passionate about creating exceptional
-              digital experiences.
+              Aspiring Full-Stack Developer passionate about creating exceptional digital
+              experiences.
             </p>
             <Social
               containerStyles="flex gap-3"
@@ -93,10 +93,7 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a
-                  href="tel:+639208023514"
-                  className="hover:text-primary transition-colors"
-                >
+                <a href="tel:+639208023514" className="hover:text-primary transition-colors">
                   (+63) 920 802 3514
                 </a>
               </li>
@@ -119,8 +116,8 @@ const Footer = () => {
         >
           <p className="text-sm text-muted-foreground text-center md:text-left">
             © {currentYear} Carl Patrick Adrian Aguas. Built with{" "}
-            <Heart className="inline w-4 h-4 text-accent fill-accent animate-pulse" />{" "}
-            using Next.js & Tailwind CSS
+            <Heart className="inline w-4 h-4 text-accent fill-accent animate-pulse" /> using Next.js
+            & Tailwind CSS
           </p>
 
           {/* Scroll to Top Button - Theme Color */}

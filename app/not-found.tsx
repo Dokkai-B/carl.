@@ -75,14 +75,16 @@ export default function NotFound() {
         >
           {/* 404 Number */}
           <motion.div variants={slidePocketChild} style={{ marginBottom: "2rem" }}>
-            <h1 style={{
-              fontSize: "clamp(3rem, 10vw, 9rem)",
-              fontWeight: "bold",
-              backgroundImage: "linear-gradient(to right, #5dade2, #3498db, #667eea)",
-              backgroundClip: "text",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}>
+            <h1
+              style={{
+                fontSize: "clamp(3rem, 10vw, 9rem)",
+                fontWeight: "bold",
+                backgroundImage: "linear-gradient(to right, #5dade2, #3498db, #667eea)",
+                backgroundClip: "text",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
               404
             </h1>
             {/* Animated underline */}
@@ -123,7 +125,8 @@ export default function NotFound() {
               margin: "0 auto 3rem",
             }}
           >
-            The page you're looking for doesn't exist yet or has been moved. Let's get you back on track.
+            The page you're looking for doesn't exist yet or has been moved. Let's get you back on
+            track.
           </motion.p>
 
           {/* CTA Buttons */}
@@ -165,21 +168,24 @@ export default function NotFound() {
                     inset: 0,
                     borderRadius: "0.5rem",
                     border: "1.5px solid rgba(93, 173, 226, 0.3)",
-                    boxShadow: "inset 0 2px 4px rgba(255,255,255,0.05), 0 10px 30px rgba(93, 173, 226, 0.1)",
+                    boxShadow:
+                      "inset 0 2px 4px rgba(255,255,255,0.05), 0 10px 30px rgba(93, 173, 226, 0.1)",
                     transition: "all 0.3s",
                   }}
                 />
 
                 {/* Content */}
-                <div style={{
-                  position: "relative",
-                  paddingLeft: "2rem",
-                  paddingRight: "2rem",
-                  paddingTop: "0.75rem",
-                  paddingBottom: "0.75rem",
-                  fontWeight: "500",
-                  color: "hsl(var(--foreground))",
-                }}>
+                <div
+                  style={{
+                    position: "relative",
+                    paddingLeft: "2rem",
+                    paddingRight: "2rem",
+                    paddingTop: "0.75rem",
+                    paddingBottom: "0.75rem",
+                    fontWeight: "500",
+                    color: "hsl(var(--foreground))",
+                  }}
+                >
                   Go Home
                 </div>
               </motion.div>
@@ -214,21 +220,24 @@ export default function NotFound() {
                     inset: 0,
                     borderRadius: "0.5rem",
                     border: "1.5px solid rgba(102, 126, 234, 0.3)",
-                    boxShadow: "inset 0 2px 4px rgba(255,255,255,0.05), 0 10px 30px rgba(102, 126, 234, 0.1)",
+                    boxShadow:
+                      "inset 0 2px 4px rgba(255,255,255,0.05), 0 10px 30px rgba(102, 126, 234, 0.1)",
                     transition: "all 0.3s",
                   }}
                 />
 
                 {/* Content */}
-                <div style={{
-                  position: "relative",
-                  paddingLeft: "2rem",
-                  paddingRight: "2rem",
-                  paddingTop: "0.75rem",
-                  paddingBottom: "0.75rem",
-                  fontWeight: "500",
-                  color: "hsl(var(--foreground))",
-                }}>
+                <div
+                  style={{
+                    position: "relative",
+                    paddingLeft: "2rem",
+                    paddingRight: "2rem",
+                    paddingTop: "0.75rem",
+                    paddingBottom: "0.75rem",
+                    fontWeight: "500",
+                    color: "hsl(var(--foreground))",
+                  }}
+                >
                   View Projects
                 </div>
               </motion.div>

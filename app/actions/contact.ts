@@ -26,40 +26,7 @@ export async function submitContactForm(formData: FormData) {
   }
 
   try {
-    // Here you would typically:
-    // 1. Save to database (using Prisma)
-    // 2. Send email notification (using Resend, SendGrid, etc.)
-    // 3. Add to CRM or notification system
-
-    // For now, we'll simulate a successful submission
-    console.log("Contact form submission:", {
-      firstName,
-      lastName,
-      email,
-      phone,
-      service,
-      message,
-      submittedAt: new Date().toISOString(),
-    });
-
-    // In a real implementation, you would save to your database:
-    // await prisma.contactSubmission.create({
-    //   data: {
-    //     firstName,
-    //     lastName,
-    //     email,
-    //     phone: phone || null,
-    //     service: service || null,
-    //     message,
-    //   },
-    // });
-
-    // And send an email notification
-    // await sendEmail({
-    //   to: "cpacaguas@mymail.mapua.edu.ph",
-    //   subject: `New contact form submission from ${firstName} ${lastName}`,
-    //   body: message,
-    // });
+    // In production, integrate: database persistence and email notification.
 
     return {
       success: true,

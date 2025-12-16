@@ -354,8 +354,8 @@ const Header = () => {
                       duration: 0.4,
                       ease: "easeOut",
                       staggerChildren: 0.05,
-                      delayChildren: 0.1
-                    }
+                      delayChildren: 0.1,
+                    },
                   },
                   exit: {
                     opacity: 0,
@@ -364,9 +364,9 @@ const Header = () => {
                       duration: 0.3,
                       ease: "easeIn",
                       staggerChildren: 0.03,
-                      staggerDirection: -1
-                    }
-                  }
+                      staggerDirection: -1,
+                    },
+                  },
                 }}
               >
                 {links.map((link, index) => (
@@ -375,7 +375,7 @@ const Header = () => {
                     variants={{
                       hidden: { opacity: 0, y: 20 },
                       visible: { opacity: 1, y: 0 },
-                      exit: { opacity: 0, y: -20 }
+                      exit: { opacity: 0, y: -20 },
                     }}
                   >
                     <DropInText
