@@ -123,14 +123,23 @@ const Footer = () => {
             using Next.js & Tailwind CSS
           </p>
 
-          {/* Scroll to Top */}
+          {/* Scroll to Top Button - Theme Color */}
           <motion.button
             onClick={scrollToTop}
-            className="glass p-3 rounded-full border border-border/50 hover:border-primary/50 transition-all duration-300 group"
-            whileHover={{ y: -4 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="relative w-12 h-12 rounded-full flex items-center justify-center group bg-primary hover:bg-primary/80"
+            whileHover={{
+              y: -4,
+              scale: 1.08,
+              boxShadow: "0 0 20px rgba(var(--primary-rgb), 0.6)",
+            }}
             whileTap={{ scale: 0.95 }}
+            aria-label="Scroll to top"
           >
-            <ArrowUp className="w-5 h-5 group-hover:text-primary transition-colors" />
+            <ArrowUp className="w-5 h-5 text-white transition-all" />
           </motion.button>
         </motion.div>
       </div>

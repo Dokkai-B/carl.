@@ -117,7 +117,7 @@ export const FullscreenModalViewer = ({
 
       {/* Content */}
       <motion.div
-        className="relative z-10 w-full h-full flex flex-col items-center justify-center px-4 md:px-8"
+        className="relative z-10 w-full h-full flex flex-col items-center justify-center px-4 md:px-8 gap-6 overflow-y-auto max-h-[95vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button - Cleaner design */}
@@ -140,10 +140,12 @@ export const FullscreenModalViewer = ({
         </motion.button>
 
         {/* Image Container */}
+        {/* Image Container - Constrained max size for optimal viewing */}
         <motion.div
-          className="relative w-full max-w-5xl"
+          className="relative w-[90vw] sm:w-[80vw] md:w-[70vw] lg:w-[60vw] flex-shrink-0"
           style={{
-            aspectRatio: "16/9",
+            height: "70vh",
+            maxHeight: "70vh",
           }}
           layout
           transition={{
@@ -178,7 +180,7 @@ export const FullscreenModalViewer = ({
                 alt={images[currentIndex].name}
                 fill
                 className="object-contain"
-                sizes="(max-width: 768px) 100vw, 1280px"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1400px"
                 priority={currentIndex === initialIndex}
                 quality={95}
               />
@@ -315,7 +317,7 @@ export const FullscreenModalViewer = ({
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
-              className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center"
+              className="absolute left-2 sm:left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center flex-shrink-0"
               style={{
                 background: "rgba(255, 255, 255, 0.06)",
                 border: "1px solid rgba(255, 255, 255, 0.1)",
@@ -330,7 +332,7 @@ export const FullscreenModalViewer = ({
               whileTap={{ scale: 0.95 }}
               aria-label="Previous image"
             >
-              <ChevronLeft className="w-6 h-6 md:w-7 md:h-7 text-white" strokeWidth={2} />
+              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white" strokeWidth={2} />
             </motion.button>
 
             <motion.button
@@ -341,7 +343,7 @@ export const FullscreenModalViewer = ({
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
-              className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center"
+              className="absolute right-2 sm:right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center flex-shrink-0"
               style={{
                 background: "rgba(255, 255, 255, 0.06)",
                 border: "1px solid rgba(255, 255, 255, 0.1)",
@@ -356,7 +358,7 @@ export const FullscreenModalViewer = ({
               whileTap={{ scale: 0.95 }}
               aria-label="Next image"
             >
-              <ChevronRight className="w-6 h-6 md:w-7 md:h-7 text-white" strokeWidth={2} />
+              <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white" strokeWidth={2} />
             </motion.button>
           </>
         )}

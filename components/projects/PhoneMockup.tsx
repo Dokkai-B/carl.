@@ -65,12 +65,13 @@ export const PhoneMockup = ({
         }}
       />
 
-      {/* Phone container */}
+      {/* Phone container - responsive sizing */}
+      {/* Phone container - responsive sizing with tighter breakpoints */}
       <motion.div
         className={
           position === "center"
-            ? "relative overflow-hidden rounded-[28px] w-80"
-            : "relative overflow-hidden rounded-[28px] w-72"
+            ? "relative overflow-hidden rounded-[28px] w-48 sm:w-56 md:w-64 lg:w-72 xl:w-80"
+            : "relative overflow-hidden rounded-[28px] w-40 sm:w-48 md:w-56 lg:w-64 xl:w-72"
         }
         animate={{
           rotateY:

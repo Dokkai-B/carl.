@@ -64,6 +64,69 @@ const getIcon = (iconName: IconName) => {
   return iconMap[iconName];
 };
 
+// Helper function to darken a hex color by a percentage
+const darkenColor = (hex: string, percent: number): string => {
+  // Remove # if present
+  const cleanHex = hex.replace('#', '');
+  
+  // Parse RGB values
+  const r = parseInt(cleanHex.substring(0, 2), 16);
+  const g = parseInt(cleanHex.substring(2, 4), 16);
+  const b = parseInt(cleanHex.substring(4, 6), 16);
+  
+  // Darken each component
+  const darkenedR = Math.max(0, Math.floor(r * (1 - percent)));
+  const darkenedG = Math.max(0, Math.floor(g * (1 - percent)));
+  const darkenedB = Math.max(0, Math.floor(b * (1 - percent)));
+  
+  // Convert back to hex
+  const toHex = (n: number) => n.toString(16).padStart(2, '0');
+  return `#${toHex(darkenedR)}${toHex(darkenedG)}${toHex(darkenedB)}`;
+};
+
+// Helper to check if color is white or near-white
+const isLightColor = (hex: string): boolean => {
+  const cleanHex = hex.replace('#', '');
+  const r = parseInt(cleanHex.substring(0, 2), 16);
+  const g = parseInt(cleanHex.substring(2, 4), 16);
+  const b = parseInt(cleanHex.substring(4, 6), 16);
+  // Consider colors with RGB values > 200 as too light
+  return r > 200 && g > 200 && b > 200;
+};
+
+// Get gradient colors with proper darkening logic
+const getGradientColors = (primary: string, secondary: string, isDark: boolean, projectSlug?: string): { start: string; end: string } => {
+  // Special case for Womens CLUB - lighten in dark mode for readability
+  if (isDark && projectSlug === 'womens-club') {
+    return {
+      start: '#4f46e5', // Lighter blue for dark mode
+      end: '#6366f1',
+    };
+  }
+  
+  // If secondary is white/near-white, use a darker shade of primary instead
+  if (isLightColor(secondary)) {
+    return {
+      start: darkenColor(primary, 0.15),
+      end: darkenColor(primary, 0.35), // Darker variant of primary
+    };
+  }
+  
+  // Normal case: darken both colors
+  return {
+    start: darkenColor(primary, 0.15),
+    end: darkenColor(secondary, 0.15),
+  };
+};
+
+// Get display color for project (handles Womens CLUB special case)
+const getDisplayColor = (primary: string, isDark: boolean, projectSlug?: string): string => {
+  if (isDark && projectSlug === 'womens-club') {
+    return '#6366f1'; // Lighter blue for dark mode
+  }
+  return primary;
+};
+
 interface ProjectPageContentProps {
   project: Project;
   navigation: {
@@ -88,6 +151,9 @@ const ScrollProgressBar = ({ project }: { project: Project }) => {
 
 const BackToTopButton = ({ project }: { project: Project }) => {
   const [showButton, setShowButton] = useState(false);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+  
   useEffect(() => {
     const onScroll = () => {
       setShowButton(window.scrollY > 300);
@@ -95,6 +161,11 @@ const BackToTopButton = ({ project }: { project: Project }) => {
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Use light colors in dark mode, dark colors in light mode
+  const bgColor = isDark ? project.colors.primary : project.colors.light?.primary;
+  const arrowColor = isDark ? "white" : "#000";
+  const borderColor = isDark ? `${project.colors.primary}40` : `${project.colors.light?.primary}40`;
 
   return (
     <AnimatePresence>
@@ -104,17 +175,20 @@ const BackToTopButton = ({ project }: { project: Project }) => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-2 rounded-lg"
+          className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-12 h-12 rounded-full"
           style={{
-            background: "rgba(0,0,0,0.4)",
-            color: "white",
-            backdropFilter: "blur(6px)",
-            WebkitBackdropFilter: "blur(6px)",
-            border: "1px solid rgba(255,255,255,0.2)",
+            background: bgColor,
+            border: `1.5px solid ${borderColor}`,
           }}
+          whileHover={{
+            y: -4,
+            scale: 1.08,
+            boxShadow: `0 0 20px ${isDark ? `${project.colors.primary}80` : `${project.colors.light?.primary}60`}`,
+          }}
+          whileTap={{ scale: 0.95 }}
+          aria-label="Scroll to top"
         >
-          <ArrowUp className="w-4 h-4" />
-          Top
+          <ArrowUp className="w-5 h-5 transition-all" style={{ color: arrowColor }} />
         </motion.button>
       )}
     </AnimatePresence>
@@ -233,12 +307,12 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 mb-24"
+            className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 mb-16 md:mb-24"
           >
-            <div className="flex flex-col justify-center">
+            <div className="flex flex-col justify-center order-2 lg:order-1">
               <div className="mb-6">
                 <motion.h1
-                  className="text-5xl md:text-6xl font-bold mb-4"
+                  className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4"
                   style={{
                     color: isDark ? "white" : "rgb(17, 24, 39)",
                   }}
@@ -255,9 +329,9 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                   <span
                     className="text-xs font-medium px-3 py-1.5 rounded-full"
                     style={{
-                      backgroundColor: `${project.colors.primary}20`,
-                      color: project.colors.primary,
-                      border: `1px solid ${project.colors.primary}40`,
+                      backgroundColor: `${getDisplayColor(project.colors.primary, isDark, project.slug)}20`,
+                      color: getDisplayColor(project.colors.primary, isDark, project.slug),
+                      border: `1px solid ${getDisplayColor(project.colors.primary, isDark, project.slug)}40`,
                     }}
                   >
                     {project.category}
@@ -282,7 +356,10 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                   transition={{ delay: 0.25, duration: 0.6 }}
                   className="h-1 mb-6 origin-left"
                   style={{
-                    background: `linear-gradient(90deg, ${project.colors.primary}, ${project.colors.secondary})`,
+                    background: (() => {
+                      const colors = getGradientColors(project.colors.primary, project.colors.secondary, isDark, project.slug);
+                      return `linear-gradient(90deg, ${colors.start}, ${colors.end})`;
+                    })(),
                     width: "160px",
                   }}
                 />
@@ -311,7 +388,10 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                     <motion.button
                       className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all"
                       style={{
-                        background: `linear-gradient(135deg, ${project.colors.primary}, ${project.colors.secondary})`,
+                        background: (() => {
+                          const colors = getGradientColors(project.colors.primary, project.colors.secondary, isDark, project.slug);
+                          return `linear-gradient(135deg, ${colors.start}, ${colors.end})`;
+                        })(),
                         color: "white",
                       }}
                       whileHover={{ scale: 1.05 }}
@@ -328,17 +408,17 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                     <motion.button
                       className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all border"
                       style={{
-                        borderColor: project.colors.primary,
-                        color: project.colors.primary,
+                        borderColor: getDisplayColor(project.colors.primary, isDark, project.slug),
+                        color: getDisplayColor(project.colors.primary, isDark, project.slug),
                         backgroundColor: isDark
-                          ? `${project.colors.primary}08`
-                          : `${project.colors.primary}10`,
+                          ? `${getDisplayColor(project.colors.primary, isDark, project.slug)}08`
+                          : `${getDisplayColor(project.colors.primary, isDark, project.slug)}10`,
                       }}
                       whileHover={{
                         scale: 1.05,
                         backgroundColor: isDark
-                          ? `${project.colors.primary}15`
-                          : `${project.colors.primary}15`,
+                          ? `${getDisplayColor(project.colors.primary, isDark, project.slug)}15`
+                          : `${getDisplayColor(project.colors.primary, isDark, project.slug)}15`,
                       }}
                       whileTap={{ scale: 0.95 }}
                     >
@@ -354,7 +434,7 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative aspect-square rounded-2xl overflow-hidden"
+              className="relative aspect-square rounded-2xl overflow-hidden order-1 lg:order-2"
             >
               <Image
                 src={project.heroImage}
@@ -362,12 +442,6 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                 fill
                 className="object-cover"
                 priority
-              />
-              <div
-                className="absolute inset-0"
-                style={{
-                  background: `radial-gradient(circle at top right, ${project.colors.primary}20, transparent 70%)`,
-                }}
               />
             </motion.div>
           </motion.div>
@@ -392,8 +466,10 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                 </p>
               </div>
 
-              <div className="flex items-center justify-center min-h-[600px]">
-                <div className="flex items-center justify-center flex-nowrap overflow-visible">
+              {/* Mobile: Single column, Tablet: 2 phones, Desktop: 3 phones side by side */}
+              {/* Mobile phones: stacked on small screens, side-by-side on larger */}
+              <div className="flex items-center justify-center min-h-[400px] md:min-h-[500px] lg:min-h-[600px] px-2 sm:px-4">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-2 md:gap-0 sm:flex-nowrap overflow-visible max-w-full">
                   {project.mobileScreens
                     .filter((screen) => /(MobileLeft|MobileCenter|MobileRight)/.test(screen.image))
                     .map((screen, index) => {
@@ -436,11 +512,8 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                 </p>
               </div>
 
-              {/* Satellite Orbital Layout - Hero Center with Depth-Based Positioning */}
-              <div
-                className="relative flex items-center justify-center"
-                style={{ minHeight: "700px" }}
-              >
+              {/* Satellite Orbital Layout - Responsive across all breakpoints */}
+              <div className="relative w-full mx-auto">
                 {(() => {
                   const heroView = project.webViews.find((view) =>
                     /DesktopCenter/i.test(view.image)
@@ -453,14 +526,11 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                   // If no center hero exists (less than 3 images), display side by side
                   if (!heroView && project.webViews.length <= 2) {
                     return (
-                      <div className="flex gap-8 items-center justify-center flex-wrap">
+                      <div className="flex gap-4 md:gap-8 items-center justify-center flex-wrap">
                         {project.webViews.map((view, index) => (
                           <div
                             key={index}
-                            style={{
-                              width: "500px",
-                              maxWidth: "45vw",
-                            }}
+                            className="w-full md:w-[45%] lg:w-[500px]"
                           >
                             <BrowserMockup
                               src={view.image}
@@ -485,104 +555,170 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
 
                   return (
                     <>
-                      {/* Top-Left Satellite - Positioned diagonally, smaller, farther in depth */}
-                      {leftView && (
-                        <div
-                          className="absolute"
-                          style={{
-                            left: "8%",
-                            top: "0%",
-                            width: "350px",
-                            transform: "translateY(-8%)",
-                            zIndex: 5,
-                          }}
-                        >
-                          <BrowserMockup
-                            src={leftView.image}
-                            alt={leftView.name}
-                            onClick={() =>
-                              openModal(
-                                showMobileSection && project.mobileScreens
-                                  ? project.mobileScreens.length +
-                                      project.webViews.findIndex((v) => v.image === leftView.image)
-                                  : project.webViews.findIndex((v) => v.image === leftView.image)
-                              )
-                            }
-                            variant="satellite"
-                            position="top-left"
-                            isDark={isDark}
-                            primaryColor={project.colors.primary}
-                            secondaryColor={project.colors.secondary}
-                            rotationIdle={-12}
-                            depthScale={0.85}
-                            idleOpacity={0.75}
-                          />
-                        </div>
-                      )}
+                      {/* Mobile & Tablet: Vertical Stack (< 1024px) */}
+                      <div className="block lg:hidden space-y-6">
+                        {heroView && (
+                          <div className="w-full">
+                            <BrowserMockup
+                              src={heroView.image}
+                              alt={heroView.name}
+                              onClick={() =>
+                                openModal(
+                                  showMobileSection && project.mobileScreens
+                                    ? project.mobileScreens.length +
+                                        project.webViews.findIndex((v) => v.image === heroView.image)
+                                    : project.webViews.findIndex((v) => v.image === heroView.image)
+                                )
+                              }
+                              variant="hero"
+                              isDark={isDark}
+                              primaryColor={project.colors.primary}
+                              secondaryColor={project.colors.secondary}
+                            />
+                          </div>
+                        )}
+                        {leftView && (
+                          <div className="w-full">
+                            <BrowserMockup
+                              src={leftView.image}
+                              alt={leftView.name}
+                              onClick={() =>
+                                openModal(
+                                  showMobileSection && project.mobileScreens
+                                    ? project.mobileScreens.length +
+                                        project.webViews.findIndex((v) => v.image === leftView.image)
+                                    : project.webViews.findIndex((v) => v.image === leftView.image)
+                                )
+                              }
+                              variant="hero"
+                              isDark={isDark}
+                              primaryColor={project.colors.primary}
+                              secondaryColor={project.colors.secondary}
+                            />
+                          </div>
+                        )}
+                        {rightView && (
+                          <div className="w-full">
+                            <BrowserMockup
+                              src={rightView.image}
+                              alt={rightView.name}
+                              onClick={() =>
+                                openModal(
+                                  showMobileSection && project.mobileScreens
+                                    ? project.mobileScreens.length +
+                                        project.webViews.findIndex((v) => v.image === rightView.image)
+                                    : project.webViews.findIndex((v) => v.image === rightView.image)
+                                )
+                              }
+                              variant="hero"
+                              isDark={isDark}
+                              primaryColor={project.colors.primary}
+                              secondaryColor={project.colors.secondary}
+                            />
+                          </div>
+                        )}
+                      </div>
 
-                      {/* Center Hero - Dominant, stable, frontmost */}
-                      {heroView && (
-                        <div
-                          className="relative"
-                          style={{
-                            width: "700px",
-                            maxWidth: "55vw",
-                            zIndex: 20,
-                          }}
-                        >
-                          <BrowserMockup
-                            src={heroView.image}
-                            alt={heroView.name}
-                            onClick={() =>
-                              openModal(
-                                showMobileSection && project.mobileScreens
-                                  ? project.mobileScreens.length +
-                                      project.webViews.findIndex((v) => v.image === heroView.image)
-                                  : project.webViews.findIndex((v) => v.image === heroView.image)
-                              )
-                            }
-                            variant="hero"
-                            isDark={isDark}
-                            primaryColor={project.colors.primary}
-                            secondaryColor={project.colors.secondary}
-                          />
-                        </div>
-                      )}
+                      {/* Desktop: Satellite Orbital Layout (>= 1024px) */}
+                      <div className="hidden lg:flex items-center justify-center relative" style={{ minHeight: "700px" }}>
+                        {/* Top-Left Satellite - Positioned diagonally, smaller, farther in depth */}
+                        {leftView && (
+                          <div
+                            className="absolute"
+                            style={{
+                              left: "8%",
+                              top: "0%",
+                              width: "clamp(250px, 30%, 350px)",
+                              transform: "translateY(-8%)",
+                              zIndex: 5,
+                            }}
+                          >
+                            <BrowserMockup
+                              src={leftView.image}
+                              alt={leftView.name}
+                              onClick={() =>
+                                openModal(
+                                  showMobileSection && project.mobileScreens
+                                    ? project.mobileScreens.length +
+                                        project.webViews.findIndex((v) => v.image === leftView.image)
+                                    : project.webViews.findIndex((v) => v.image === leftView.image)
+                                )
+                              }
+                              variant="satellite"
+                              position="top-left"
+                              isDark={isDark}
+                              primaryColor={project.colors.primary}
+                              secondaryColor={project.colors.secondary}
+                              rotationIdle={-12}
+                              depthScale={0.85}
+                              idleOpacity={0.75}
+                            />
+                          </div>
+                        )}
 
-                      {/* Bottom-Right Satellite - Positioned diagonally opposite, smaller, farther */}
-                      {rightView && (
-                        <div
-                          className="absolute"
-                          style={{
-                            right: "8%",
-                            bottom: "0%",
-                            width: "350px",
-                            transform: "translateY(8%)",
-                            zIndex: 5,
-                          }}
-                        >
-                          <BrowserMockup
-                            src={rightView.image}
-                            alt={rightView.name}
-                            onClick={() =>
-                              openModal(
-                                showMobileSection && project.mobileScreens
-                                  ? project.mobileScreens.length +
-                                      project.webViews.findIndex((v) => v.image === rightView.image)
-                                  : project.webViews.findIndex((v) => v.image === rightView.image)
-                              )
-                            }
-                            variant="satellite"
-                            position="bottom-right"
-                            isDark={isDark}
-                            primaryColor={project.colors.primary}
-                            secondaryColor={project.colors.secondary}
-                            rotationIdle={12}
-                            depthScale={0.85}
-                            idleOpacity={0.75}
-                          />
-                        </div>
-                      )}
+                        {/* Center Hero - Dominant, stable, frontmost */}
+                        {heroView && (
+                          <div
+                            className="relative"
+                            style={{
+                              width: "clamp(500px, 55vw, 700px)",
+                              zIndex: 20,
+                            }}
+                          >
+                            <BrowserMockup
+                              src={heroView.image}
+                              alt={heroView.name}
+                              onClick={() =>
+                                openModal(
+                                  showMobileSection && project.mobileScreens
+                                    ? project.mobileScreens.length +
+                                        project.webViews.findIndex((v) => v.image === heroView.image)
+                                    : project.webViews.findIndex((v) => v.image === heroView.image)
+                                )
+                              }
+                              variant="hero"
+                              isDark={isDark}
+                              primaryColor={project.colors.primary}
+                              secondaryColor={project.colors.secondary}
+                            />
+                          </div>
+                        )}
+
+                        {/* Bottom-Right Satellite - Positioned diagonally opposite, smaller, farther */}
+                        {rightView && (
+                          <div
+                            className="absolute"
+                            style={{
+                              right: "8%",
+                              bottom: "0%",
+                              width: "clamp(250px, 30%, 350px)",
+                              transform: "translateY(8%)",
+                              zIndex: 5,
+                            }}
+                          >
+                            <BrowserMockup
+                              src={rightView.image}
+                              alt={rightView.name}
+                              onClick={() =>
+                                openModal(
+                                  showMobileSection && project.mobileScreens
+                                    ? project.mobileScreens.length +
+                                        project.webViews.findIndex((v) => v.image === rightView.image)
+                                    : project.webViews.findIndex((v) => v.image === rightView.image)
+                                )
+                              }
+                              variant="satellite"
+                              position="bottom-right"
+                              isDark={isDark}
+                              primaryColor={project.colors.primary}
+                              secondaryColor={project.colors.secondary}
+                              rotationIdle={12}
+                              depthScale={0.85}
+                              idleOpacity={0.75}
+                            />
+                          </div>
+                        )}
+                      </div>
                     </>
                   );
                 })()}
@@ -671,12 +807,12 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                         className="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center"
                         style={{
                           background: isDark
-                            ? `${project.colors.primary}15`
+                            ? `${getDisplayColor(project.colors.primary, isDark, project.slug)}15`
                             : `${project.colors.primary}20`,
                         }}
                         whileHover={{ scale: 1.1 }}
                       >
-                        <Icon className="w-6 h-6" style={{ color: project.colors.primary }} />
+                        <Icon className="w-6 h-6" style={{ color: getDisplayColor(project.colors.primary, isDark, project.slug) }} />
                       </motion.div>
 
                       <motion.div
@@ -792,11 +928,11 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                     className="px-4 py-2.5 rounded-full text-sm font-medium cursor-default"
                     style={{
                       backgroundColor: isDark
-                        ? `${project.colors.primary}18`
-                        : `${project.colors.light.primary}20`,
-                      color: isDark ? project.colors.primary : project.colors.light.primary,
+                        ? `${getDisplayColor(project.colors.primary, isDark, project.slug)}18`
+                        : `${getDisplayColor(project.colors.primary, isDark, project.slug)}20`,
+                      color: getDisplayColor(project.colors.primary, isDark, project.slug),
                       border: `1px solid ${
-                        isDark ? `${project.colors.primary}28` : `${project.colors.light.primary}35`
+                        isDark ? `${getDisplayColor(project.colors.primary, isDark, project.slug)}28` : `${getDisplayColor(project.colors.primary, isDark, project.slug)}35`
                       }`,
                       opacity: 0.85,
                     }}

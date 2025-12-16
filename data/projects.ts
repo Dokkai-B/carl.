@@ -225,18 +225,18 @@ export const projects: Project[] = [
       { name: "Story List", image: "/Temp Photos/UIPhoto/Moonii/StoryList.png" },
     ],
     colors: {
-      primary: "#957ab6",
-      secondary: "#7c5fa3",
+      primary: "#a77bbe",
+      secondary: "#607ac2",
       light: {
-        primary: "#b399cc",
-        secondary: "#957ab6",
+        primary: "#d4b5e5",
+        secondary: "#9fa3d9",
       },
     },
   },
 
   // SaveEat - Mobile Only
   {
-    id: 2,
+    id: 6,
     slug: "saveeat",
     title: "SaveEat",
     category: "Mobile Application",
@@ -268,11 +268,11 @@ export const projects: Project[] = [
       { name: "Login", image: "/Temp Photos/UIPhoto/SaveEat/Login.png" },
     ],
     colors: {
-      primary: "#16a34a",
-      secondary: "#15803d",
+      primary: "#fd8f4c",
+      secondary: "#eef0ed",
       light: {
-        primary: "#4ade80",
-        secondary: "#22c55e",
+        primary: "#ffb088",
+        secondary: "#fff5f0",
       },
     },
   },
@@ -320,11 +320,11 @@ export const projects: Project[] = [
       { name: "User Feed", image: "/Temp Photos/UIPhoto/HeartToArt/UserFeed.png" },
     ],
     colors: {
-      primary: "#ec4899",
-      secondary: "#db2777",
+      primary: "#b20018",
+      secondary: "#d8d8d8",
       light: {
-        primary: "#f472b6",
-        secondary: "#f91e63",
+        primary: "#e63946",
+        secondary: "#f5f5f5",
       },
     },
   },
@@ -363,11 +363,11 @@ export const projects: Project[] = [
       { name: "Lost Pets", image: "/Temp Photos/UIPhoto/LostPaws/LostPets.png" },
     ],
     colors: {
-      primary: "#f97316",
-      secondary: "#ea580c",
+      primary: "#18b24f",
+      secondary: "#ffffff",
       light: {
-        primary: "#fb923c",
-        secondary: "#fdba74",
+        primary: "#4ade80",
+        secondary: "#f5f5f5",
       },
     },
   },
@@ -405,11 +405,11 @@ export const projects: Project[] = [
       },
     ],
     colors: {
-      primary: "#dc2626",
-      secondary: "#991b1b",
+      primary: "#c7c6c6",
+      secondary: "#aa352c",
       light: {
-        primary: "#ef4444",
-        secondary: "#fca5a5",
+        primary: "#e0dfdf",
+        secondary: "#d97b71",
       },
     },
   },
@@ -454,11 +454,11 @@ export const projects: Project[] = [
       { name: "Member List", image: "/Temp Photos/UIPhoto/WomensCLUB/MemberList.png" },
     ],
     colors: {
-      primary: "#d946ef",
-      secondary: "#c026d3",
+      primary: "#232289",
+      secondary: "#ffffff",
       light: {
-        primary: "#e879f9",
-        secondary: "#f0abfc",
+        primary: "#4f46e5",
+        secondary: "#f5f5f5",
       },
     },
   },
