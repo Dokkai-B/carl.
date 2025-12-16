@@ -262,6 +262,7 @@ export function useLoaderTextAnimation(): UseLoaderTextAnimationReturn {
         },
       });
       setState("idle");
+    }
     };
 
     animateIn();

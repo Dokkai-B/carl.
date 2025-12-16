@@ -838,7 +838,6 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                       transition={{ delay: index * 0.05 }}
                       className="flex gap-4 group"
                       whileHover="hover"
-                      initial="normal"
                     >
                       <motion.div
                         className="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center"
