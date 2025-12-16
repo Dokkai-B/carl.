@@ -1,14 +1,8 @@
 # 🚀 Carl's Portfolio - Modern Full-Stack PortfolioThis is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-
-
 A modern, fully-featured portfolio website built with **Next.js 14**, **TypeScript**, **Tailwind CSS**, and **Prisma ORM**.## Getting Started
 
-
-
 ## ✨ FeaturesFirst, run the development server:
-
-
 
 - ⚡ **Next.js 14** with App Router```bash
 
@@ -82,6 +76,7 @@ carl-portfolio/## Learn More
 ## 🛠️ Tech Stack
 
 ### Frontend
+
 - **Next.js 14** - React framework
 - **TypeScript** - Type safety
 - **Tailwind CSS** - Utility-first CSS
@@ -91,17 +86,20 @@ carl-portfolio/## Learn More
 - **React Icons** - Icon library
 
 ### Backend & Database
+
 - **PostgreSQL** - Database
 - **Prisma ORM** - Type-safe database client
 - **Next.js API Routes** - Serverless functions
 
 ### DevOps & Monitoring
+
 - **Docker** - Containerization
 - **GitHub Actions** - CI/CD
 - **Sentry** - Error tracking
 - **Google Analytics** - Usage analytics
 
 ### Code Quality
+
 - **ESLint** - Linting
 - **Prettier** - Code formatting
 - **Husky** - Git hooks
@@ -112,7 +110,7 @@ carl-portfolio/## Learn More
 
 ### Prerequisites
 
-- Node.js 20+ 
+- Node.js 20+
 - PostgreSQL (or use Docker)
 - npm or yarn
 
@@ -142,22 +140,29 @@ Edit \`.env\` with your configuration:
 \`\`\`env
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/portfolio"
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
+
 # Add your keys for EmailJS, Sentry, Analytics, etc.
+
 \`\`\`
 
 4. **Set up the database**
 
 \`\`\`bash
+
 # Using Docker (recommended)
+
 docker-compose up -d postgres
 
 # Or using local PostgreSQL
+
 # Make sure PostgreSQL is running and DATABASE_URL is correct
 
 # Run Prisma migrations
+
 npm run db:push
 
 # (Optional) Seed the database
+
 npm run db:seed
 \`\`\`
 
@@ -174,43 +179,51 @@ Open [http://localhost:3000](http://localhost:3000) to see your portfolio.
 ### Using Docker Compose (Full Stack)
 
 \`\`\`bash
+
 # Start all services (frontend + PostgreSQL + Adminer)
+
 docker-compose up -d
 
 # View logs
+
 docker-compose logs -f
 
 # Stop services
+
 docker-compose down
 \`\`\`
 
 ### Using Docker (Frontend Only)
 
 \`\`\`bash
+
 # Build the image
+
 docker build -t carl-portfolio .
 
 # Run the container
+
 docker run -p 3000:3000 carl-portfolio
 \`\`\`
 
 ## 📝 Available Scripts
 
 \`\`\`bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run start        # Start production server
-npm run lint         # Run ESLint
-npm run format       # Format code with Prettier
+npm run dev # Start development server
+npm run build # Build for production
+npm run start # Start production server
+npm run lint # Run ESLint
+npm run format # Format code with Prettier
 npm run format:check # Check code formatting
-npm run type-check   # Run TypeScript type checking
+npm run type-check # Run TypeScript type checking
 
 # Database scripts
-npm run db:generate  # Generate Prisma client
-npm run db:push      # Push schema to database
-npm run db:migrate   # Create migration
-npm run db:studio    # Open Prisma Studio
-npm run db:seed      # Seed the database
+
+npm run db:generate # Generate Prisma client
+npm run db:push # Push schema to database
+npm run db:migrate # Create migration
+npm run db:studio # Open Prisma Studio
+npm run db:seed # Seed the database
 \`\`\`
 
 ## 🔐 Environment Variables
@@ -218,13 +231,15 @@ npm run db:seed      # Seed the database
 See \`.env.example\` for all available environment variables.
 
 Required:
+
 - \`DATABASE_URL\` - PostgreSQL connection string
 - \`NEXT_PUBLIC_SITE_URL\` - Your site URL
 
 Optional:
+
 - \`NEXT_PUBLIC_SENTRY_DSN\` - Sentry error tracking
 - \`NEXT_PUBLIC_GA_MEASUREMENT_ID\` - Google Analytics ID
-- \`NEXT_PUBLIC_EMAILJS_*\` - EmailJS configuration
+- \`NEXT*PUBLIC_EMAILJS*\*\` - EmailJS configuration
 
 ## 📊 Database Management
 
@@ -250,6 +265,7 @@ When using \`docker-compose\`, Adminer is available at [http://localhost:8080](h
 4. Deploy!
 
 The CI/CD pipeline in \`.github/workflows/ci-cd.yml\` will handle:
+
 - Linting and type checking
 - Building the application
 - Automatic deployments to Vercel
@@ -272,8 +288,8 @@ Edit \`app/globals.css\` to customize the color scheme:
 
 \`\`\`css
 :root {
-  --primary: ...;
-  --accent: ...;
+--primary: ...;
+--accent: ...;
 }
 \`\`\`
 
@@ -285,13 +301,13 @@ All UI components use Tailwind Variants for easy customization:
 import { tv } from "tailwind-variants";
 
 const button = tv({
-  base: "...",
-  variants: {
-    variant: {
-      default: "...",
-      custom: "...", // Add your variant
-    },
-  },
+base: "...",
+variants: {
+variant: {
+default: "...",
+custom: "...", // Add your variant
+},
+},
 });
 \`\`\`
 

@@ -23,12 +23,12 @@ All UI components in `/components/ui/` need proper TypeScript prop interfaces:
 
 \`\`\`typescript
 export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {}
+extends React.InputHTMLAttributes<HTMLInputElement> {}
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, ...props }, ref) => {
-    // ... implementation
-  }
+({ className, type, ...props }, ref) => {
+// ... implementation
+}
 )
 \`\`\`
 
@@ -37,6 +37,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 Framer Motion's `motion` components don't accept `className` in strict mode without proper typing.
 
 **Files affected:**
+
 - `app/contact/page.tsx`
 - `app/services/page.tsx`
 - `app/work/page.tsx`
@@ -82,8 +83,8 @@ For immediate deployment, the current setup works because:
 
 To deploy now:
 \`\`\`bash
-npm run build  # Will show warnings but complete successfully
-npm start      # Production server will run
+npm run build # Will show warnings but complete successfully
+npm start # Production server will run
 \`\`\`
 
 ## Working Around Type Errors for Now
@@ -92,12 +93,12 @@ If you need to deploy quickly, add this to `tsconfig.json`:
 
 \`\`\`json
 {
-  "compilerOptions": {
-    "strict": false,
-    "skipLibCheck": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false
-  }
+"compilerOptions": {
+"strict": false,
+"skipLibCheck": true,
+"noUnusedLocals": false,
+"noUnusedParameters": false
+}
 }
 \`\`\`
 
@@ -121,14 +122,17 @@ If you need to deploy quickly, add this to `tsconfig.json`:
 ## Testing Commands
 
 \`\`\`bash
+
 # These should all work:
-npm run dev          # ✅ Development server
-npm run lint         # ⚠️ Will show warnings
-npm run type-check   # ❌ Will show errors (expected)
-npm run format       # ✅ Will work
-npm run build        # ⚠️ Will complete with warnings
+
+npm run dev # ✅ Development server
+npm run lint # ⚠️ Will show warnings
+npm run type-check # ❌ Will show errors (expected)
+npm run format # ✅ Will work
+npm run build # ⚠️ Will complete with warnings
 
 # Docker still works:
+
 docker-compose up -d # ✅ Will work
 \`\`\`
 

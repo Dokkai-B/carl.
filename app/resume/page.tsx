@@ -681,8 +681,8 @@ const FloatingTabNav = ({ activeSection }: { activeSection: string }) => {
                       ? "rgba(66, 129, 164, 0.25)"
                       : "rgba(20, 30, 40, 0.6)"
                     : isActive
-                    ? "rgba(255, 112, 166, 0.2)"
-                    : "rgba(255, 255, 255, 0.5)",
+                      ? "rgba(255, 112, 166, 0.2)"
+                      : "rgba(255, 255, 255, 0.5)",
                   backdropFilter: "blur(16px)",
                   WebkitBackdropFilter: "blur(16px)",
                   border: `1.5px solid ${
@@ -697,8 +697,8 @@ const FloatingTabNav = ({ activeSection }: { activeSection: string }) => {
                       ? "0 0 30px rgba(66, 129, 164, 0.35), inset 0 1px 2px rgba(255,255,255,0.1)"
                       : "0 0 30px rgba(255, 112, 166, 0.3), inset 0 1px 2px rgba(255,255,255,0.5)"
                     : isDark
-                    ? "0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255,255,255,0.05)"
-                    : "0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 2px rgba(255,255,255,0.5)",
+                      ? "0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255,255,255,0.05)"
+                      : "0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 2px rgba(255,255,255,0.5)",
                 }}
               >
                 {/* Shine effect */}
@@ -750,8 +750,8 @@ const FloatingTabNav = ({ activeSection }: { activeSection: string }) => {
                       ? "rgba(66, 129, 164, 0.25)"
                       : "rgba(20, 30, 40, 0.7)"
                     : isActive
-                    ? "rgba(255, 112, 166, 0.2)"
-                    : "rgba(255, 255, 255, 0.6)",
+                      ? "rgba(255, 112, 166, 0.2)"
+                      : "rgba(255, 255, 255, 0.6)",
                   backdropFilter: "blur(12px)",
                   WebkitBackdropFilter: "blur(12px)",
                   border: `1px solid ${

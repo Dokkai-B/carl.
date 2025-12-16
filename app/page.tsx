@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useAnimation } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowRight, Github, Linkedin, Mail } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,7 @@ const skillCardsContainer = coordinatedContainer(ANIMATION_CONFIG.stagger.slow, 
 
 const HomePage = () => {
   const [loaderComplete, setLoaderComplete] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [_mounted, setMounted] = useState(false);
   const mountedRef = useRef(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [shouldAnimate, setShouldAnimate] = useState(false);
@@ -50,7 +50,7 @@ const HomePage = () => {
         clearTimeout(menuTimeoutRef.current);
       }
     };
-  }, []);
+  }, [setMounted]);
 
   // Listen for menu state changes
   useEffect(() => {

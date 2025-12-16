@@ -120,8 +120,8 @@ export const BrowserMockup = ({
           boxShadow: isHovered
             ? `0 25px 50px rgba(0, 0, 0, 0.3), 0 0 0 1px ${primaryColor}40, 0 0 20px ${primaryColor}20`
             : variant === "hero"
-            ? `0 20px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.05), 0 0 15px ${primaryColor}10`
-            : `0 15px 30px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.03)`,
+              ? `0 20px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.05), 0 0 15px ${primaryColor}10`
+              : `0 15px 30px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.03)`,
           opacity: isHovered ? 1 : variant === "satellite" ? idleOpacity : 1,
         }}
       >

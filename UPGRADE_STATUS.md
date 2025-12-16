@@ -3,6 +3,7 @@
 ## ✅ Phase 1 – Refactor (COMPLETED)
 
 ### Convert to TypeScript ✅
+
 - [x] Install TypeScript and type definitions
 - [x] Create `tsconfig.json` with proper configuration
 - [x] Rename all `.jsx` files to `.tsx`
@@ -12,6 +13,7 @@
 - [x] Configure TypeScript for Next.js App Router
 
 ### Add ESLint + Prettier + Husky ✅
+
 - [x] Install ESLint with TypeScript support
 - [x] Install Prettier and integrate with ESLint
 - [x] Create `.prettierrc` configuration
@@ -22,6 +24,7 @@
 - [x] Add npm scripts for linting and formatting
 
 ### Unify folder structure ✅
+
 - [x] Organize components in `/components`
 - [x] Create `/lib` for utilities
 - [x] Create `/config` for configuration
@@ -34,6 +37,7 @@
 ## ✅ Phase 2 – Modernize Backend (COMPLETED)
 
 ### Switch to PostgreSQL + Prisma ORM ✅
+
 - [x] Install Prisma and PostgreSQL client
 - [x] Create `prisma/schema.prisma` with data models:
   - [x] Project model
@@ -46,6 +50,7 @@
 - [x] Configure Docker Compose with PostgreSQL
 
 ### Database Migration Path 🔄
+
 - [ ] Export data from Strapi/SQLite
 - [ ] Create migration scripts
 - [ ] Import data to PostgreSQL
@@ -59,6 +64,7 @@
 ## ✅ Phase 3 – Improve UX/UI (COMPLETED)
 
 ### Rebuild design system with Shadcn UI + Tailwind Variants ✅
+
 - [x] Already using Radix UI components (Shadcn foundation)
 - [x] Install Tailwind Variants
 - [x] Upgrade tailwind-merge to v3
@@ -66,6 +72,7 @@
 - [x] Components ready for variant-based styling
 
 ### Framer Motion 11 ✅
+
 - [x] Already using Framer Motion 11.5.3
 - [x] StairTransition component implemented
 - [x] PageTransition component implemented
@@ -76,6 +83,7 @@
 ## ✅ Phase 4 – Automate (COMPLETED)
 
 ### CI/CD with GitHub Actions ✅
+
 - [x] Create `.github/workflows/ci-cd.yml`
 - [x] Set up lint and type-check job
 - [x] Set up build job
@@ -84,6 +92,7 @@
 - [x] Add artifact uploading
 
 ### Dockerize ✅
+
 - [x] Create multi-stage `Dockerfile`
 - [x] Create `docker-compose.yml` with:
   - [x] Next.js frontend service
@@ -99,6 +108,7 @@
 ### Add analytics, SEO metadata, error monitoring ✅
 
 #### SEO & Metadata ✅
+
 - [x] Install next-seo
 - [x] Create `config/site.ts` for site configuration
 - [x] Update `app/layout.tsx` with comprehensive metadata:
@@ -110,12 +120,14 @@
 - [x] Configure icons and favicons
 
 #### Analytics ✅
+
 - [x] Install react-ga4
 - [x] Create `lib/analytics.tsx`
 - [x] Integrate Analytics component in layout
 - [x] Add event tracking functions
 
 #### Sentry Error Monitoring ✅
+
 - [x] Install @sentry/nextjs
 - [x] Create `sentry.client.config.ts`
 - [x] Create `sentry.server.config.ts`
@@ -146,6 +158,7 @@
 ## 📦 New Dependencies Added
 
 ### Production Dependencies
+
 - `@prisma/client` - Database ORM client
 - `@sentry/nextjs` - Error monitoring
 - `next-seo` - SEO optimization
@@ -154,6 +167,7 @@
 - `tailwind-merge@3.x` - Class merging utility
 
 ### Development Dependencies
+
 - `typescript` - TypeScript compiler
 - `@types/react` - React type definitions
 - `@types/node` - Node.js type definitions
@@ -174,12 +188,14 @@
 ### Immediate Actions Required
 
 1. **Set up environment variables**
+
    ```bash
    cp .env.example .env
    # Edit .env with your actual values
    ```
 
 2. **Initialize database**
+
    ```bash
    docker-compose up -d postgres
    npm run db:push
@@ -192,6 +208,7 @@
    - Set up Vercel secrets for GitHub Actions
 
 4. **Test the application**
+
    ```bash
    npm run dev
    ```
@@ -225,6 +242,7 @@
 ## 📊 Upgrade Benefits
 
 ### Developer Experience
+
 - ✅ Type safety across the entire codebase
 - ✅ Automated code formatting and linting
 - ✅ Git hooks prevent bad commits
@@ -232,12 +250,14 @@
 - ✅ Containerized development environment
 
 ### Performance
+
 - ✅ Optimized production builds
 - ✅ Docker multi-stage builds
 - ✅ Standalone Next.js output
 - ✅ Database query optimization with Prisma
 
 ### Maintainability
+
 - ✅ Consistent code style
 - ✅ Type-safe database queries
 - ✅ Clear project structure
@@ -245,6 +265,7 @@
 - ✅ Automated deployments
 
 ### Monitoring & Analytics
+
 - ✅ Real-time error tracking
 - ✅ User behavior analytics
 - ✅ Performance monitoring

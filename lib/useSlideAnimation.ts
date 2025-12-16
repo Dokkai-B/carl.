@@ -252,17 +252,17 @@ export function useLoaderTextAnimation(): UseLoaderTextAnimationReturn {
     const animateIn = async () => {
       if (isMountedRef.current) {
         await controls.start({
-        y: 0,
-        opacity: 1,
-        transition: {
-          type: "spring",
-          stiffness: ANIMATION_CONFIG.spring.stiffness,
-          damping: ANIMATION_CONFIG.spring.damping,
-          delay: 0.3,
-        },
-      });
-      setState("idle");
-    }
+          y: 0,
+          opacity: 1,
+          transition: {
+            type: "spring",
+            stiffness: ANIMATION_CONFIG.spring.stiffness,
+            damping: ANIMATION_CONFIG.spring.damping,
+            delay: 0.3,
+          },
+        });
+        setState("idle");
+      }
     };
 
     animateIn();

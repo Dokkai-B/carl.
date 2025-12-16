@@ -52,7 +52,7 @@ const Stats = () => {
               <div className="relative flex flex-col items-center p-6 rounded-2xl border border-border bg-card/30 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10 hover:scale-105">
                 {/* Glow effect on hover */}
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/0 via-accent/0 to-primary/0 opacity-0 group-hover:opacity-10 transition-opacity" />
-                
+
                 <div className="relative z-10 text-center">
                   <div className="flex items-baseline justify-center mb-2">
                     {inView && (

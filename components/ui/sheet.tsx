@@ -7,13 +7,13 @@ import { cn } from "@/lib/utils";
 
 import { IoMdClose } from "react-icons/io";
 
-const Sheet = SheetPrimitive.Root
+const Sheet = SheetPrimitive.Root;
 
-const SheetTrigger = SheetPrimitive.Trigger
+const SheetTrigger = SheetPrimitive.Trigger;
 
-const SheetClose = SheetPrimitive.Close
+const SheetClose = SheetPrimitive.Close;
 
-const SheetPortal = SheetPrimitive.Portal
+const SheetPortal = SheetPrimitive.Portal;
 
 const SheetOverlay = React.forwardRef<
   ElementRef<typeof SheetPrimitive.Overlay>,
@@ -28,7 +28,7 @@ const SheetOverlay = React.forwardRef<
     ref={ref}
   />
 ));
-SheetOverlay.displayName = SheetPrimitive.Overlay.displayName
+SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
 
 const sheetVariants = cva(
   "fixed z-50 gap-4 bg-primary p-6 shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500 dark:bg-slate-950",
@@ -47,40 +47,45 @@ const sheetVariants = cva(
       side: "right",
     },
   }
-)
+);
 
 type SheetSide = "top" | "bottom" | "left" | "right";
 type SheetContentProps = ComponentPropsWithoutRef<typeof SheetPrimitive.Content> & {
   side?: SheetSide;
 };
 
-const SheetContent = React.forwardRef<
-  ElementRef<typeof SheetPrimitive.Content>,
-  SheetContentProps
->(({ side = "right", className, children, ...props }, ref) => (
-  <SheetPortal>
-    <SheetOverlay />
-    <SheetPrimitive.Content ref={ref} className={cn(sheetVariants({ side }), className)} {...props}>
-      {children}
-      <SheetPrimitive.Close
-        className="absolute right-8 top-8 transition-opacity outline-none">
-        <IoMdClose className="text-3xl text-accent" />
-        <span className="sr-only">Close</span>
-      </SheetPrimitive.Close>
-    </SheetPrimitive.Content>
-  </SheetPortal>
-));
-SheetContent.displayName = SheetPrimitive.Content.displayName
+const SheetContent = React.forwardRef<ElementRef<typeof SheetPrimitive.Content>, SheetContentProps>(
+  ({ side = "right", className, children, ...props }, ref) => (
+    <SheetPortal>
+      <SheetOverlay />
+      <SheetPrimitive.Content
+        ref={ref}
+        className={cn(sheetVariants({ side }), className)}
+        {...props}
+      >
+        {children}
+        <SheetPrimitive.Close className="absolute right-8 top-8 transition-opacity outline-none">
+          <IoMdClose className="text-3xl text-accent" />
+          <span className="sr-only">Close</span>
+        </SheetPrimitive.Close>
+      </SheetPrimitive.Content>
+    </SheetPortal>
+  )
+);
+SheetContent.displayName = SheetPrimitive.Content.displayName;
 
 const SheetHeader = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
   <div className={cn("flex flex-col space-y-2 text-center sm:text-left", className)} {...props} />
 );
-SheetHeader.displayName = "SheetHeader"
+SheetHeader.displayName = "SheetHeader";
 
 const SheetFooter = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className)} {...props} />
+  <div
+    className={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className)}
+    {...props}
+  />
 );
-SheetFooter.displayName = "SheetFooter"
+SheetFooter.displayName = "SheetFooter";
 
 const SheetTitle = React.forwardRef<
   ElementRef<typeof SheetPrimitive.Title>,
@@ -92,7 +97,7 @@ const SheetTitle = React.forwardRef<
     {...props}
   />
 ));
-SheetTitle.displayName = SheetPrimitive.Title.displayName
+SheetTitle.displayName = SheetPrimitive.Title.displayName;
 
 const SheetDescription = React.forwardRef<
   ElementRef<typeof SheetPrimitive.Description>,
@@ -104,7 +109,7 @@ const SheetDescription = React.forwardRef<
     {...props}
   />
 ));
-SheetDescription.displayName = SheetPrimitive.Description.displayName
+SheetDescription.displayName = SheetPrimitive.Description.displayName;
 
 export {
   Sheet,
@@ -117,4 +122,4 @@ export {
   SheetFooter,
   SheetTitle,
   SheetDescription,
-}
+};

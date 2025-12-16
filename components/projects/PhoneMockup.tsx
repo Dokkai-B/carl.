@@ -43,8 +43,8 @@ export const PhoneMockup = ({
           position === "left"
             ? "translateX(24px)"
             : position === "right"
-            ? "translateX(-24px)"
-            : "translateX(0)",
+              ? "translateX(-24px)"
+              : "translateX(0)",
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -80,10 +80,10 @@ export const PhoneMockup = ({
                 ? 0
                 : 12
               : position === "right"
-              ? isHovered
-                ? 0
-                : -12
-              : 0,
+                ? isHovered
+                  ? 0
+                  : -12
+                : 0,
           scale: isHovered ? 1.04 : 1.0,
         }}
         transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}

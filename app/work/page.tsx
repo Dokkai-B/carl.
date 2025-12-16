@@ -400,8 +400,8 @@ const ProjectListItem = ({
                 color: isHovered
                   ? project.orbColors.primary
                   : isDark
-                  ? "rgba(255,255,255,0.65)"
-                  : "rgba(0,0,0,0.6)",
+                    ? "rgba(255,255,255,0.65)"
+                    : "rgba(0,0,0,0.6)",
               }}
               animate={{
                 x: isHovered ? 4 : 0,
@@ -418,8 +418,8 @@ const ProjectListItem = ({
                 color: isHovered
                   ? project.orbColors.primary
                   : isDark
-                  ? "rgba(255,255,255,0.3)"
-                  : "rgba(0,0,0,0.25)",
+                    ? "rgba(255,255,255,0.3)"
+                    : "rgba(0,0,0,0.25)",
               }}
               animate={{
                 opacity: isHovered ? 1 : 0.7,
@@ -439,8 +439,8 @@ const ProjectListItem = ({
               background: isHovered
                 ? `linear-gradient(90deg, ${project.orbColors.primary} 0%, ${project.orbColors.primary}40 100%)`
                 : isDark
-                ? "rgba(255,255,255,0.08)"
-                : "rgba(0,0,0,0.06)",
+                  ? "rgba(255,255,255,0.08)"
+                  : "rgba(0,0,0,0.06)",
               transformOrigin: "left",
               boxShadow: isHovered ? `0 0 8px ${project.orbColors.primary}50` : "none",
             }}

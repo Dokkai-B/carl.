@@ -5,6 +5,7 @@
 **Your portfolio has been successfully upgraded with modern, production-ready infrastructure!**
 
 All 5 phases of the roadmap have been implemented:
+
 - ✅ Phase 1: Refactor (TypeScript, ESLint, Prettier, Husky)
 - ✅ Phase 2: Modernize Backend (PostgreSQL, Prisma ORM)
 - ✅ Phase 3: Improve UX/UI (Tailwind Variants, Framer Motion 11)
@@ -16,83 +17,101 @@ All 5 phases of the roadmap have been implemented:
 ### Start Development
 
 \`\`\`bash
+
 # Start the app
+
 npm run dev
+
 # ✅ Server running at http://localhost:3000
 
 # Open in browser
+
 # Your portfolio is now live locally!
+
 \`\`\`
 
 ### Using Docker (Full Stack)
 
 \`\`\`bash
+
 # Start PostgreSQL + Frontend + Adminer
+
 docker-compose up -d
 
 # Your services:
+
 # - Frontend: http://localhost:3000
+
 # - Database: localhost:5432
+
 # - Adminer UI: http://localhost:8080
+
 \`\`\`
 
 ## 📊 What Changed?
 
 ### Before → After
 
-| Feature | Before | After |
-|---------|--------|-------|
-| **Language** | JavaScript | ✅ TypeScript |
-| **Linting** | Basic ESLint | ✅ ESLint + Prettier + Husky |
-| **Database** | SQLite (Strapi) | ✅ PostgreSQL + Prisma ORM |
-| **Styling** | Tailwind + CVA | ✅ Tailwind Variants |
-| **Animations** | Framer Motion 11 | ✅ Framer Motion 11 (optimized) |
-| **CI/CD** | None | ✅ GitHub Actions |
-| **Containerization** | None | ✅ Docker + Docker Compose |
-| **Error Tracking** | None | ✅ Sentry |
-| **Analytics** | None | ✅ Google Analytics |
-| **SEO** | Basic | ✅ Comprehensive Meta Tags |
-| **Type Safety** | None | ✅ Full TypeScript |
+| Feature              | Before           | After                           |
+| -------------------- | ---------------- | ------------------------------- |
+| **Language**         | JavaScript       | ✅ TypeScript                   |
+| **Linting**          | Basic ESLint     | ✅ ESLint + Prettier + Husky    |
+| **Database**         | SQLite (Strapi)  | ✅ PostgreSQL + Prisma ORM      |
+| **Styling**          | Tailwind + CVA   | ✅ Tailwind Variants            |
+| **Animations**       | Framer Motion 11 | ✅ Framer Motion 11 (optimized) |
+| **CI/CD**            | None             | ✅ GitHub Actions               |
+| **Containerization** | None             | ✅ Docker + Docker Compose      |
+| **Error Tracking**   | None             | ✅ Sentry                       |
+| **Analytics**        | None             | ✅ Google Analytics             |
+| **SEO**              | Basic            | ✅ Comprehensive Meta Tags      |
+| **Type Safety**      | None             | ✅ Full TypeScript              |
 
 ## 🛠️ New Capabilities
 
 ### 1. Type-Safe Development
+
 - Full TypeScript support
 - IntelliSense and autocomplete everywhere
 - Catch errors before runtime
 - Better refactoring tools
 
 ### 2. Code Quality Automation
+
 - Auto-formatting on save (Prettier)
 - Linting before commit (Husky)
 - Consistent code style across team
 - Pre-commit hooks prevent bad code
 
 ### 3. Modern Database
+
 - PostgreSQL with Prisma ORM
 - Type-safe database queries
 - Easy migrations
 - Visual database explorer (Prisma Studio)
 
 ### 4. Enhanced Components
+
 - Tailwind Variants for flexible styling
 - Improved component API
 - Better variant system
 - Easier customization
 
 ### 5. Professional DevOps
+
 - Automated deployments to Vercel
 - Docker containerization
 - Database in container
 - CI/CD pipeline ready
 
 ### 6. Monitoring & Analytics
+
 - Real-time error tracking (Sentry)
 - User analytics (Google Analytics)
 - Session replays
 - Performance monitoring
 
 ### 7. SEO Optimized
+
 - OpenGraph tags
 - Twitter Cards
 - Structured data
@@ -101,34 +120,38 @@ docker-compose up -d
 ## 📝 Available Commands
 
 ### Development
+
 \`\`\`bash
-npm run dev          # Start dev server
-npm run build        # Build for production
-npm run start        # Start production server
+npm run dev # Start dev server
+npm run build # Build for production
+npm run start # Start production server
 \`\`\`
 
 ### Code Quality
+
 \`\`\`bash
-npm run lint         # Run ESLint
-npm run format       # Format with Prettier
+npm run lint # Run ESLint
+npm run format # Format with Prettier
 npm run format:check # Check formatting
-npm run type-check   # TypeScript type checking
+npm run type-check # TypeScript type checking
 \`\`\`
 
 ### Database
+
 \`\`\`bash
-npm run db:generate  # Generate Prisma client
-npm run db:push      # Push schema to database
-npm run db:migrate   # Create migration
-npm run db:studio    # Open Prisma Studio (database UI)
-npm run db:seed      # Seed database with data
+npm run db:generate # Generate Prisma client
+npm run db:push # Push schema to database
+npm run db:migrate # Create migration
+npm run db:studio # Open Prisma Studio (database UI)
+npm run db:seed # Seed database with data
 \`\`\`
 
 ### Docker
+
 \`\`\`bash
-docker-compose up -d      # Start all services
-docker-compose down       # Stop all services
-docker-compose logs -f    # View logs
+docker-compose up -d # Start all services
+docker-compose down # Stop all services
+docker-compose logs -f # View logs
 \`\`\`
 
 ## 🎯 Next Steps
@@ -139,7 +162,7 @@ docker-compose logs -f    # View logs
    \`\`\`bash
    cp .env.example .env
    \`\`\`
-   
+
    Edit `.env` and add:
    - Database connection string
    - EmailJS credentials
@@ -148,12 +171,16 @@ docker-compose logs -f    # View logs
 
 2. **Set Up Database**
    \`\`\`bash
+
    # Option A: Using Docker (Easiest)
+
    docker-compose up -d postgres
    npm run db:push
-   
+
    # Option B: Using local PostgreSQL
+
    # Make sure PostgreSQL is running
+
    npm run db:push
    \`\`\`
 
@@ -210,34 +237,37 @@ docker-compose logs -f    # View logs
 ## 🎨 Customization
 
 ### Change Colors
+
 Edit `app/globals.css`:
 \`\`\`css
 :root {
-  --primary: #1c1c22;
-  --accent: #00ff99;
-  /* Add your colors */
+--primary: #1c1c22;
+--accent: #00ff99;
+/_ Add your colors _/
 }
 \`\`\`
 
 ### Update Site Info
+
 Edit `config/site.ts`:
 \`\`\`typescript
 export const siteConfig = {
-  name: "Your Name",
-  title: "Your Title",
-  // Update your info
+name: "Your Name",
+title: "Your Title",
+// Update your info
 };
 \`\`\`
 
 ### Modify Components
+
 All components use Tailwind Variants - easy to customize:
 \`\`\`typescript
 const button = tv({
-  variants: {
-    variant: {
-      custom: "your-custom-styles",
-    },
-  },
+variants: {
+variant: {
+custom: "your-custom-styles",
+},
+},
 });
 \`\`\`
 
@@ -251,6 +281,7 @@ const button = tv({
 4. Deploy!
 
 The CI/CD pipeline will automatically:
+
 - Run linting and type checking
 - Build the application
 - Deploy on push to main
@@ -310,9 +341,10 @@ If you encounter issues:
 
 ## 🎉 Conclusion
 
-Your portfolio is now built with industry-standard tools and practices used by professional development teams at major tech companies. 
+Your portfolio is now built with industry-standard tools and practices used by professional development teams at major tech companies.
 
 **You have:**
+
 - Modern development workflow
 - Professional code quality tools
 - Production-ready infrastructure
@@ -323,6 +355,7 @@ Your portfolio is now built with industry-standard tools and practices used by p
 - Type-safe codebase
 
 **You're ready to:**
+
 - Deploy to production
 - Collaborate with teams
 - Scale your application
@@ -334,7 +367,7 @@ Your portfolio is now built with industry-standard tools and practices used by p
 
 **Built with** ❤️ **by Carl**
 
-*Upgraded on October 31, 2025*
+_Upgraded on October 31, 2025_
 
 **Status**: ✅ PRODUCTION READY
 

@@ -148,16 +148,16 @@ function SkillNode({
                 ? "rgba(66, 129, 164, 0.6)"
                 : "rgba(255, 112, 166, 0.5)"
               : isDark
-              ? "rgba(255, 255, 255, 0.15)"
-              : "rgba(0, 0, 0, 0.1)"
+                ? "rgba(255, 255, 255, 0.15)"
+                : "rgba(0, 0, 0, 0.1)"
           }`,
           boxShadow: isHovered
             ? isDark
               ? "0 0 30px rgba(66, 129, 164, 0.3), inset 0 1px 2px rgba(255,255,255,0.1)"
               : "0 0 30px rgba(255, 112, 166, 0.25), inset 0 1px 2px rgba(255,255,255,0.5)"
             : isDark
-            ? "0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255,255,255,0.05)"
-            : "0 4px 20px rgba(0, 0, 0, 0.1), inset 0 1px 2px rgba(255,255,255,0.5)",
+              ? "0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255,255,255,0.05)"
+              : "0 4px 20px rgba(0, 0, 0, 0.1), inset 0 1px 2px rgba(255,255,255,0.5)",
         }}
         whileHover={reducedMotion ? {} : { scale: 1.15 }}
         whileTap={reducedMotion ? {} : { scale: 0.95 }}
@@ -550,8 +550,8 @@ export function SkillNodesMobile() {
                       ? "rgba(66, 129, 164, 0.6)"
                       : "rgba(255, 112, 166, 0.5)"
                     : isDark
-                    ? "rgba(255, 255, 255, 0.15)"
-                    : "rgba(0, 0, 0, 0.1)"
+                      ? "rgba(255, 255, 255, 0.15)"
+                      : "rgba(0, 0, 0, 0.1)"
                 }`,
                 boxShadow: isExpanded
                   ? isDark

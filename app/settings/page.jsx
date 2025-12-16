@@ -1,7 +1,13 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function SettingsPage() {
   const { theme, setTheme, systemTheme } = useTheme();
@@ -28,7 +34,9 @@ export default function SettingsPage() {
             <SelectItem value="dark">Dark</SelectItem>
           </SelectContent>
         </Select>
-        <p className="text-xs text-white/40">Current: {current === "system" ? `System (${systemTheme || "auto"})` : current}</p>
+        <p className="text-xs text-white/40">
+          Current: {current === "system" ? `System (${systemTheme || "auto"})` : current}
+        </p>
       </div>
 
       <div className="pt-6 border-t border-white/10">

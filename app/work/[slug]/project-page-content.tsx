@@ -507,7 +507,7 @@ export default function ProjectPageContent({ project, navigation }: ProjectPageC
                           index={index}
                           onClick={() => openModal(index)}
                           isDark={isDark}
-                          position={position as any}
+                          position={position as "left" | "center" | "right"}
                           projectColors={project.colors}
                         />
                       );

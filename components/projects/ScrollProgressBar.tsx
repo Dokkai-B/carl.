@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useScroll } from "framer-motion";
 import { Project } from "@/data/projects";
 
 interface ScrollProgressBarProps {
@@ -8,7 +8,7 @@ interface ScrollProgressBarProps {
 }
 
 export function ScrollProgressBar({ project }: ScrollProgressBarProps) {
-  const { scrollYProgress } = require("framer-motion").useScroll();
+  const { scrollYProgress } = useScroll();
 
   return (
     <motion.div

@@ -70,10 +70,16 @@
     --border: #f3f2f9; /* Border color */
 
     /* Transition for CSS custom properties */
-    transition: --background 0.4s ease-in-out, --foreground 0.4s ease-in-out,
-      --card 0.4s ease-in-out, --card-foreground 0.4s ease-in-out, --muted 0.4s ease-in-out,
-      --muted-foreground 0.4s ease-in-out, --accent 0.4s ease-in-out,
-      --accent-hover 0.4s ease-in-out, --border 0.4s ease-in-out;
+    transition:
+      --background 0.4s ease-in-out,
+      --foreground 0.4s ease-in-out,
+      --card 0.4s ease-in-out,
+      --card-foreground 0.4s ease-in-out,
+      --muted 0.4s ease-in-out,
+      --muted-foreground 0.4s ease-in-out,
+      --accent 0.4s ease-in-out,
+      --accent-hover 0.4s ease-in-out,
+      --border 0.4s ease-in-out;
   }
 
   /* LIGHT MODE COLORS */
