@@ -5,6 +5,7 @@ import React, { useRef, useState, useEffect, useCallback } from "react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
+import { useIsMobile, useHasHover } from "@/lib/device-detect";
 
 // =============================================
 // PROJECT DATA
@@ -251,6 +252,24 @@ const BackgroundPreview = ({
   hoveredProject: (typeof projects)[0] | null;
   isDark: boolean;
 }) => {
+  const isMobile = useIsMobile();
+
+  // Simplified background for mobile - no orbs, no preview
+  if (isMobile) {
+    return (
+      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+        <div
+          className="absolute inset-0"
+          style={{
+            background: isDark
+              ? "linear-gradient(180deg, var(--background) 0%, var(--muted) 100%)"
+              : "linear-gradient(180deg, var(--background) 0%, color-mix(in srgb, var(--muted) 20%, var(--background)) 100%)",
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
       {/* Orbs layer - always visible */}
@@ -345,6 +364,8 @@ const ProjectListItem = ({
   onLeave: () => void;
   isDark: boolean;
 }) => {
+  const isMobile = useIsMobile();
+  const hasHover = useHasHover();
   const projectSlug = project.slug || project.title.toLowerCase().replace(/\s+/g, "-");
 
   return (
@@ -358,8 +379,9 @@ const ProjectListItem = ({
           damping: 22,
           delay: 0.1 + index * 0.05,
         }}
-        onMouseEnter={onHover}
-        onMouseLeave={onLeave}
+        onMouseEnter={hasHover ? onHover : undefined}
+        onMouseLeave={hasHover ? onLeave : undefined}
+        onTouchStart={!hasHover ? onHover : undefined}
         className="group cursor-pointer relative"
       >
         {/* Hover background glow - uses project orb color */}

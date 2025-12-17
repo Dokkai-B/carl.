@@ -5,6 +5,7 @@ import { useState, useRef } from "react";
 import { useInView } from "framer-motion";
 import Image from "next/image";
 import { Project } from "@/data/projects";
+import { useIsMobile, useHasHover } from "@/lib/device-detect";
 
 interface PhoneMockupProps {
   src: string;
@@ -28,6 +29,8 @@ export const PhoneMockup = ({
   const [isHovered, setIsHovered] = useState(false);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
+  const isMobile = useIsMobile();
+  const hasHover = useHasHover();
 
   return (
     <motion.div
@@ -46,24 +49,26 @@ export const PhoneMockup = ({
               ? "translateX(-24px)"
               : "translateX(0)",
       }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={hasHover ? () => setIsHovered(true) : undefined}
+      onMouseLeave={hasHover ? () => setIsHovered(false) : undefined}
       onClick={onClick}
     >
       {/* Floating shadow */}
-      <div
-        className="absolute inset-0 rounded-[28px] pointer-events-none"
-        style={{
-          filter: "blur(24px)",
-          background: isDark
-            ? "radial-gradient(ellipse at center, rgba(0, 0, 0, 0.4), transparent 65%)"
-            : "radial-gradient(ellipse at center, rgba(0, 0, 0, 0.15), transparent 65%)",
-          transform: `translateY(${isHovered ? "10px" : "16px"}) scale(0.9)`,
-          opacity: isHovered ? 0.85 : 0.55,
-          transition:
-            "transform 350ms cubic-bezier(0.16, 1, 0.3, 1), opacity 280ms cubic-bezier(0.16, 1, 0.3, 1)",
-        }}
-      />
+      {!isMobile && (
+        <div
+          className="absolute inset-0 rounded-[28px] pointer-events-none"
+          style={{
+            filter: "blur(24px)",
+            background: isDark
+              ? "radial-gradient(ellipse at center, rgba(0, 0, 0, 0.4), transparent 65%)"
+              : "radial-gradient(ellipse at center, rgba(0, 0, 0, 0.15), transparent 65%)",
+            transform: `translateY(${isHovered ? "10px" : "16px"}) scale(0.9)`,
+            opacity: isHovered ? 0.85 : 0.55,
+            transition:
+              "transform 350ms cubic-bezier(0.16, 1, 0.3, 1), opacity 280ms cubic-bezier(0.16, 1, 0.3, 1)",
+          }}
+        />
+      )}
 
       {/* Phone container - responsive sizing */}
       {/* Phone container - responsive sizing with tighter breakpoints */}
@@ -73,19 +78,23 @@ export const PhoneMockup = ({
             ? "relative overflow-hidden rounded-[28px] w-48 sm:w-56 md:w-64 lg:w-72 xl:w-80"
             : "relative overflow-hidden rounded-[28px] w-40 sm:w-48 md:w-56 lg:w-64 xl:w-72"
         }
-        animate={{
-          rotateY:
-            position === "left"
-              ? isHovered
-                ? 0
-                : 12
-              : position === "right"
-                ? isHovered
-                  ? 0
-                  : -12
-                : 0,
-          scale: isHovered ? 1.04 : 1.0,
-        }}
+        animate={
+          isMobile
+            ? {}
+            : {
+                rotateY:
+                  position === "left"
+                    ? isHovered
+                      ? 0
+                      : 12
+                    : position === "right"
+                      ? isHovered
+                        ? 0
+                        : -12
+                      : 0,
+                scale: isHovered ? 1.04 : 1.0,
+              }
+        }
         transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
         style={{
           backgroundColor: isDark ? "rgba(255, 255, 255, 0.04)" : "rgba(255, 255, 255, 0.5)",

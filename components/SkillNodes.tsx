@@ -4,6 +4,7 @@ import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from
 import { LucideIcon, X, Globe, Smartphone, Monitor, Layers, Shield } from "lucide-react";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useTheme } from "next-themes";
+import { useHasHover } from "@/lib/device-detect";
 
 // Skill data with all content
 const skillsData = [
@@ -217,6 +218,7 @@ function SkillBubble({ skill, onClose, reducedMotion }: SkillBubbleProps) {
   }, []);
 
   const isDark = !mounted || resolvedTheme === "dark";
+  const hasHover = useHasHover();
 
   // Mouse position for 3D tilt effect
   const mouseX = useMotionValue(0);
@@ -229,7 +231,7 @@ function SkillBubble({ skill, onClose, reducedMotion }: SkillBubbleProps) {
 
   // Handle mouse move for 3D tilt
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!bubbleRef.current || reducedMotion) return;
+    if (!bubbleRef.current || reducedMotion || !hasHover) return;
     const rect = bubbleRef.current.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
@@ -266,12 +268,12 @@ function SkillBubble({ skill, onClose, reducedMotion }: SkillBubbleProps) {
         {/* 3D Tilt wrapper */}
         <motion.div
           ref={bubbleRef}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
+          onMouseMove={hasHover ? handleMouseMove : undefined}
+          onMouseLeave={hasHover ? handleMouseLeave : undefined}
           style={{
-            rotateX: reducedMotion ? 0 : rotateX,
-            rotateY: reducedMotion ? 0 : rotateY,
-            transformStyle: "preserve-3d",
+            rotateX: reducedMotion || !hasHover ? 0 : rotateX,
+            rotateY: reducedMotion || !hasHover ? 0 : rotateY,
+            transformStyle: hasHover ? "preserve-3d" : "flat",
           }}
           className="group"
         >

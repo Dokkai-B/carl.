@@ -10,6 +10,7 @@ import {
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
+import { useIsMobile } from "@/lib/device-detect";
 
 // Orb state for name-driven merge animation
 type OrbState = "default" | "merging" | "morphing" | "returning" | null;
@@ -112,6 +113,7 @@ const ORB_SIZES = {
 export function AnimatedBackground() {
   const pathname = usePathname();
   const isHomePage = pathname === "/";
+  const isMobile = useIsMobile();
   const [orbState, setOrbState] = useState<OrbState>("default");
   const [mounted, setMounted] = useState(false);
   const [isPointerDevice, setIsPointerDevice] = useState(false);
@@ -657,12 +659,22 @@ export function AnimatedBackground() {
   // Check if we're in default state (for idle animation + parallax)
   const isDefaultState = orbState === "default" || orbState === null;
 
-  if (!mounted) {
-    return (
-      <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-muted" />
-      </div>
-    );
+  // Simple static background for mobile/tablet and initial render
+  const simpleBackground = (
+    <div className="fixed inset-0 -z-10 overflow-hidden">
+      <div
+        className="absolute inset-0"
+        style={{
+          background: isDark
+            ? `linear-gradient(135deg, var(--background) 0%, var(--background) 40%, color-mix(in srgb, var(--muted) 30%, var(--background)) 100%)`
+            : `linear-gradient(135deg, var(--background) 0%, var(--background) 40%, color-mix(in srgb, var(--muted) 50%, var(--background)) 100%)`,
+        }}
+      />
+    </div>
+  );
+
+  if (!mounted || isMobile) {
+    return simpleBackground;
   }
 
   const orbColors = getOrbColors();

@@ -12,6 +12,7 @@ import {
 import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import { useTheme } from "next-themes";
 import { ANIMATION_CONFIG } from "@/lib/animations";
+import { useIsMobile, useHasHover } from "@/lib/device-detect";
 
 import {
   FaHtml5,
@@ -563,10 +564,13 @@ const DynamicBackground = ({
   isDark: boolean;
   backgroundY: any;
 }) => {
+  const isMobile = useIsMobile();
   const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
 
-  // Track mouse position for parallax
+  // Track mouse position for parallax - Desktop only
   useEffect(() => {
+    if (isMobile) return;
+
     const handleMouseMove = (e: MouseEvent) => {
       const x = (e.clientX / window.innerWidth) * 100;
       const y = (e.clientY / window.innerHeight) * 100;
@@ -575,7 +579,23 @@ const DynamicBackground = ({
 
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
+  }, [isMobile]);
+
+  // Simplified background for mobile
+  if (isMobile) {
+    return (
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div
+          className="absolute inset-0"
+          style={{
+            background: isDark
+              ? "linear-gradient(180deg, var(--background) 0%, var(--muted) 100%)"
+              : "linear-gradient(180deg, var(--background) 0%, color-mix(in srgb, var(--muted) 30%, var(--background)) 100%)",
+          }}
+        />
+      </div>
+    );
+  }
 
   return (
     <motion.div className="fixed inset-0 pointer-events-none z-0" style={{ y: backgroundY }}>
@@ -800,6 +820,8 @@ interface GlassCardProps {
 const GlassCard = ({ children, className = "", delay = 0, hover3D = true }: GlassCardProps) => {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const isMobile = useIsMobile();
+  const hasHover = useHasHover();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, margin: "-50px" });
 
@@ -809,14 +831,14 @@ const GlassCard = ({ children, className = "", delay = 0, hover3D = true }: Glas
 
   const isDark = !mounted || resolvedTheme === "dark";
 
-  // 3D tilt
+  // 3D tilt - Disabled on mobile
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [8, -8]), { stiffness: 300, damping: 30 });
   const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-8, 8]), { stiffness: 300, damping: 30 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!hover3D) return;
+    if (!hover3D || isMobile || !hasHover) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
@@ -842,7 +864,7 @@ const GlassCard = ({ children, className = "", delay = 0, hover3D = true }: Glas
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      style={hover3D ? { rotateX, rotateY, transformStyle: "preserve-3d" } : {}}
+      style={hover3D && !isMobile && hasHover ? { rotateX, rotateY, transformStyle: "preserve-3d" } : {}}
       className={`relative group ${className}`}
     >
       {/* Blur background */}
@@ -895,6 +917,7 @@ const GlassCard = ({ children, className = "", delay = 0, hover3D = true }: Glas
 const InfoGlassCard = ({ item, index }: { item: InfoItem; index: number }) => {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const isMobile = useIsMobile();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, margin: "-30px" });
 
@@ -915,7 +938,7 @@ const InfoGlassCard = ({ item, index }: { item: InfoItem; index: number }) => {
         damping: 25,
         delay: index * 0.05,
       }}
-      whileHover={{ scale: 1.02, y: -2 }}
+      whileHover={!isMobile ? { scale: 1.02, y: -2 } : undefined}
       className="relative group"
     >
       {/* Glass background */}
@@ -965,6 +988,8 @@ interface TimelineCardProps {
 const TimelineCard = ({ duration, title, subtitle, index, isLast }: TimelineCardProps) => {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const isMobile = useIsMobile();
+  const hasHover = useHasHover();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, margin: "-50px" });
 
@@ -974,13 +999,14 @@ const TimelineCard = ({ duration, title, subtitle, index, isLast }: TimelineCard
 
   const isDark = !mounted || resolvedTheme === "dark";
 
-  // 3D tilt
+  // 3D tilt - Disabled on mobile
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [6, -6]), { stiffness: 300, damping: 30 });
   const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-6, 6]), { stiffness: 300, damping: 30 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isMobile || !hasHover) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
@@ -1039,8 +1065,8 @@ const TimelineCard = ({ duration, title, subtitle, index, isLast }: TimelineCard
       <motion.div
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-        whileHover={{ y: -4 }}
+        style={!isMobile && hasHover ? { rotateX, rotateY, transformStyle: "preserve-3d" } : {}}
+        whileHover={!isMobile ? { y: -4 } : undefined}
         className="relative group cursor-pointer"
       >
         {/* Blur background */}
@@ -1110,6 +1136,8 @@ const SkillTile = ({ skill, index }: { skill: SkillItem; index: number }) => {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const isMobile = useIsMobile();
+  const hasHover = useHasHover();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, margin: "-30px" });
 
@@ -1119,7 +1147,7 @@ const SkillTile = ({ skill, index }: { skill: SkillItem; index: number }) => {
 
   const isDark = !mounted || resolvedTheme === "dark";
 
-  // 3D tilt
+  // 3D tilt - Disabled on mobile
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [12, -12]), {
@@ -1132,6 +1160,7 @@ const SkillTile = ({ skill, index }: { skill: SkillItem; index: number }) => {
   });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isMobile || !hasHover) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
@@ -1198,10 +1227,10 @@ const SkillTile = ({ skill, index }: { skill: SkillItem; index: number }) => {
     >
       <motion.div
         onMouseMove={handleMouseMove}
-        onMouseEnter={() => setIsHovered(true)}
+        onMouseEnter={() => hasHover && setIsHovered(true)}
         onMouseLeave={handleMouseLeave}
-        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-        whileHover={{ scale: 1.05, y: -4 }}
+        style={!isMobile && hasHover ? { rotateX, rotateY, transformStyle: "preserve-3d" } : {}}
+        whileHover={!isMobile ? { scale: 1.05, y: -4 } : undefined}
         whileTap={{ scale: 0.95 }}
         className="relative cursor-pointer group"
       >

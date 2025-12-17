@@ -3,11 +3,13 @@
 import { useEffect, useState, useRef } from "react";
 import { motion, useSpring, useMotionValue } from "framer-motion";
 import { useTheme } from "next-themes";
+import { useHasHover } from "@/lib/device-detect";
 
 export default function CustomCursor() {
   const [isHovering, setIsHovering] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const hasHover = useHasHover();
   const cursorRef = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
 
@@ -57,10 +59,7 @@ export default function CustomCursor() {
   }, []);
 
   useEffect(() => {
-    // Hide on touch devices
-    if (typeof window !== "undefined" && "ontouchstart" in window) {
-      return;
-    }
+    if (!hasHover) return;
 
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.set(e.clientX);
@@ -97,15 +96,13 @@ export default function CustomCursor() {
       document.body.removeEventListener("mouseenter", handleMouseEnter);
       document.body.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, [mouseX, mouseY, isVisible]);
+  }, [mouseX, mouseY, isVisible, hasHover]);
 
-  // Don't render on touch devices or SSR
-  if (typeof window !== "undefined" && "ontouchstart" in window) {
+  // Early returns AFTER all hooks
+  // Don't render on touch devices, non-hover devices, or during SSR
+  if (!hasHover || !mounted || (typeof window !== "undefined" && "ontouchstart" in window)) {
     return null;
   }
-
-  // Wait for theme to be resolved
-  if (!mounted) return null;
 
   return (
     <>

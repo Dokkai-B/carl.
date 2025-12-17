@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { useIsMobile } from "@/lib/device-detect";
 
 export interface OrbConfig {
   size: number;
@@ -39,6 +40,7 @@ export function OrbBackground({
 }: OrbBackgroundProps) {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const isMobile = useIsMobile();
   const isDark = resolvedTheme === "dark";
 
   useEffect(() => {
@@ -56,7 +58,8 @@ export function OrbBackground({
     return () => mediaQuery.removeEventListener("change", handler);
   }, []);
 
-  if (!mounted) return null;
+  // Don't render orbs on mobile for performance
+  if (!mounted || isMobile) return null;
 
   const colors = [
     isDark ? primaryColor : lightPrimaryColor || primaryColor,

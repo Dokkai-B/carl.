@@ -5,10 +5,12 @@ import { motion, useAnimation, useMotionValue, useSpring, useTransform } from "f
 import { FaGithub, FaLinkedinIn, FaInstagram } from "react-icons/fa";
 import { slidePocketChild, ANIMATION_CONFIG } from "@/lib/animations";
 import { useTheme } from "next-themes";
+import { useIsMobile, useHasHover } from "@/lib/device-detect";
 
 const Contact = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const isMobile = useIsMobile();
   const mountedRef = useRef(false);
   const isExitingRef = useRef(false);
   const menuTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -114,67 +116,71 @@ const Contact = () => {
         />
       </div>
 
-      {/* Floating orbs */}
-      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-        {orbs.map((orb, index) => (
-          <motion.div
-            key={orb.id}
-            style={{
-              position: "absolute",
-              width: orb.size,
-              height: orb.size,
-              borderRadius: "50%",
-              backgroundColor: orb.color,
-              filter: "blur(80px)",
-              opacity: 0.08,
-              left: orb.x,
-              top: orb.y,
-              transform: "translate(-50%, -50%)",
-            }}
-            animate={{
-              scale: [1, 1.15, 1],
-              x: [0, 40, 0],
-              y: [0, 50, 0],
-            }}
-            transition={{
-              duration: 25 + index * 3,
-              repeat: Infinity,
-              repeatType: "reverse",
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Interactive background particles */}
-      <div className="fixed inset-0 -z-5 overflow-hidden pointer-events-none">
-        {mounted &&
-          particles.map((particle) => (
+      {/* Floating orbs - Desktop only */}
+      {!isMobile && (
+        <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+          {orbs.map((orb, index) => (
             <motion.div
-              key={`particle-${particle.id}`}
+              key={orb.id}
               style={{
                 position: "absolute",
-                width: "2px",
-                height: "2px",
+                width: orb.size,
+                height: orb.size,
                 borderRadius: "50%",
-                backgroundColor: `rgba(93, 173, 226, ${particle.opacity})`,
-                left: `${particle.left}%`,
-                top: `${particle.top}%`,
+                backgroundColor: orb.color,
+                filter: "blur(80px)",
+                opacity: 0.08,
+                left: orb.x,
+                top: orb.y,
+                transform: "translate(-50%, -50%)",
               }}
               animate={{
-                y: [0, particle.yEnd1, particle.yEnd2],
-                opacity: [0.3, 0.8, 0],
-                x: [0, particle.xEnd1, particle.xEnd2],
+                scale: [1, 1.15, 1],
+                x: [0, 40, 0],
+                y: [0, 50, 0],
               }}
               transition={{
-                duration: particle.duration,
+                duration: 25 + index * 3,
                 repeat: Infinity,
+                repeatType: "reverse",
                 ease: "easeInOut",
-                delay: particle.delay,
               }}
             />
           ))}
-      </div>
+        </div>
+      )}
+
+      {/* Interactive background particles - Desktop only */}
+      {!isMobile && (
+        <div className="fixed inset-0 -z-5 overflow-hidden pointer-events-none">
+          {mounted &&
+            particles.map((particle) => (
+              <motion.div
+                key={`particle-${particle.id}`}
+                style={{
+                  position: "absolute",
+                  width: "2px",
+                  height: "2px",
+                  borderRadius: "50%",
+                  backgroundColor: `rgba(93, 173, 226, ${particle.opacity})`,
+                  left: `${particle.left}%`,
+                  top: `${particle.top}%`,
+                }}
+                animate={{
+                  y: [0, particle.yEnd1, particle.yEnd2],
+                  opacity: [0.3, 0.8, 0],
+                  x: [0, particle.xEnd1, particle.xEnd2],
+                }}
+                transition={{
+                  duration: particle.duration,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: particle.delay,
+                }}
+              />
+            ))}
+        </div>
+      )}
 
       {/* Main content */}
       <div className="container mx-auto px-6 py-20 relative z-10">
@@ -262,12 +268,15 @@ const SocialIconCard = ({
   isDark: boolean;
 }) => {
   const [hovered, setHovered] = useState(false);
+  const isMobile = useIsMobile();
+  const hasHover = useHasHover();
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [8, -8]), { stiffness: 300, damping: 30 });
   const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-8, 8]), { stiffness: 300, damping: 30 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isMobile || !hasHover) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
@@ -288,8 +297,8 @@ const SocialIconCard = ({
       transition={{ delay: 0.6 + index * 0.1, duration: 0.5 }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      onMouseEnter={() => setHovered(true)}
-      style={{ rotateX, rotateY, transformStyle: "preserve-3d" } as any}
+      onMouseEnter={() => hasHover && setHovered(true)}
+      style={hasHover && !isMobile ? { rotateX, rotateY, transformStyle: "preserve-3d" } : {}}
       className="relative group"
     >
       <motion.a

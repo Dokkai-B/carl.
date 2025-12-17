@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import SkillNodes, { SkillNodesMobile } from "@/components/SkillNodes";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { slidePocketChild, ANIMATION_CONFIG, coordinatedContainer } from "@/lib/animations";
+import { useHasHover } from "@/lib/device-detect";
 
 // Container for staggered hero content - coordinated slide pocket animation
 const heroContainer = coordinatedContainer(ANIMATION_CONFIG.stagger.normal, 0);
@@ -22,6 +23,7 @@ const HomePage = () => {
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const isExitingRef = useRef(false);
   const menuTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const hasHover = useHasHover();
 
   useEffect(() => {
     setMounted(true);
@@ -117,8 +119,10 @@ const HomePage = () => {
                   <span
                     data-hero-name="full"
                     className="text-3xl md:text-4xl lg:text-5xl font-bold gradient-text leading-tight block cursor-pointer transition-all duration-300 ease-out hover:-translate-y-[2px] hover:tracking-wide hover:drop-shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)]"
-                    onMouseEnter={() => handleNameHover("full")}
-                    onMouseLeave={() => handleNameHover(null)}
+                    onMouseEnter={hasHover ? () => handleNameHover("full") : undefined}
+                    onMouseLeave={hasHover ? () => handleNameHover(null) : undefined}
+                    onTouchStart={!hasHover ? () => handleNameHover("full") : undefined}
+                    onTouchEnd={!hasHover ? () => handleNameHover(null) : undefined}
                   >
                     Carl Patrick Aguas
                   </span>
@@ -132,8 +136,10 @@ const HomePage = () => {
                   <span
                     data-hero-name="short"
                     className="text-3xl md:text-4xl lg:text-5xl font-bold gradient-text leading-tight block cursor-pointer transition-all duration-300 ease-out hover:-translate-y-[2px] hover:tracking-wide hover:drop-shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)]"
-                    onMouseEnter={() => handleNameHover("short")}
-                    onMouseLeave={() => handleNameHover(null)}
+                    onMouseEnter={hasHover ? () => handleNameHover("short") : undefined}
+                    onMouseLeave={hasHover ? () => handleNameHover(null) : undefined}
+                    onTouchStart={!hasHover ? () => handleNameHover("short") : undefined}
+                    onTouchEnd={!hasHover ? () => handleNameHover(null) : undefined}
                   >
                     Carlo
                   </span>

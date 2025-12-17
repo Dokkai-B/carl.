@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
+import { useIsMobile, useHasHover } from "@/lib/device-detect";
 
 interface BrowserMockupProps {
   src: string;
@@ -35,6 +36,8 @@ export const BrowserMockup = ({
   idleOpacity = 1,
 }: BrowserMockupProps) => {
   const [isHovered, setIsHovered] = useState(false);
+  const isMobile = useIsMobile();
+  const hasHover = useHasHover();
 
   // Calculate satellite positioning and rotation
   const getSatelliteStyles = () => {
@@ -83,34 +86,40 @@ export const BrowserMockup = ({
         delay: variant === "hero" ? 0.1 : 0.3,
         ease: [0.25, 0.1, 0.25, 1],
       }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={hasHover ? () => setIsHovered(true) : undefined}
+      onMouseLeave={hasHover ? () => setIsHovered(false) : undefined}
       onClick={onClick}
     >
-      {/* Floating shadow - depth based */}
-      <div
-        className="absolute inset-0 rounded-[28px] pointer-events-none"
-        style={{
-          filter: `blur(${variant === "satellite" ? "18px" : "24px"})`,
-          background: isDark
-            ? "radial-gradient(ellipse at center, rgba(0, 0, 0, 0.4), transparent 65%)"
-            : "radial-gradient(ellipse at center, rgba(0, 0, 0, 0.15), transparent 65%)",
-          transform: `translateY(${
-            isHovered ? "8px" : variant === "satellite" ? "20px" : "16px"
-          }) scale(0.9)`,
-          opacity: isHovered ? 0.85 : variant === "satellite" ? 0.4 : 0.55,
-          transition:
-            "transform 350ms cubic-bezier(0.16, 1, 0.3, 1), opacity 280ms cubic-bezier(0.16, 1, 0.3, 1)",
-        }}
-      />
-      {/* Browser Container - orbital depth system */}
+      {/* Floating shadow - depth based - Disabled on mobile */}
+      {!isMobile && (
+        <div
+          className="absolute inset-0 rounded-[28px] pointer-events-none"
+          style={{
+            filter: `blur(${variant === "satellite" ? "18px" : "24px"})`,
+            background: isDark
+              ? "radial-gradient(ellipse at center, rgba(0, 0, 0, 0.4), transparent 65%)"
+              : "radial-gradient(ellipse at center, rgba(0, 0, 0, 0.15), transparent 65%)",
+            transform: `translateY(${
+              isHovered ? "8px" : variant === "satellite" ? "20px" : "16px"
+            }) scale(0.9)`,
+            opacity: isHovered ? 0.85 : variant === "satellite" ? 0.4 : 0.55,
+            transition:
+              "transform 350ms cubic-bezier(0.16, 1, 0.3, 1), opacity 280ms cubic-bezier(0.16, 1, 0.3, 1)",
+          }}
+        />
+      )}
+      {/* Browser Container - simplified on mobile */}
       <motion.div
         className="relative overflow-hidden rounded-[28px] w-full"
-        animate={{
-          scale: isHovered ? 1.04 : variant === "satellite" ? depthScale : 1.0,
-          rotate: isHovered ? 0 : rotationIdle,
-          y: isHovered && variant === "satellite" ? -12 : 0,
-        }}
+        animate={
+          !isMobile
+            ? {
+                scale: isHovered ? 1.04 : variant === "satellite" ? depthScale : 1.0,
+                rotate: isHovered ? 0 : rotationIdle,
+                y: isHovered && variant === "satellite" ? -12 : 0,
+              }
+            : {}
+        }
         transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
         style={{
           backgroundColor: isDark ? "rgba(255, 255, 255, 0.04)" : "rgba(255, 255, 255, 0.5)",
