@@ -9,7 +9,7 @@ import {
   useInView,
   AnimatePresence,
 } from "framer-motion";
-import { useRef, useState, useEffect, useCallback, useMemo } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import { useTheme } from "next-themes";
 import { ANIMATION_CONFIG } from "@/lib/animations";
 import { useIsMobile, useHasHover } from "@/lib/device-detect";
@@ -30,17 +30,13 @@ import {
   FaBriefcase,
   FaGraduationCap,
   FaCode,
-  FaLinux,
   FaShieldAlt,
   FaTerminal,
   FaKey,
   FaSearch,
   FaBug,
   FaLock,
-  FaNetworkWired,
   FaDatabase,
-  FaSkull,
-  FaUserSecret,
 } from "react-icons/fa";
 
 import {
@@ -864,7 +860,9 @@ const GlassCard = ({ children, className = "", delay = 0, hover3D = true }: Glas
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      style={hover3D && !isMobile && hasHover ? { rotateX, rotateY, transformStyle: "preserve-3d" } : {}}
+      style={
+        hover3D && !isMobile && hasHover ? { rotateX, rotateY, transformStyle: "preserve-3d" } : {}
+      }
       className={`relative group ${className}`}
     >
       {/* Blur background */}

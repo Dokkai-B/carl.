@@ -4,8 +4,8 @@ export async function submitContactForm(formData: FormData) {
   const firstName = formData.get("firstName") as string;
   const lastName = formData.get("lastName") as string;
   const email = formData.get("email") as string;
-  const _phone = formData.get("phone") as string;
-  const _service = formData.get("service") as string;
+  // const phone = formData.get("phone") as string;
+  // const service = formData.get("service") as string;
   const message = formData.get("message") as string;
 
   // Basic validation

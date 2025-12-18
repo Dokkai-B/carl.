@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { slidePocketChild, ANIMATION_CONFIG } from "@/lib/animations";
+import { slidePocketChild } from "@/lib/animations";
 
 export default function NotFound() {
   const [mounted, setMounted] = useState(false);

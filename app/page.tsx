@@ -17,7 +17,7 @@ const skillCardsContainer = coordinatedContainer(ANIMATION_CONFIG.stagger.slow, 
 
 const HomePage = () => {
   const [loaderComplete, setLoaderComplete] = useState(false);
-  const [_mounted, setMounted] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const mountedRef = useRef(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [shouldAnimate, setShouldAnimate] = useState(false);
