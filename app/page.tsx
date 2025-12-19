@@ -182,7 +182,7 @@ const HomePage = () => {
                     <Linkedin className="w-5 h-5" />
                   </a>
                   <a
-                    href="mailto:cpacaguas@mymail.mapua.edu.ph"
+                    href="mailto:xix.carlaguas.xix@gmail.com"
                     className="w-10 h-10 glass rounded-full flex items-center justify-center hover:border-primary/50 transition-all hover:scale-110"
                   >
                     <Mail className="w-5 h-5" />

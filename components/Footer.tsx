@@ -86,10 +86,10 @@ const Footer = () => {
             <ul className="space-y-2 text-muted-foreground">
               <li>
                 <a
-                  href="mailto:cpacaguas@mymail.mapua.edu.ph"
+                  href="mailto:xix.carlaguas.xix@gmail.com"
                   className="hover:text-primary transition-colors"
                 >
-                  cpacaguas@mymail.mapua.edu.ph
+                  xix.carlaguas.xix@gmail.com
                 </a>
               </li>
               <li>

@@ -8,7 +8,7 @@ export const siteConfig = {
   links: {
     github: "https://github.com/Dokkai-B",
     linkedin: "https://linkedin.com/in/carl-patrick-adrian-aguas-0a5959292",
-    email: "cpacaguas@mymail.mapua.edu.ph",
+    email: "xix.carlaguas.xix@gmail.com",
   },
   creator: "@carl_aguas",
   keywords: [

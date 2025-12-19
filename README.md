@@ -291,7 +291,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 **Carl Patrick Adrian Aguas**
 - GitHub: [@Dokkai-B](https://github.com/Dokkai-B)
 - LinkedIn: [carl-patrick-adrian-aguas](https://linkedin.com/in/carl-patrick-adrian-aguas-0a5959292)
-- Email: cpacaguas@mymail.mapua.edu.ph
+- Email: xix.carlaguas.xix@gmail.com
 
 Project Link: [https://github.com/Dokkai-B/carl-portfolio](https://github.com/Dokkai-B/carl-portfolio)
 

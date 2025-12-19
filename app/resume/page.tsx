@@ -231,7 +231,7 @@ const about = {
   title: "About Carl",
   info: [
     { fieldName: "Name", fieldValue: "Carl Patrick Adrian Aguas" },
-    { fieldName: "Experience", fieldValue: "<1 Year" },
+    { fieldName: "Experience", fieldValue: "1 Year" },
     { fieldName: "Nationality", fieldValue: "Filipino" },
     { fieldName: "Email", fieldValue: "Work / Dump Email" },
     { fieldName: "Languages", fieldValue: "English, Filipino" },

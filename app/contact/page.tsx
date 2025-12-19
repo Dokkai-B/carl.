@@ -201,7 +201,7 @@ const Contact = () => {
           {/* Email Pill */}
           <motion.div variants={slidePocketChild} className="flex justify-center mb-16">
             <motion.a
-              href="mailto:cpacaguas@mymail.mapua.edu.ph"
+              href="mailto:xix.carlaguas.xix@gmail.com"
               whileHover={{ scale: 1.05, y: -5 }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
@@ -240,7 +240,7 @@ const Contact = () => {
 
               {/* Content */}
               <div className="relative px-8 py-3 font-medium text-foreground">
-                cpacaguas@mymail.mapua.edu.ph
+                xix.carlaguas.xix@gmail.com
               </div>
             </motion.a>
           </motion.div>
