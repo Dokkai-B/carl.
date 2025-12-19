@@ -62,7 +62,11 @@ export const metadata = {
     creator: siteConfig.creator,
   },
   icons: {
-    icon: "/Logo/Logo.png",
+    icon: [
+      { url: "/Logo/Logo.png" },
+      { url: "/Logo/Logo.png", sizes: "16x16", type: "image/png" },
+      { url: "/Logo/Logo.png", sizes: "32x32", type: "image/png" },
+    ],
     shortcut: "/Logo/Logo.png",
     apple: "/Logo/Logo.png",
   },
