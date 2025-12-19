@@ -62,9 +62,9 @@ export const metadata = {
     creator: siteConfig.creator,
   },
   icons: {
-    icon: "/assets/icon/c-icon.png",
-    shortcut: "/assets/icon/c-icon.png",
-    apple: "/assets/icon/c-icon.png",
+    icon: "/Logo/Logo.png",
+    shortcut: "/Logo/Logo.png",
+    apple: "/Logo/Logo.png",
   },
   manifest: "/manifest.json",
 };
