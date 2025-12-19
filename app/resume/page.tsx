@@ -233,7 +233,7 @@ const about = {
     { fieldName: "Name", fieldValue: "Carl Patrick Adrian Aguas" },
     { fieldName: "Experience", fieldValue: "1 Year" },
     { fieldName: "Nationality", fieldValue: "Filipino" },
-    { fieldName: "Email", fieldValue: "Work / Dump Email" },
+    { fieldName: "Email", fieldValue: "xix.carlaguas.xix@gmail.com" },
     { fieldName: "Languages", fieldValue: "English, Filipino" },
   ],
 };
