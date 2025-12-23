@@ -246,11 +246,6 @@ const experience = {
       position: "Full-Stack Developer Intern",
       duration: "October 2024 – December 2024",
     },
-    {
-      company: "Women's Club",
-      position: "Freelance Full-Stack Website Developer",
-      duration: "April 2024 – May 2024",
-    },
     { company: "JZ Perfumery", position: "Freelance Brand and Visual Designer", duration: "" },
     {
       company: "Classic Watch MNL",
